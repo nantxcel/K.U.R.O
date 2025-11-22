@@ -1,8 +1,14 @@
-[gd_scene load_steps=9 format=3 uid="uid://d15hs7qpxqhf3"]
+[gd_scene load_steps=15 format=3 uid="uid://d15hs7qpxqhf3"]
 
 [ext_resource type="Script" uid="uid://btbsyf4hokvud" path="res://scripts/actors/heroes/SamplePlayer.cs" id="1_player"]
 [ext_resource type="Script" uid="uid://hhpl8w4ty1ky" path="res://scripts/actors/enemies/SampleEnemy.cs" id="2_enemy"]
-[ext_resource type="PackedScene" path="res://scenes/actors/heroes/jsmb_2.tscn" id="3_spine"]
+[ext_resource type="Script" uid="uid://cenpuhlcgesin" path="res://scripts/systems/fsm/StateMachine.cs" id="3_ceqyr"]
+[ext_resource type="PackedScene" uid="uid://bg3ltu6fhm4pa" path="res://scenes/actors/heroes/jsmb_2.tscn" id="3_spine"]
+[ext_resource type="Script" uid="uid://0u5whf0qv6i5" path="res://scripts/actors/heroes/states/PlayerIdleState.cs" id="4_op3tf"]
+[ext_resource type="Script" uid="uid://cue6hp5ws2264" path="res://scripts/actors/heroes/states/PlayerWalkState.cs" id="5_w7wnm"]
+[ext_resource type="Script" uid="uid://d3ancpb5wo2ie" path="res://scripts/actors/heroes/states/PlayerAttackState.cs" id="6_bhpvs"]
+[ext_resource type="Script" uid="uid://l40es7irdvdw" path="res://scripts/actors/heroes/states/PlayerHitState.cs" id="7_w7wnm"]
+[ext_resource type="Script" uid="uid://ba1kd5qgh17ag" path="res://scripts/actors/heroes/states/PlayerRunState.cs" id="8_bhpvs"]
 
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_player"]
 size = Vector2(32, 64)
@@ -64,6 +70,25 @@ monitorable = false
 position = Vector2(50, 0)
 shape = SubResource("RectangleShape2D_attack")
 
+[node name="StateMachine" type="Node" parent="Player" node_paths=PackedStringArray("InitialState")]
+script = ExtResource("3_ceqyr")
+InitialState = NodePath("Idle")
+
+[node name="Idle" type="Node" parent="Player/StateMachine"]
+script = ExtResource("4_op3tf")
+
+[node name="Walk" type="Node" parent="Player/StateMachine"]
+script = ExtResource("5_w7wnm")
+
+[node name="Attack" type="Node" parent="Player/StateMachine"]
+script = ExtResource("6_bhpvs")
+
+[node name="Hit" type="Node" parent="Player/StateMachine"]
+script = ExtResource("7_w7wnm")
+
+[node name="Run" type="Node" parent="Player/StateMachine"]
+script = ExtResource("8_bhpvs")
+
 [node name="Enemy" type="CharacterBody2D" parent="."]
 position = Vector2(800, 400)
 collision_layer = 2
@@ -99,5 +124,5 @@ offset_right = 200.0
 offset_bottom = -10.0
 grow_horizontal = 2
 grow_vertical = 0
-text = "WASD: Move | Space: Attack | ESC: Quit"
+text = "WASD: Move | Space: Attack | Shift: Run"
 horizontal_alignment = 1

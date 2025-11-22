@@ -9,6 +9,7 @@ public partial class SampleEnemy : GameActor
     
     private SamplePlayer? _player;
     private RandomNumberGenerator _rng = new RandomNumberGenerator();
+    private float _hitStunTimer = 0.0f; // Re-declared here as it was removed from base
     
     public SampleEnemy()
     {
@@ -38,6 +39,11 @@ public partial class SampleEnemy : GameActor
         
         base._PhysicsProcess(delta);
         
+        if (_hitStunTimer > 0)
+        {
+             _hitStunTimer -= (float)delta;
+        }
+        
         // Distance check
         Vector2 playerPos = _player.GlobalPosition;
         Vector2 enemyPos = GlobalPosition;
@@ -61,7 +67,7 @@ public partial class SampleEnemy : GameActor
                 // Stop and attack
                 velocity = Vector2.Zero;
                 
-                if (_attackTimer <= 0 && _hitStunTimer <= 0)
+                if (AttackTimer <= 0 && _hitStunTimer <= 0) // Used Property AttackTimer from base
                 {
                     AttackPlayer();
                 }
@@ -94,7 +100,7 @@ public partial class SampleEnemy : GameActor
     
     private void AttackPlayer()
     {
-        _attackTimer = AttackCooldown;
+        AttackTimer = AttackCooldown; // Used Property AttackTimer
         if (_player != null)
         {
             _player.TakeDamage((int)AttackDamage);
@@ -121,6 +127,14 @@ public partial class SampleEnemy : GameActor
         base.TakeDamage(damage);
         // Enemy has shorter stun
         _hitStunTimer = 0.3f;
+        
+        // If we want to play hit animation manually since base FSM logic might not cover enemy without state machine
+        if (_animationPlayer != null)
+        {
+             _animationPlayer.Play("animations/hit");
+             // We'd need to listen to finish to go back to idle but for simple enemy without FSM, this is tricky
+             // For now, just play it.
+        }
     }
     
     protected override void Die()

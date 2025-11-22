@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using Kuros.Systems.FSM;
 
 namespace Kuros.Core
 {
@@ -12,21 +13,24 @@ namespace Kuros.Core
         [Export] public float AttackCooldown = 0.5f;
         [Export] public int MaxHealth = 100;
         
-        protected int _currentHealth;
-        protected float _attackTimer = 0.0f;
-        protected float _hitStunTimer = 0.0f;
-        protected bool _facingRight = true;
-        protected bool _isPlayingActionAnimation = false;
+        [ExportCategory("Components")]
+        [Export] public StateMachine StateMachine { get; private set; } = null!;
+
+        // Exposed state for States to use
+        public int CurrentHealth { get; protected set; }
+        public float AttackTimer { get; set; } = 0.0f;
+        public bool FacingRight { get; protected set; } = true;
+        public AnimationPlayer? AnimPlayer => _animationPlayer;
         
-        protected Node2D _spineCharacter;
-        protected Sprite2D _sprite;
-        protected AnimationPlayer _animationPlayer;
+        protected Node2D _spineCharacter = null!;
+        protected Sprite2D _sprite = null!;
+        protected AnimationPlayer _animationPlayer = null!;
 
         public override void _Ready()
         {
-            _currentHealth = MaxHealth;
+            CurrentHealth = MaxHealth;
             
-            // Common node fetching
+            // Node fetching
             _spineCharacter = GetNodeOrNull<Node2D>("SpineCharacter");
             _sprite = GetNodeOrNull<Sprite2D>("Sprite2D");
             
@@ -35,46 +39,52 @@ namespace Kuros.Core
                 _animationPlayer = _spineCharacter.GetNodeOrNull<AnimationPlayer>("AnimationPlayer");
             }
             
-            if (_animationPlayer != null)
+            // Initialize StateMachine if manually assigned or found
+            if (StateMachine == null)
             {
-                _animationPlayer.AnimationFinished += OnAnimationFinished;
-                PlayAnimation("animations/Idle");
+                StateMachine = GetNodeOrNull<StateMachine>("StateMachine");
+            }
+
+            if (StateMachine != null)
+            {
+                StateMachine.Initialize(this);
             }
         }
 
         public override void _PhysicsProcess(double delta)
         {
-            if (_attackTimer > 0) _attackTimer -= (float)delta;
-            if (_hitStunTimer > 0) _hitStunTimer -= (float)delta;
+            if (AttackTimer > 0) AttackTimer -= (float)delta;
+            
+            // FSM handles logic, but we can keep global helpers here
+            // If using FSM, ensure it is processed either here or by itself (Node process)
+            // StateMachine._PhysicsProcess is called automatically by Godot if it's in the tree
         }
 
         public virtual void TakeDamage(int damage)
         {
-            _currentHealth -= damage;
-            _currentHealth = Mathf.Max(_currentHealth, 0);
+            CurrentHealth -= damage;
+            CurrentHealth = Mathf.Max(CurrentHealth, 0);
             
-            GD.Print($"{Name} took {damage} damage! Health: {_currentHealth}");
+            GD.Print($"{Name} took {damage} damage! Health: {CurrentHealth}");
             
-            // Hit animation & Stun
-            if (_animationPlayer != null)
-            {
-                _isPlayingActionAnimation = true;
-                _animationPlayer.Play("animations/hit");
-                _hitStunTimer = 0.6f; // Default stun
-                GD.Print($"[{Name} Animation] Playing hit animation");
-            }
-
             FlashDamageEffect();
 
-            if (_currentHealth <= 0)
+            if (CurrentHealth <= 0)
             {
                 Die();
+            }
+            else
+            {
+                // Force state change to Hit
+                if (StateMachine != null)
+                {
+                    StateMachine.ChangeState("Hit");
+                }
             }
         }
 
         protected virtual void Die()
         {
-            // Override in subclasses
             QueueFree();
         }
 
@@ -84,7 +94,7 @@ namespace Kuros.Core
             if (visualNode != null)
             {
                 var originalColor = visualNode.Modulate;
-                visualNode.Modulate = new Color(1, 0, 0); // Default Red
+                visualNode.Modulate = new Color(1, 0, 0); 
                 
                 var tween = CreateTween();
                 tween.TweenInterval(0.1);
@@ -92,58 +102,25 @@ namespace Kuros.Core
             }
         }
 
-        protected void FlipFacing(bool faceRight)
+        public void FlipFacing(bool faceRight)
         {
-            if (_facingRight == faceRight) return;
+            if (FacingRight == faceRight) return;
             
-            _facingRight = faceRight;
+            FacingRight = faceRight;
             
             if (_spineCharacter != null)
             {
                 var scale = _spineCharacter.Scale;
-                // Set absolute X scale based on direction
                 float absX = Mathf.Abs(scale.X);
                 _spineCharacter.Scale = new Vector2(faceRight ? absX : -absX, scale.Y);
             }
             else if (_sprite != null)
             {
-                _sprite.FlipH = !_facingRight;
-            }
-        }
-
-        protected void PlayAnimation(string animName)
-        {
-            if (_animationPlayer == null) return;
-            
-            // Safe play method if needed, but usually we access _animationPlayer directly or use specific logic
-            _animationPlayer.Play(animName);
-        }
-
-        protected virtual void OnAnimationFinished(StringName animName)
-        {
-            GD.Print($"[{Name} Animation] OnAnimationFinished: {animName}");
-            
-            if (animName == "animations/attack" || animName == "animations/hit")
-            {
-                if (_animationPlayer != null)
-                {
-                    GD.Print($"[{Name} Animation] Playing RESET to restore bones");
-                    _animationPlayer.Play("RESET");
-                }
-            }
-            else if (animName == "RESET")
-            {
-                if (_animationPlayer != null)
-                {
-                    GD.Print($"[{Name} Animation] RESET complete, playing Idle");
-                    _animationPlayer.Play("animations/Idle");
-                    _isPlayingActionAnimation = false;
-                    GD.Print($"[{Name} Animation] Animation lock released");
-                }
+                _sprite.FlipH = !FacingRight;
             }
         }
         
-        protected void ClampPositionToScreen(float margin = 50f, float bottomOffset = 150f)
+        public void ClampPositionToScreen(float margin = 50f, float bottomOffset = 150f)
         {
              var screenSize = GetViewportRect().Size;
              GlobalPosition = new Vector2(
@@ -153,4 +130,3 @@ namespace Kuros.Core
         }
     }
 }
-

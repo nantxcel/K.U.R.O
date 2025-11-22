@@ -1,15 +1,20 @@
-[gd_scene load_steps=13 format=3]
+[gd_scene load_steps=14 format=3 uid="uid://bg3ltu6fhm4pa"]
 
 [ext_resource type="Script" uid="uid://nvtam7ys5jk3" path="res://addons/spine/插槽.gd" id="1"]
 [ext_resource type="Texture2D" uid="uid://nht4yvr03ilc" path="res://textures/characters/heroes/jsmb.png" id="jsmb.png"]
+
 [sub_resource type="SkeletonModification2DTwoBoneIK" id="SkeletonModification2DTwoBoneIK_44n0a"]
 target_nodepath = NodePath("root/bone7")
+joint_one_bone_idx = 26
 joint_one_bone2d_node = NodePath("root/bone/bone5")
+joint_two_bone_idx = 27
 joint_two_bone2d_node = NodePath("root/bone/bone5/bone6")
 
 [sub_resource type="SkeletonModification2DTwoBoneIK" id="SkeletonModification2DTwoBoneIK_8hylu"]
 target_nodepath = NodePath("root/bone10")
+joint_one_bone_idx = 28
 joint_one_bone2d_node = NodePath("root/bone/bone8")
+joint_two_bone_idx = 29
 joint_two_bone2d_node = NodePath("root/bone/bone8/bone9")
 
 [sub_resource type="SkeletonModificationStack2D" id="SkeletonModificationStack2D_wvhs7"]
@@ -39,6 +44,7 @@ tracks/1/path = NodePath("014:modulate:r")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -49,6 +55,7 @@ tracks/2/path = NodePath("014:modulate:g")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -59,6 +66,7 @@ tracks/3/path = NodePath("014:modulate:b")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -69,6 +77,7 @@ tracks/4/path = NodePath("014:modulate:a")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -91,6 +100,7 @@ tracks/6/path = NodePath("013:modulate:r")
 tracks/6/interp = 1
 tracks/6/loop_wrap = true
 tracks/6/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -101,6 +111,7 @@ tracks/7/path = NodePath("013:modulate:g")
 tracks/7/interp = 1
 tracks/7/loop_wrap = true
 tracks/7/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -111,6 +122,7 @@ tracks/8/path = NodePath("013:modulate:b")
 tracks/8/interp = 1
 tracks/8/loop_wrap = true
 tracks/8/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -121,6 +133,7 @@ tracks/9/path = NodePath("013:modulate:a")
 tracks/9/interp = 1
 tracks/9/loop_wrap = true
 tracks/9/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -143,6 +156,7 @@ tracks/11/path = NodePath("011:modulate:r")
 tracks/11/interp = 1
 tracks/11/loop_wrap = true
 tracks/11/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -153,6 +167,7 @@ tracks/12/path = NodePath("011:modulate:g")
 tracks/12/interp = 1
 tracks/12/loop_wrap = true
 tracks/12/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -163,6 +178,7 @@ tracks/13/path = NodePath("011:modulate:b")
 tracks/13/interp = 1
 tracks/13/loop_wrap = true
 tracks/13/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -173,6 +189,7 @@ tracks/14/path = NodePath("011:modulate:a")
 tracks/14/interp = 1
 tracks/14/loop_wrap = true
 tracks/14/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -195,6 +212,7 @@ tracks/16/path = NodePath("012:modulate:r")
 tracks/16/interp = 1
 tracks/16/loop_wrap = true
 tracks/16/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -205,6 +223,7 @@ tracks/17/path = NodePath("012:modulate:g")
 tracks/17/interp = 1
 tracks/17/loop_wrap = true
 tracks/17/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -215,6 +234,7 @@ tracks/18/path = NodePath("012:modulate:b")
 tracks/18/interp = 1
 tracks/18/loop_wrap = true
 tracks/18/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -225,6 +245,7 @@ tracks/19/path = NodePath("012:modulate:a")
 tracks/19/interp = 1
 tracks/19/loop_wrap = true
 tracks/19/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -247,6 +268,7 @@ tracks/21/path = NodePath("010:modulate:r")
 tracks/21/interp = 1
 tracks/21/loop_wrap = true
 tracks/21/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -257,6 +279,7 @@ tracks/22/path = NodePath("010:modulate:g")
 tracks/22/interp = 1
 tracks/22/loop_wrap = true
 tracks/22/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -267,6 +290,7 @@ tracks/23/path = NodePath("010:modulate:b")
 tracks/23/interp = 1
 tracks/23/loop_wrap = true
 tracks/23/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -277,6 +301,7 @@ tracks/24/path = NodePath("010:modulate:a")
 tracks/24/interp = 1
 tracks/24/loop_wrap = true
 tracks/24/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -299,6 +324,7 @@ tracks/26/path = NodePath("009:modulate:r")
 tracks/26/interp = 1
 tracks/26/loop_wrap = true
 tracks/26/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -309,6 +335,7 @@ tracks/27/path = NodePath("009:modulate:g")
 tracks/27/interp = 1
 tracks/27/loop_wrap = true
 tracks/27/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -319,6 +346,7 @@ tracks/28/path = NodePath("009:modulate:b")
 tracks/28/interp = 1
 tracks/28/loop_wrap = true
 tracks/28/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -329,6 +357,7 @@ tracks/29/path = NodePath("009:modulate:a")
 tracks/29/interp = 1
 tracks/29/loop_wrap = true
 tracks/29/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -351,6 +380,7 @@ tracks/31/path = NodePath("006:modulate:r")
 tracks/31/interp = 1
 tracks/31/loop_wrap = true
 tracks/31/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -361,6 +391,7 @@ tracks/32/path = NodePath("006:modulate:g")
 tracks/32/interp = 1
 tracks/32/loop_wrap = true
 tracks/32/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -371,6 +402,7 @@ tracks/33/path = NodePath("006:modulate:b")
 tracks/33/interp = 1
 tracks/33/loop_wrap = true
 tracks/33/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -381,6 +413,7 @@ tracks/34/path = NodePath("006:modulate:a")
 tracks/34/interp = 1
 tracks/34/loop_wrap = true
 tracks/34/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -403,6 +436,7 @@ tracks/36/path = NodePath("005:modulate:r")
 tracks/36/interp = 1
 tracks/36/loop_wrap = true
 tracks/36/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -413,6 +447,7 @@ tracks/37/path = NodePath("005:modulate:g")
 tracks/37/interp = 1
 tracks/37/loop_wrap = true
 tracks/37/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -423,6 +458,7 @@ tracks/38/path = NodePath("005:modulate:b")
 tracks/38/interp = 1
 tracks/38/loop_wrap = true
 tracks/38/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -433,6 +469,7 @@ tracks/39/path = NodePath("005:modulate:a")
 tracks/39/interp = 1
 tracks/39/loop_wrap = true
 tracks/39/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -455,6 +492,7 @@ tracks/41/path = NodePath("004:modulate:r")
 tracks/41/interp = 1
 tracks/41/loop_wrap = true
 tracks/41/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -465,6 +503,7 @@ tracks/42/path = NodePath("004:modulate:g")
 tracks/42/interp = 1
 tracks/42/loop_wrap = true
 tracks/42/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -475,6 +514,7 @@ tracks/43/path = NodePath("004:modulate:b")
 tracks/43/interp = 1
 tracks/43/loop_wrap = true
 tracks/43/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -485,6 +525,7 @@ tracks/44/path = NodePath("004:modulate:a")
 tracks/44/interp = 1
 tracks/44/loop_wrap = true
 tracks/44/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -507,6 +548,7 @@ tracks/46/path = NodePath("003:modulate:r")
 tracks/46/interp = 1
 tracks/46/loop_wrap = true
 tracks/46/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -517,6 +559,7 @@ tracks/47/path = NodePath("003:modulate:g")
 tracks/47/interp = 1
 tracks/47/loop_wrap = true
 tracks/47/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -527,6 +570,7 @@ tracks/48/path = NodePath("003:modulate:b")
 tracks/48/interp = 1
 tracks/48/loop_wrap = true
 tracks/48/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -537,6 +581,7 @@ tracks/49/path = NodePath("003:modulate:a")
 tracks/49/interp = 1
 tracks/49/loop_wrap = true
 tracks/49/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -559,6 +604,7 @@ tracks/51/path = NodePath("002:modulate:r")
 tracks/51/interp = 1
 tracks/51/loop_wrap = true
 tracks/51/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -569,6 +615,7 @@ tracks/52/path = NodePath("002:modulate:g")
 tracks/52/interp = 1
 tracks/52/loop_wrap = true
 tracks/52/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -579,6 +626,7 @@ tracks/53/path = NodePath("002:modulate:b")
 tracks/53/interp = 1
 tracks/53/loop_wrap = true
 tracks/53/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -589,6 +637,7 @@ tracks/54/path = NodePath("002:modulate:a")
 tracks/54/interp = 1
 tracks/54/loop_wrap = true
 tracks/54/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -611,6 +660,7 @@ tracks/56/path = NodePath("001:modulate:r")
 tracks/56/interp = 1
 tracks/56/loop_wrap = true
 tracks/56/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -621,6 +671,7 @@ tracks/57/path = NodePath("001:modulate:g")
 tracks/57/interp = 1
 tracks/57/loop_wrap = true
 tracks/57/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -631,6 +682,7 @@ tracks/58/path = NodePath("001:modulate:b")
 tracks/58/interp = 1
 tracks/58/loop_wrap = true
 tracks/58/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -641,6 +693,7 @@ tracks/59/path = NodePath("001:modulate:a")
 tracks/59/interp = 1
 tracks/59/loop_wrap = true
 tracks/59/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -663,6 +716,7 @@ tracks/61/path = NodePath("008:modulate:r")
 tracks/61/interp = 1
 tracks/61/loop_wrap = true
 tracks/61/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -673,6 +727,7 @@ tracks/62/path = NodePath("008:modulate:g")
 tracks/62/interp = 1
 tracks/62/loop_wrap = true
 tracks/62/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -683,6 +738,7 @@ tracks/63/path = NodePath("008:modulate:b")
 tracks/63/interp = 1
 tracks/63/loop_wrap = true
 tracks/63/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -693,6 +749,7 @@ tracks/64/path = NodePath("008:modulate:a")
 tracks/64/interp = 1
 tracks/64/loop_wrap = true
 tracks/64/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -715,6 +772,7 @@ tracks/66/path = NodePath("007:modulate:r")
 tracks/66/interp = 1
 tracks/66/loop_wrap = true
 tracks/66/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -725,6 +783,7 @@ tracks/67/path = NodePath("007:modulate:g")
 tracks/67/interp = 1
 tracks/67/loop_wrap = true
 tracks/67/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -735,6 +794,7 @@ tracks/68/path = NodePath("007:modulate:b")
 tracks/68/interp = 1
 tracks/68/loop_wrap = true
 tracks/68/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -745,6 +805,7 @@ tracks/69/path = NodePath("007:modulate:a")
 tracks/69/interp = 1
 tracks/69/loop_wrap = true
 tracks/69/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -755,6 +816,7 @@ tracks/70/path = NodePath("Skeleton2D/root:position:x")
 tracks/70/interp = 1
 tracks/70/loop_wrap = true
 tracks/70/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(0, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -765,6 +827,7 @@ tracks/71/path = NodePath("Skeleton2D/root:position:y")
 tracks/71/interp = 1
 tracks/71/loop_wrap = true
 tracks/71/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(0, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -787,6 +850,7 @@ tracks/73/path = NodePath("Skeleton2D/root:scale:x")
 tracks/73/interp = 1
 tracks/73/loop_wrap = true
 tracks/73/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -797,6 +861,7 @@ tracks/74/path = NodePath("Skeleton2D/root:scale:y")
 tracks/74/interp = 1
 tracks/74/loop_wrap = true
 tracks/74/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -807,6 +872,7 @@ tracks/75/path = NodePath("Skeleton2D/root/bone:position:x")
 tracks/75/interp = 1
 tracks/75/loop_wrap = true
 tracks/75/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(4.56, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -817,6 +883,7 @@ tracks/76/path = NodePath("Skeleton2D/root/bone:position:y")
 tracks/76/interp = 1
 tracks/76/loop_wrap = true
 tracks/76/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(-78.86, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -839,6 +906,7 @@ tracks/78/path = NodePath("Skeleton2D/root/bone:scale:x")
 tracks/78/interp = 1
 tracks/78/loop_wrap = true
 tracks/78/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -849,6 +917,7 @@ tracks/79/path = NodePath("Skeleton2D/root/bone:scale:y")
 tracks/79/interp = 1
 tracks/79/loop_wrap = true
 tracks/79/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -859,6 +928,7 @@ tracks/80/path = NodePath("Skeleton2D/root/bone/bone2:position:x")
 tracks/80/interp = 1
 tracks/80/loop_wrap = true
 tracks/80/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(0, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -869,6 +939,7 @@ tracks/81/path = NodePath("Skeleton2D/root/bone/bone2:position:y")
 tracks/81/interp = 1
 tracks/81/loop_wrap = true
 tracks/81/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(-3.71, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -891,6 +962,7 @@ tracks/83/path = NodePath("Skeleton2D/root/bone/bone2:scale:x")
 tracks/83/interp = 1
 tracks/83/loop_wrap = true
 tracks/83/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -901,6 +973,7 @@ tracks/84/path = NodePath("Skeleton2D/root/bone/bone2:scale:y")
 tracks/84/interp = 1
 tracks/84/loop_wrap = true
 tracks/84/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -911,6 +984,7 @@ tracks/85/path = NodePath("Skeleton2D/root/bone/bone2/bone3:position:x")
 tracks/85/interp = 1
 tracks/85/loop_wrap = true
 tracks/85/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(33.39, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -921,6 +995,7 @@ tracks/86/path = NodePath("Skeleton2D/root/bone/bone2/bone3:position:y")
 tracks/86/interp = 1
 tracks/86/loop_wrap = true
 tracks/86/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(0, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -943,6 +1018,7 @@ tracks/88/path = NodePath("Skeleton2D/root/bone/bone2/bone3:scale:x")
 tracks/88/interp = 1
 tracks/88/loop_wrap = true
 tracks/88/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -953,6 +1029,7 @@ tracks/89/path = NodePath("Skeleton2D/root/bone/bone2/bone3:scale:y")
 tracks/89/interp = 1
 tracks/89/loop_wrap = true
 tracks/89/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -963,6 +1040,7 @@ tracks/90/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone4:position:x")
 tracks/90/interp = 1
 tracks/90/loop_wrap = true
 tracks/90/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(48.82, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -973,6 +1051,7 @@ tracks/91/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone4:position:y")
 tracks/91/interp = 1
 tracks/91/loop_wrap = true
 tracks/91/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(0, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -995,6 +1074,7 @@ tracks/93/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone4:scale:x")
 tracks/93/interp = 1
 tracks/93/loop_wrap = true
 tracks/93/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -1005,6 +1085,7 @@ tracks/94/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone4:scale:y")
 tracks/94/interp = 1
 tracks/94/loop_wrap = true
 tracks/94/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -1015,6 +1096,7 @@ tracks/95/path = NodePath("Skeleton2D/root/bone/bone5:position:x")
 tracks/95/interp = 1
 tracks/95/loop_wrap = true
 tracks/95/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(-23.02, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -1025,6 +1107,7 @@ tracks/96/path = NodePath("Skeleton2D/root/bone/bone5:position:y")
 tracks/96/interp = 1
 tracks/96/loop_wrap = true
 tracks/96/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(-3.44, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -1047,6 +1130,7 @@ tracks/98/path = NodePath("Skeleton2D/root/bone/bone5:scale:x")
 tracks/98/interp = 1
 tracks/98/loop_wrap = true
 tracks/98/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -1057,6 +1141,7 @@ tracks/99/path = NodePath("Skeleton2D/root/bone/bone5:scale:y")
 tracks/99/interp = 1
 tracks/99/loop_wrap = true
 tracks/99/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -1067,6 +1152,7 @@ tracks/100/path = NodePath("Skeleton2D/root/bone/bone5/bone6:position:x")
 tracks/100/interp = 1
 tracks/100/loop_wrap = true
 tracks/100/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(38.82, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -1077,6 +1163,7 @@ tracks/101/path = NodePath("Skeleton2D/root/bone/bone5/bone6:position:y")
 tracks/101/interp = 1
 tracks/101/loop_wrap = true
 tracks/101/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(0, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -1099,6 +1186,7 @@ tracks/103/path = NodePath("Skeleton2D/root/bone/bone5/bone6:scale:x")
 tracks/103/interp = 1
 tracks/103/loop_wrap = true
 tracks/103/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -1109,6 +1197,7 @@ tracks/104/path = NodePath("Skeleton2D/root/bone/bone5/bone6:scale:y")
 tracks/104/interp = 1
 tracks/104/loop_wrap = true
 tracks/104/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -1119,6 +1208,7 @@ tracks/105/path = NodePath("Skeleton2D/root/bone7:position:x")
 tracks/105/interp = 1
 tracks/105/loop_wrap = true
 tracks/105/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(-27.35, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -1129,6 +1219,7 @@ tracks/106/path = NodePath("Skeleton2D/root/bone7:position:y")
 tracks/106/interp = 1
 tracks/106/loop_wrap = true
 tracks/106/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(-2.31, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -1151,6 +1242,7 @@ tracks/108/path = NodePath("Skeleton2D/root/bone7:scale:x")
 tracks/108/interp = 1
 tracks/108/loop_wrap = true
 tracks/108/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -1161,6 +1253,7 @@ tracks/109/path = NodePath("Skeleton2D/root/bone7:scale:y")
 tracks/109/interp = 1
 tracks/109/loop_wrap = true
 tracks/109/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -1171,6 +1264,7 @@ tracks/110/path = NodePath("Skeleton2D/root/bone/bone8:position:x")
 tracks/110/interp = 1
 tracks/110/loop_wrap = true
 tracks/110/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(15.36, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -1181,6 +1275,7 @@ tracks/111/path = NodePath("Skeleton2D/root/bone/bone8:position:y")
 tracks/111/interp = 1
 tracks/111/loop_wrap = true
 tracks/111/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(-0.21, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -1203,6 +1298,7 @@ tracks/113/path = NodePath("Skeleton2D/root/bone/bone8:scale:x")
 tracks/113/interp = 1
 tracks/113/loop_wrap = true
 tracks/113/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -1213,6 +1309,7 @@ tracks/114/path = NodePath("Skeleton2D/root/bone/bone8:scale:y")
 tracks/114/interp = 1
 tracks/114/loop_wrap = true
 tracks/114/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -1223,6 +1320,7 @@ tracks/115/path = NodePath("Skeleton2D/root/bone/bone8/bone9:position:x")
 tracks/115/interp = 1
 tracks/115/loop_wrap = true
 tracks/115/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(33.94, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -1233,6 +1331,7 @@ tracks/116/path = NodePath("Skeleton2D/root/bone/bone8/bone9:position:y")
 tracks/116/interp = 1
 tracks/116/loop_wrap = true
 tracks/116/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(0, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -1255,6 +1354,7 @@ tracks/118/path = NodePath("Skeleton2D/root/bone/bone8/bone9:scale:x")
 tracks/118/interp = 1
 tracks/118/loop_wrap = true
 tracks/118/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -1265,6 +1365,7 @@ tracks/119/path = NodePath("Skeleton2D/root/bone/bone8/bone9:scale:y")
 tracks/119/interp = 1
 tracks/119/loop_wrap = true
 tracks/119/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -1275,6 +1376,7 @@ tracks/120/path = NodePath("Skeleton2D/root/bone10:position:x")
 tracks/120/interp = 1
 tracks/120/loop_wrap = true
 tracks/120/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(24.37, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -1285,6 +1387,7 @@ tracks/121/path = NodePath("Skeleton2D/root/bone10:position:y")
 tracks/121/interp = 1
 tracks/121/loop_wrap = true
 tracks/121/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(-7.56, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -1307,6 +1410,7 @@ tracks/123/path = NodePath("Skeleton2D/root/bone10:scale:x")
 tracks/123/interp = 1
 tracks/123/loop_wrap = true
 tracks/123/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -1317,6 +1421,7 @@ tracks/124/path = NodePath("Skeleton2D/root/bone10:scale:y")
 tracks/124/interp = 1
 tracks/124/loop_wrap = true
 tracks/124/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -1327,6 +1432,7 @@ tracks/125/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone11:position:x")
 tracks/125/interp = 1
 tracks/125/loop_wrap = true
 tracks/125/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(36.41, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -1337,6 +1443,7 @@ tracks/126/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone11:position:y")
 tracks/126/interp = 1
 tracks/126/loop_wrap = true
 tracks/126/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(-22.27, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -1359,6 +1466,7 @@ tracks/128/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone11:scale:x")
 tracks/128/interp = 1
 tracks/128/loop_wrap = true
 tracks/128/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -1369,6 +1477,7 @@ tracks/129/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone11:scale:y")
 tracks/129/interp = 1
 tracks/129/loop_wrap = true
 tracks/129/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -1379,6 +1488,7 @@ tracks/130/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone11/bone12:posit
 tracks/130/interp = 1
 tracks/130/loop_wrap = true
 tracks/130/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(51.84, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -1389,6 +1499,7 @@ tracks/131/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone11/bone12:posit
 tracks/131/interp = 1
 tracks/131/loop_wrap = true
 tracks/131/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(0, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -1411,6 +1522,7 @@ tracks/133/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone11/bone12:scale
 tracks/133/interp = 1
 tracks/133/loop_wrap = true
 tracks/133/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -1421,6 +1533,7 @@ tracks/134/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone11/bone12:scale
 tracks/134/interp = 1
 tracks/134/loop_wrap = true
 tracks/134/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -1431,6 +1544,7 @@ tracks/135/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone11/bone12/bone1
 tracks/135/interp = 1
 tracks/135/loop_wrap = true
 tracks/135/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(32.82, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -1441,6 +1555,7 @@ tracks/136/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone11/bone12/bone1
 tracks/136/interp = 1
 tracks/136/loop_wrap = true
 tracks/136/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(0, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -1463,6 +1578,7 @@ tracks/138/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone11/bone12/bone1
 tracks/138/interp = 1
 tracks/138/loop_wrap = true
 tracks/138/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -1473,6 +1589,7 @@ tracks/139/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone11/bone12/bone1
 tracks/139/interp = 1
 tracks/139/loop_wrap = true
 tracks/139/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -1483,6 +1600,7 @@ tracks/140/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone14:position:x")
 tracks/140/interp = 1
 tracks/140/loop_wrap = true
 tracks/140/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(36.41, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -1493,6 +1611,7 @@ tracks/141/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone14:position:y")
 tracks/141/interp = 1
 tracks/141/loop_wrap = true
 tracks/141/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(22.81, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -1515,6 +1634,7 @@ tracks/143/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone14:scale:x")
 tracks/143/interp = 1
 tracks/143/loop_wrap = true
 tracks/143/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -1525,6 +1645,7 @@ tracks/144/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone14:scale:y")
 tracks/144/interp = 1
 tracks/144/loop_wrap = true
 tracks/144/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -1535,6 +1656,7 @@ tracks/145/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone14/bone15:posit
 tracks/145/interp = 1
 tracks/145/loop_wrap = true
 tracks/145/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(44.46, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -1545,6 +1667,7 @@ tracks/146/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone14/bone15:posit
 tracks/146/interp = 1
 tracks/146/loop_wrap = true
 tracks/146/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(0, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -1567,6 +1690,7 @@ tracks/148/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone14/bone15:scale
 tracks/148/interp = 1
 tracks/148/loop_wrap = true
 tracks/148/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -1577,6 +1701,7 @@ tracks/149/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone14/bone15:scale
 tracks/149/interp = 1
 tracks/149/loop_wrap = true
 tracks/149/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -1587,6 +1712,7 @@ tracks/150/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone14/bone15/bone1
 tracks/150/interp = 1
 tracks/150/loop_wrap = true
 tracks/150/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(25.87, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -1597,6 +1723,7 @@ tracks/151/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone14/bone15/bone1
 tracks/151/interp = 1
 tracks/151/loop_wrap = true
 tracks/151/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(0, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -1619,6 +1746,7 @@ tracks/153/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone14/bone15/bone1
 tracks/153/interp = 1
 tracks/153/loop_wrap = true
 tracks/153/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -1629,6 +1757,7 @@ tracks/154/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone14/bone15/bone1
 tracks/154/interp = 1
 tracks/154/loop_wrap = true
 tracks/154/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -1639,6 +1768,7 @@ tracks/155/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone4/bone17:positi
 tracks/155/interp = 1
 tracks/155/loop_wrap = true
 tracks/155/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(-60.83, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -1649,6 +1779,7 @@ tracks/156/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone4/bone17:positi
 tracks/156/interp = 1
 tracks/156/loop_wrap = true
 tracks/156/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(-112.72, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -1671,6 +1802,7 @@ tracks/158/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone4/bone17:scale:
 tracks/158/interp = 1
 tracks/158/loop_wrap = true
 tracks/158/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -1681,6 +1813,7 @@ tracks/159/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone4/bone17:scale:
 tracks/159/interp = 1
 tracks/159/loop_wrap = true
 tracks/159/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -1691,6 +1824,7 @@ tracks/160/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone4/bone17/bone18
 tracks/160/interp = 1
 tracks/160/loop_wrap = true
 tracks/160/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(45.37, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -1701,6 +1835,7 @@ tracks/161/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone4/bone17/bone18
 tracks/161/interp = 1
 tracks/161/loop_wrap = true
 tracks/161/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(0, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -1723,6 +1858,7 @@ tracks/163/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone4/bone17/bone18
 tracks/163/interp = 1
 tracks/163/loop_wrap = true
 tracks/163/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -1733,6 +1869,7 @@ tracks/164/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone4/bone17/bone18
 tracks/164/interp = 1
 tracks/164/loop_wrap = true
 tracks/164/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -1743,6 +1880,7 @@ tracks/165/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone4/bone17/bone18
 tracks/165/interp = 1
 tracks/165/loop_wrap = true
 tracks/165/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(42.58, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -1753,6 +1891,7 @@ tracks/166/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone4/bone17/bone18
 tracks/166/interp = 1
 tracks/166/loop_wrap = true
 tracks/166/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(0, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -1775,6 +1914,7 @@ tracks/168/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone4/bone17/bone18
 tracks/168/interp = 1
 tracks/168/loop_wrap = true
 tracks/168/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -1785,6 +1925,7 @@ tracks/169/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone4/bone17/bone18
 tracks/169/interp = 1
 tracks/169/loop_wrap = true
 tracks/169/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -1795,6 +1936,7 @@ tracks/170/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone4/bone20:positi
 tracks/170/interp = 1
 tracks/170/loop_wrap = true
 tracks/170/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(30.72, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -1805,6 +1947,7 @@ tracks/171/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone4/bone20:positi
 tracks/171/interp = 1
 tracks/171/loop_wrap = true
 tracks/171/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(-149.32, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -1827,6 +1970,7 @@ tracks/173/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone4/bone20:scale:
 tracks/173/interp = 1
 tracks/173/loop_wrap = true
 tracks/173/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -1837,6 +1981,7 @@ tracks/174/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone4/bone20:scale:
 tracks/174/interp = 1
 tracks/174/loop_wrap = true
 tracks/174/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -1847,6 +1992,7 @@ tracks/175/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone4/bone20/bone21
 tracks/175/interp = 1
 tracks/175/loop_wrap = true
 tracks/175/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(39.38, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -1857,6 +2003,7 @@ tracks/176/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone4/bone20/bone21
 tracks/176/interp = 1
 tracks/176/loop_wrap = true
 tracks/176/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(0, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -1879,6 +2026,7 @@ tracks/178/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone4/bone20/bone21
 tracks/178/interp = 1
 tracks/178/loop_wrap = true
 tracks/178/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -1889,6 +2037,7 @@ tracks/179/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone4/bone20/bone21
 tracks/179/interp = 1
 tracks/179/loop_wrap = true
 tracks/179/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -1899,6 +2048,7 @@ tracks/180/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone4/bone22:positi
 tracks/180/interp = 1
 tracks/180/loop_wrap = true
 tracks/180/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(110.06, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -1909,6 +2059,7 @@ tracks/181/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone4/bone22:positi
 tracks/181/interp = 1
 tracks/181/loop_wrap = true
 tracks/181/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(-99.35, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -1931,6 +2082,7 @@ tracks/183/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone4/bone22:scale:
 tracks/183/interp = 1
 tracks/183/loop_wrap = true
 tracks/183/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -1941,6 +2093,7 @@ tracks/184/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone4/bone22:scale:
 tracks/184/interp = 1
 tracks/184/loop_wrap = true
 tracks/184/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -1951,6 +2104,7 @@ tracks/185/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone4/bone22/bone23
 tracks/185/interp = 1
 tracks/185/loop_wrap = true
 tracks/185/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(47.46, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -1961,6 +2115,7 @@ tracks/186/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone4/bone22/bone23
 tracks/186/interp = 1
 tracks/186/loop_wrap = true
 tracks/186/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(0, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -1983,6 +2138,7 @@ tracks/188/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone4/bone22/bone23
 tracks/188/interp = 1
 tracks/188/loop_wrap = true
 tracks/188/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -1993,6 +2149,7 @@ tracks/189/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone4/bone22/bone23
 tracks/189/interp = 1
 tracks/189/loop_wrap = true
 tracks/189/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -2003,6 +2160,7 @@ tracks/190/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone4/bone22/bone23
 tracks/190/interp = 1
 tracks/190/loop_wrap = true
 tracks/190/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(45.28, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -2013,6 +2171,7 @@ tracks/191/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone4/bone22/bone23
 tracks/191/interp = 1
 tracks/191/loop_wrap = true
 tracks/191/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(0, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -2035,6 +2194,7 @@ tracks/193/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone4/bone22/bone23
 tracks/193/interp = 1
 tracks/193/loop_wrap = true
 tracks/193/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -2045,6 +2205,7 @@ tracks/194/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone4/bone22/bone23
 tracks/194/interp = 1
 tracks/194/loop_wrap = true
 tracks/194/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -2055,6 +2216,7 @@ tracks/195/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone4/bone25:positi
 tracks/195/interp = 1
 tracks/195/loop_wrap = true
 tracks/195/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(-141.96, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -2065,6 +2227,7 @@ tracks/196/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone4/bone25:positi
 tracks/196/interp = 1
 tracks/196/loop_wrap = true
 tracks/196/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(-74.73, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -2087,6 +2250,7 @@ tracks/198/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone4/bone25:scale:
 tracks/198/interp = 1
 tracks/198/loop_wrap = true
 tracks/198/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -2097,6 +2261,7 @@ tracks/199/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone4/bone25:scale:
 tracks/199/interp = 1
 tracks/199/loop_wrap = true
 tracks/199/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -2107,6 +2272,7 @@ tracks/200/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone4/bone25/bone26
 tracks/200/interp = 1
 tracks/200/loop_wrap = true
 tracks/200/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(56.97, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -2117,6 +2283,7 @@ tracks/201/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone4/bone25/bone26
 tracks/201/interp = 1
 tracks/201/loop_wrap = true
 tracks/201/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(0, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -2139,6 +2306,7 @@ tracks/203/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone4/bone25/bone26
 tracks/203/interp = 1
 tracks/203/loop_wrap = true
 tracks/203/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -2149,6 +2317,7 @@ tracks/204/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone4/bone25/bone26
 tracks/204/interp = 1
 tracks/204/loop_wrap = true
 tracks/204/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -2159,6 +2328,7 @@ tracks/205/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone4/bone25/bone26
 tracks/205/interp = 1
 tracks/205/loop_wrap = true
 tracks/205/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(54.42, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -2169,6 +2339,7 @@ tracks/206/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone4/bone25/bone26
 tracks/206/interp = 1
 tracks/206/loop_wrap = true
 tracks/206/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(0, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -2191,6 +2362,7 @@ tracks/208/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone4/bone25/bone26
 tracks/208/interp = 1
 tracks/208/loop_wrap = true
 tracks/208/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -2201,6 +2373,7 @@ tracks/209/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone4/bone25/bone26
 tracks/209/interp = 1
 tracks/209/loop_wrap = true
 tracks/209/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -2211,6 +2384,7 @@ tracks/210/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone4/bone28:positi
 tracks/210/interp = 1
 tracks/210/loop_wrap = true
 tracks/210/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(136.1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -2221,6 +2395,7 @@ tracks/211/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone4/bone28:positi
 tracks/211/interp = 1
 tracks/211/loop_wrap = true
 tracks/211/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(-65.52, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -2243,6 +2418,7 @@ tracks/213/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone4/bone28:scale:
 tracks/213/interp = 1
 tracks/213/loop_wrap = true
 tracks/213/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -2253,6 +2429,7 @@ tracks/214/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone4/bone28:scale:
 tracks/214/interp = 1
 tracks/214/loop_wrap = true
 tracks/214/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -2263,6 +2440,7 @@ tracks/215/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone4/bone28/bone29
 tracks/215/interp = 1
 tracks/215/loop_wrap = true
 tracks/215/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(64.05, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -2273,6 +2451,7 @@ tracks/216/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone4/bone28/bone29
 tracks/216/interp = 1
 tracks/216/loop_wrap = true
 tracks/216/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(0, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -2295,6 +2474,7 @@ tracks/218/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone4/bone28/bone29
 tracks/218/interp = 1
 tracks/218/loop_wrap = true
 tracks/218/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -2305,6 +2485,7 @@ tracks/219/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone4/bone28/bone29
 tracks/219/interp = 1
 tracks/219/loop_wrap = true
 tracks/219/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -2315,6 +2496,7 @@ tracks/220/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone4/bone28/bone29
 tracks/220/interp = 1
 tracks/220/loop_wrap = true
 tracks/220/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(65.45, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -2325,6 +2507,7 @@ tracks/221/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone4/bone28/bone29
 tracks/221/interp = 1
 tracks/221/loop_wrap = true
 tracks/221/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(0, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -2347,6 +2530,7 @@ tracks/223/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone4/bone28/bone29
 tracks/223/interp = 1
 tracks/223/loop_wrap = true
 tracks/223/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -2357,6 +2541,7 @@ tracks/224/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone4/bone28/bone29
 tracks/224/interp = 1
 tracks/224/loop_wrap = true
 tracks/224/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -2367,6 +2552,7 @@ tracks/225/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone11/bone12/bone1
 tracks/225/interp = 1
 tracks/225/loop_wrap = true
 tracks/225/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1.74, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -2377,6 +2563,7 @@ tracks/226/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone11/bone12/bone1
 tracks/226/interp = 1
 tracks/226/loop_wrap = true
 tracks/226/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(-15.31, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -2399,6 +2586,7 @@ tracks/228/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone11/bone12/bone1
 tracks/228/interp = 1
 tracks/228/loop_wrap = true
 tracks/228/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -2409,6 +2597,7 @@ tracks/229/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone11/bone12/bone1
 tracks/229/interp = 1
 tracks/229/loop_wrap = true
 tracks/229/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -2419,6 +2608,7 @@ tracks/230/path = NodePath("Skeleton2D/root/bone/bone32:position:x")
 tracks/230/interp = 1
 tracks/230/loop_wrap = true
 tracks/230/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(-40.06, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -2429,6 +2619,7 @@ tracks/231/path = NodePath("Skeleton2D/root/bone/bone32:position:y")
 tracks/231/interp = 1
 tracks/231/loop_wrap = true
 tracks/231/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(-5.76, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -2451,6 +2642,7 @@ tracks/233/path = NodePath("Skeleton2D/root/bone/bone32:scale:x")
 tracks/233/interp = 1
 tracks/233/loop_wrap = true
 tracks/233/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -2461,6 +2653,7 @@ tracks/234/path = NodePath("Skeleton2D/root/bone/bone32:scale:y")
 tracks/234/interp = 1
 tracks/234/loop_wrap = true
 tracks/234/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -2471,6 +2664,7 @@ tracks/235/path = NodePath("Skeleton2D/root/bone/bone33:position:x")
 tracks/235/interp = 1
 tracks/235/loop_wrap = true
 tracks/235/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(36.19, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -2481,6 +2675,7 @@ tracks/236/path = NodePath("Skeleton2D/root/bone/bone33:position:y")
 tracks/236/interp = 1
 tracks/236/loop_wrap = true
 tracks/236/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(-6.02, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -2503,6 +2698,7 @@ tracks/238/path = NodePath("Skeleton2D/root/bone/bone33:scale:x")
 tracks/238/interp = 1
 tracks/238/loop_wrap = true
 tracks/238/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -2513,6 +2709,7 @@ tracks/239/path = NodePath("Skeleton2D/root/bone/bone33:scale:y")
 tracks/239/interp = 1
 tracks/239/loop_wrap = true
 tracks/239/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -2530,6 +2727,7 @@ tracks/0/path = NodePath("Skeleton2D/root/bone:position:x")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0),
 "points": PackedFloat32Array(4.56, 0, 0, 0.25, 0, 4.56, -0.25, 0, 0.25, 0, 4.56, -0.25, 0, 0, 0),
 "times": PackedFloat32Array(0, 0.5, 1)
 }
@@ -2540,6 +2738,7 @@ tracks/1/path = NodePath("Skeleton2D/root/bone:position:y")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0),
 "points": PackedFloat32Array(-78.86, 0, 0, 0.25, 0, -73.24, -0.25, 0, 0.25, 0, -78.86, -0.25, 0, 0, 0),
 "times": PackedFloat32Array(0, 0.5, 1)
 }
@@ -2550,6 +2749,7 @@ tracks/2/path = NodePath("Skeleton2D/root/bone/bone5:position:x")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0),
 "points": PackedFloat32Array(-23.02, 0, 0, 0.25, 0, -23.02, -0.25, 0, 0.25, 0, -23.02, -0.25, 0, 0, 0),
 "times": PackedFloat32Array(0, 0.5, 1)
 }
@@ -2560,6 +2760,7 @@ tracks/3/path = NodePath("Skeleton2D/root/bone/bone5:position:y")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0),
 "points": PackedFloat32Array(-3.44, 0, 0, 0.25, 0, -8.59, -0.25, 0, 0.25, 0, -3.44, -0.25, 0, 0, 0),
 "times": PackedFloat32Array(0, 0.5, 1)
 }
@@ -2570,6 +2771,7 @@ tracks/4/path = NodePath("Skeleton2D/root/bone/bone8:position:x")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0),
 "points": PackedFloat32Array(15.36, 0, 0, 0.25, 0, 15.36, -0.25, 0, 0.25, 0, 15.36, -0.25, 0, 0, 0),
 "times": PackedFloat32Array(0, 0.5, 1)
 }
@@ -2580,6 +2782,7 @@ tracks/5/path = NodePath("Skeleton2D/root/bone/bone8:position:y")
 tracks/5/interp = 1
 tracks/5/loop_wrap = true
 tracks/5/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0),
 "points": PackedFloat32Array(-0.21, 0, 0, 0.25, 0, -5.36, -0.25, 0, 0.25, 0, -0.21, -0.25, 0, 0, 0),
 "times": PackedFloat32Array(0, 0.5, 1)
 }
@@ -2590,6 +2793,7 @@ tracks/6/path = NodePath("Skeleton2D/root/bone/bone2/bone3:position:x")
 tracks/6/interp = 1
 tracks/6/loop_wrap = true
 tracks/6/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0),
 "points": PackedFloat32Array(32.43, 0, 0, 0.382, 0.57, 33.39, -0.265, 0, 0.25, 0, 30, -0.25, 0, 0.243, 0, 32.43, -0.351, -0.4, 0, 0),
 "times": PackedFloat32Array(0, 0.1667, 0.6667, 1)
 }
@@ -2600,6 +2804,7 @@ tracks/7/path = NodePath("Skeleton2D/root/bone/bone2/bone3:position:y")
 tracks/7/interp = 1
 tracks/7/loop_wrap = true
 tracks/7/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0),
 "points": PackedFloat32Array(0.04, 0, 0, 0.382, 0.57, 0, -0.265, 0, 0.25, 0, 0.13, -0.25, 0, 0.243, 0, 0.04, -0.351, -0.4, 0, 0),
 "times": PackedFloat32Array(0, 0.1667, 0.6667, 1)
 }
@@ -2864,6 +3069,7 @@ tracks/0/path = NodePath("Skeleton2D/root/bone:position:x")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0, 0),
 "points": PackedFloat32Array(4.56, 0, 0, 0, 0, 4.56, 0, 0, 0, 0, 4.56, 0, 0, 0, 0, 4.56, 0, 0, 0, 0, 4.56, 0, 0, 0, 0),
 "times": PackedFloat32Array(0, 0.2667, 0.5, 0.7667, 1)
 }
@@ -2874,6 +3080,7 @@ tracks/1/path = NodePath("Skeleton2D/root/bone:position:y")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0, 0),
 "points": PackedFloat32Array(-78.86, 0, 0, 0, 0, -84.35, 0, 0, 0, 0, -78.86, 0, 0, 0, 0, -84.35, 0, 0, 0, 0, -78.86, 0, 0, 0, 0),
 "times": PackedFloat32Array(0, 0.2667, 0.5, 0.7667, 1)
 }
@@ -2884,6 +3091,7 @@ tracks/2/path = NodePath("Skeleton2D/root/bone/bone2/bone3:position:x")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0, 0, 0),
 "points": PackedFloat32Array(31.83, 0, 0, 0.359, 0.43, 28.74, -0.244, 0, 0.25, 0, 33.39, -0.25, 0, 0.25, 0, 28.74, -0.25, 0, 0.25, 0, 33.39, -0.25, 0, 0.26, 0, 31.83, -0.382, -0.56, 0, 0),
 "times": PackedFloat32Array(0, 0.1667, 0.4, 0.6667, 0.9, 1)
 }
@@ -2894,6 +3102,7 @@ tracks/3/path = NodePath("Skeleton2D/root/bone/bone2/bone3:position:y")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0, 0, 0),
 "points": PackedFloat32Array(0.06, 0, 0, 0.359, 0.43, 0.17, -0.244, 0, 0.25, 0, 0, -0.25, 0, 0.25, 0, 0.17, -0.25, 0, 0.25, 0, 0, -0.25, 0, 0.26, 0, 0.06, -0.382, -0.56, 0, 0),
 "times": PackedFloat32Array(0, 0.1667, 0.4, 0.6667, 0.9, 1)
 }
@@ -2916,6 +3125,7 @@ tracks/5/path = NodePath("Skeleton2D/root/bone/bone5:position:x")
 tracks/5/interp = 1
 tracks/5/loop_wrap = true
 tracks/5/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0),
 "points": PackedFloat32Array(-23.02, 0, 0, 0, 0, -20.87, 0, 0, 0, 0, -22.02, 0, 0, 0, 0, -23.02, 0, 0, 0, 0),
 "times": PackedFloat32Array(0, 0.5, 0.7667, 1)
 }
@@ -2926,6 +3136,7 @@ tracks/6/path = NodePath("Skeleton2D/root/bone/bone5:position:y")
 tracks/6/interp = 1
 tracks/6/loop_wrap = true
 tracks/6/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0),
 "points": PackedFloat32Array(-3.44, 0, 0, 0, 0, -5.72205e-08, 0, 0, 0, 0, 0.61, 0, 0, 0, 0, -3.44, 0, 0, 0, 0),
 "times": PackedFloat32Array(0, 0.5, 0.7667, 1)
 }
@@ -2948,6 +3159,7 @@ tracks/8/path = NodePath("Skeleton2D/root/bone7:position:x")
 tracks/8/interp = 1
 tracks/8/loop_wrap = true
 tracks/8/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0, 0),
 "points": PackedFloat32Array(-27.35, 0, 0, 0, 0, -28.32, 0, 0, 0, 0, -3.98, 0, 0, 0, 0, 16.47, 0, 0, 0, 0, -27.35, 0, 0, 0, 0),
 "times": PackedFloat32Array(0, 0.0667, 0.2667, 0.5, 1)
 }
@@ -2958,6 +3170,7 @@ tracks/9/path = NodePath("Skeleton2D/root/bone7:position:y")
 tracks/9/interp = 1
 tracks/9/loop_wrap = true
 tracks/9/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0, 0),
 "points": PackedFloat32Array(-2.31, 0, 0, 0, 0, -3.28, 0, 0, 0, 0, -20.01, 0, 0, 0, 0, -6.34, 0, 0, 0, 0, -2.31, 0, 0, 0, 0),
 "times": PackedFloat32Array(0, 0.0667, 0.2667, 0.5, 1)
 }
@@ -2980,6 +3193,7 @@ tracks/11/path = NodePath("Skeleton2D/root/bone/bone8:position:x")
 tracks/11/interp = 1
 tracks/11/loop_wrap = true
 tracks/11/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0),
 "points": PackedFloat32Array(15.36, 0, 0, 0, 0, 12.84, 0, 0, 0, 0, 10.63, 0, 0, 0, 0, 15.36, 0, 0, 0, 0),
 "times": PackedFloat32Array(0, 0.2667, 0.5, 1)
 }
@@ -2990,6 +3204,7 @@ tracks/12/path = NodePath("Skeleton2D/root/bone/bone8:position:y")
 tracks/12/interp = 1
 tracks/12/loop_wrap = true
 tracks/12/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0),
 "points": PackedFloat32Array(-0.21, 0, 0, 0, 0, 4, 0, 0, 0, 0, -0.21, 0, 0, 0, 0, -0.21, 0, 0, 0, 0),
 "times": PackedFloat32Array(0, 0.2667, 0.5, 1)
 }
@@ -3000,6 +3215,7 @@ tracks/13/path = NodePath("Skeleton2D/root/bone10:position:x")
 tracks/13/interp = 1
 tracks/13/loop_wrap = true
 tracks/13/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0),
 "points": PackedFloat32Array(24.37, 0, 0, 0, 0, -15.12, 0, 0, 0, 0, -9.18, 0, 0, 0, 0, 24.37, 0, 0, 0, 0),
 "times": PackedFloat32Array(0, 0.5, 0.7667, 1)
 }
@@ -3010,6 +3226,7 @@ tracks/14/path = NodePath("Skeleton2D/root/bone10:position:y")
 tracks/14/interp = 1
 tracks/14/loop_wrap = true
 tracks/14/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0),
 "points": PackedFloat32Array(-7.56, 0, 0, 0, 0, -12.43, 0, 0, 0, 0, -21.19, 0, 0, 0, 0, -7.56, 0, 0, 0, 0),
 "times": PackedFloat32Array(0, 0.5, 0.7667, 1)
 }
@@ -3263,6 +3480,7 @@ tracks/0/path = NodePath("Skeleton2D/root/bone:position:x")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0, 0, 0),
 "points": PackedFloat32Array(4.56, 0, 0, 0, 0, 1.81, 0, 0, 0, 0, 0.43, 0, 0, 0, 0, 25.52, 0, 0, 0, 0, 25.26, 0, 0, 0, 0, 4.56, 0, 0, 0, 0),
 "times": PackedFloat32Array(0, 0.1333, 0.4, 0.4667, 0.6667, 0.9)
 }
@@ -3273,6 +3491,7 @@ tracks/1/path = NodePath("Skeleton2D/root/bone:position:y")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0, 0, 0),
 "points": PackedFloat32Array(-78.86, 0, 0, 0, 0, -76.88, 0, 0, 0, 0, -75.88, 0, 0, 0, 0, -68.5, 0, 0, 0, 0, -69.14, 0, 0, 0, 0, -78.86, 0, 0, 0, 0),
 "times": PackedFloat32Array(0, 0.1333, 0.4, 0.4667, 0.6667, 0.9)
 }
@@ -3379,6 +3598,7 @@ tracks/10/path = NodePath("Skeleton2D/root/bone10:position:x")
 tracks/10/interp = 1
 tracks/10/loop_wrap = true
 tracks/10/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0),
 "points": PackedFloat32Array(24.37, 0, 0, 0, 0, 73.96, 0, 0, 100, 0, 73.96, 0, 0, 0, 0, 24.37, 0, 0, 0, 0),
 "times": PackedFloat32Array(0.4, 0.4667, 0.7667, 0.9)
 }
@@ -3389,6 +3609,7 @@ tracks/11/path = NodePath("Skeleton2D/root/bone10:position:y")
 tracks/11/interp = 1
 tracks/11/loop_wrap = true
 tracks/11/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0),
 "points": PackedFloat32Array(-7.56, 0, 0, 0, 0, -8.32, 0, 0, 100, 0, -8.32, 0, 0, 0, 0, -7.56, 0, 0, 0, 0),
 "times": PackedFloat32Array(0.4, 0.4667, 0.7667, 0.9)
 }
@@ -3399,6 +3620,7 @@ tracks/12/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone11:position:x")
 tracks/12/interp = 1
 tracks/12/loop_wrap = true
 tracks/12/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0),
 "points": PackedFloat32Array(36.41, 0, 0, 0, 0, 32.14, 0, 0, 100, 0, 32.14, 0, 0, 0, 0, 36.41, 0, 0, 0, 0),
 "times": PackedFloat32Array(0.4333, 0.4667, 0.6667, 0.9)
 }
@@ -3409,6 +3631,7 @@ tracks/13/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone11:position:y")
 tracks/13/interp = 1
 tracks/13/loop_wrap = true
 tracks/13/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0),
 "points": PackedFloat32Array(-22.27, 0, 0, 0, 0, -16.45, 0, 0, 100, 0, -16.45, 0, 0, 0, 0, -22.27, 0, 0, 0, 0),
 "times": PackedFloat32Array(0.4333, 0.4667, 0.6667, 0.9)
 }
@@ -3431,6 +3654,7 @@ tracks/15/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone11/bone12:positi
 tracks/15/interp = 1
 tracks/15/loop_wrap = true
 tracks/15/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0),
 "points": PackedFloat32Array(51.84, 0, 0, 0, 0, 55.32, 0, 0, 100, 0, 55.32, 0, 0, 0, 0, 51.84, 0, 0, 0, 0),
 "times": PackedFloat32Array(0.4333, 0.4667, 0.6667, 0.9)
 }
@@ -3441,6 +3665,7 @@ tracks/16/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone11/bone12:positi
 tracks/16/interp = 1
 tracks/16/loop_wrap = true
 tracks/16/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0),
 "points": PackedFloat32Array(0, 0, 0, 0, 0, -0.35, 0, 0, 100, 0, -0.35, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 "times": PackedFloat32Array(0.4333, 0.4667, 0.6667, 0.9)
 }
@@ -3475,6 +3700,7 @@ tracks/19/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone14:position:x")
 tracks/19/interp = 1
 tracks/19/loop_wrap = true
 tracks/19/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0),
 "points": PackedFloat32Array(36.41, 0, 0, 0, 0, 32.45, 0, 0, 100, 0, 32.45, 0, 0, 0, 0, 36.41, 0, 0, 0, 0),
 "times": PackedFloat32Array(0.4, 0.4667, 0.6667, 0.9)
 }
@@ -3485,6 +3711,7 @@ tracks/20/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone14:position:y")
 tracks/20/interp = 1
 tracks/20/loop_wrap = true
 tracks/20/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0),
 "points": PackedFloat32Array(22.81, 0, 0, 0, 0, -8.54, 0, 0, 100, 0, -8.54, 0, 0, 0, 0, 22.81, 0, 0, 0, 0),
 "times": PackedFloat32Array(0.4, 0.4667, 0.6667, 0.9)
 }
@@ -3699,6 +3926,7 @@ tracks/38/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone11/bone12/bone13
 tracks/38/interp = 1
 tracks/38/loop_wrap = true
 tracks/38/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0, 0, 0),
 "points": PackedFloat32Array(1.74, 0, 0, 0, 0, 6.46, 0, 0, 0, 0, 8.83, 0, 0, 0, 0, 8.47, 0, 0, 100, 0, 8.47, 0, 0, 0, 0, 1.74, 0, 0, 0, 0),
 "times": PackedFloat32Array(0, 0.1333, 0.4, 0.4667, 0.6667, 0.9)
 }
@@ -3709,6 +3937,7 @@ tracks/39/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone11/bone12/bone13
 tracks/39/interp = 1
 tracks/39/loop_wrap = true
 tracks/39/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0, 0, 0),
 "points": PackedFloat32Array(-15.31, 0, 0, 0, 0, -13.12, 0, 0, 0, 0, -12.03, 0, 0, 0, 0, -12.19, 0, 0, 100, 0, -12.19, 0, 0, 0, 0, -15.31, 0, 0, 0, 0),
 "times": PackedFloat32Array(0, 0.1333, 0.4, 0.4667, 0.6667, 0.9)
 }
@@ -3770,6 +3999,7 @@ tracks/1/path = NodePath("Skeleton2D/root/bone:position:x")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0, 0, 0),
 "points": PackedFloat32Array(4.56, 0, 0, 0, 0, -8.88, 0, 0, 0, 0, -22.63, 0, 0, 0, 0, 4.56, 0, 0, 0, 0, 12.94, 0, 0, 0, 0, 4.56, 0, 0, 0, 0),
 "times": PackedFloat32Array(0, 0.0667, 0.2333, 0.3333, 0.4, 0.5667)
 }
@@ -3780,6 +4010,7 @@ tracks/2/path = NodePath("Skeleton2D/root/bone:position:y")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0, 0, 0),
 "points": PackedFloat32Array(-78.86, 0, 0, 0, 0, -73.94, 0, 0, 0, 0, -67.27, 0, 0, 0, 0, -78.86, 0, 0, 0, 0, -77, 0, 0, 0, 0, -78.86, 0, 0, 0, 0),
 "times": PackedFloat32Array(0, 0.0667, 0.2333, 0.3333, 0.4, 0.5667)
 }
@@ -4021,7 +4252,7 @@ tracks/22/keys = {
 "times": PackedFloat32Array(0, 0.0667, 0.2667, 0.3333, 0.4333, 0.5667),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [0.166504, -0.0537561, 0.399506, 0.166504, -0.227242, 0.166504]
+"values": [0.166504, -0.0537561, 0.39950599999999997, 0.166504, -0.227242, 0.166504]
 }
 tracks/23/type = "value"
 tracks/23/imported = false
@@ -4141,6 +4372,7 @@ tracks/6/path = NodePath("Skeleton2D/root/bone/bone2/bone3:position:x")
 tracks/6/interp = 1
 tracks/6/loop_wrap = true
 tracks/6/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0, 0, 0),
 "points": PackedFloat32Array(31.83, 0, 0, 0.359, 0.43, 28.74, -0.244, 0, 0.25, 0, 33.39, -0.25, 0, 0.25, 0, 28.74, -0.25, 0, 0.25, 0, 33.39, -0.25, 0, 0.26, 0, 31.83, -0.382, -0.56, 0, 0),
 "times": PackedFloat32Array(0, 0.0667, 0.2, 0.3333, 0.4667, 0.5333)
 }
@@ -4151,6 +4383,7 @@ tracks/7/path = NodePath("Skeleton2D/root/bone/bone2/bone3:position:y")
 tracks/7/interp = 1
 tracks/7/loop_wrap = true
 tracks/7/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0, 0, 0),
 "points": PackedFloat32Array(0.06, 0, 0, 0.359, 0.43, 0.17, -0.244, 0, 0.25, 0, 0, -0.25, 0, 0.25, 0, 0.17, -0.25, 0, 0.25, 0, 0, -0.25, 0, 0.26, 0, 0.06, -0.382, -0.56, 0, 0),
 "times": PackedFloat32Array(0, 0.0667, 0.2, 0.3333, 0.4667, 0.5333)
 }
@@ -4257,6 +4490,7 @@ tracks/16/path = NodePath("Skeleton2D/root/bone/bone5:position:x")
 tracks/16/interp = 1
 tracks/16/loop_wrap = true
 tracks/16/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0),
 "points": PackedFloat32Array(-23.02, 0, 0, 0, 0, -20.87, 0, 0, 0, 0, -22.02, 0, 0, 0, 0, -23.02, 0, 0, 0, 0),
 "times": PackedFloat32Array(0, 0.2667, 0.4, 0.5333)
 }
@@ -4267,6 +4501,7 @@ tracks/17/path = NodePath("Skeleton2D/root/bone/bone5:position:y")
 tracks/17/interp = 1
 tracks/17/loop_wrap = true
 tracks/17/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0),
 "points": PackedFloat32Array(-3.44, 0, 0, 0, 0, -5.72205e-08, 0, 0, 0, 0, 0.61, 0, 0, 0, 0, -3.44, 0, 0, 0, 0),
 "times": PackedFloat32Array(0, 0.2667, 0.4, 0.5333)
 }
@@ -4301,6 +4536,7 @@ tracks/20/path = NodePath("Skeleton2D/root/bone/bone8:position:x")
 tracks/20/interp = 1
 tracks/20/loop_wrap = true
 tracks/20/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0),
 "points": PackedFloat32Array(15.36, 0, 0, 0, 0, 12.84, 0, 0, 0, 0, -7.93, 0, 0, 0, 0, 15.36, 0, 0, 0, 0),
 "times": PackedFloat32Array(0, 0.1333, 0.2667, 0.5333)
 }
@@ -4311,6 +4547,7 @@ tracks/21/path = NodePath("Skeleton2D/root/bone/bone8:position:y")
 tracks/21/interp = 1
 tracks/21/loop_wrap = true
 tracks/21/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0),
 "points": PackedFloat32Array(-0.21, 0, 0, 0, 0, 4, 0, 0, 0, 0, 1.62, 0, 0, 0, 0, -0.21, 0, 0, 0, 0),
 "times": PackedFloat32Array(0, 0.1333, 0.2667, 0.5333)
 }
@@ -4321,6 +4558,7 @@ tracks/22/path = NodePath("Skeleton2D/root/bone/bone8/bone9:position:x")
 tracks/22/interp = 1
 tracks/22/loop_wrap = true
 tracks/22/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(30.01, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -4331,6 +4569,7 @@ tracks/23/path = NodePath("Skeleton2D/root/bone/bone8/bone9:position:y")
 tracks/23/interp = 1
 tracks/23/loop_wrap = true
 tracks/23/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(1.29, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -4377,6 +4616,7 @@ tracks/27/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone14:position:x")
 tracks/27/interp = 1
 tracks/27/loop_wrap = true
 tracks/27/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(37.65, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -4387,6 +4627,7 @@ tracks/28/path = NodePath("Skeleton2D/root/bone/bone2/bone3/bone14:position:y")
 tracks/28/interp = 1
 tracks/28/loop_wrap = true
 tracks/28/keys = {
+"handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(28.75, 0, 0, 0, 0),
 "times": PackedFloat32Array(0)
 }
@@ -4457,6 +4698,7 @@ tracks/34/path = NodePath("Skeleton2D/root/bone:position:x")
 tracks/34/interp = 1
 tracks/34/loop_wrap = true
 tracks/34/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0, 0),
 "points": PackedFloat32Array(13.9, 0, 0, 0, 0, 28.47, 0, 0, 0, 0, 13.9, 0, 0, 0, 0, 28.47, 0, 0, 0, 0, 13.9, 0, 0, 0, 0),
 "times": PackedFloat32Array(0, 0.1333, 0.2667, 0.4, 0.5333)
 }
@@ -4467,6 +4709,7 @@ tracks/35/path = NodePath("Skeleton2D/root/bone:position:y")
 tracks/35/interp = 1
 tracks/35/loop_wrap = true
 tracks/35/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0, 0),
 "points": PackedFloat32Array(-73.02, 0, 0, 0, 0, -83.95, 0, 0, 0, 0, -73.02, 0, 0, 0, 0, -83.95, 0, 0, 0, 0, -73.02, 0, 0, 0, 0),
 "times": PackedFloat32Array(0, 0.1333, 0.2667, 0.4, 0.5333)
 }
@@ -4489,6 +4732,7 @@ tracks/37/path = NodePath("Skeleton2D/root/bone7:position:x")
 tracks/37/interp = 1
 tracks/37/loop_wrap = true
 tracks/37/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0, 0),
 "points": PackedFloat32Array(-37.11, 0, 0, 0, 0, -50.8, 0, 0, 0, 0, -17, 0, 0, 0, 0, 46.81, 0, 0, 0, 0, -37.11, 0, 0, 0, 0),
 "times": PackedFloat32Array(0, 0.0333, 0.1333, 0.2667, 0.5333)
 }
@@ -4499,6 +4743,7 @@ tracks/38/path = NodePath("Skeleton2D/root/bone7:position:y")
 tracks/38/interp = 1
 tracks/38/loop_wrap = true
 tracks/38/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0, 0),
 "points": PackedFloat32Array(-6.33, 0, 0, 0, 0, -18.43, 0, 0, 0, 0, -54.76, 0, 0, 0, 0, -18.2, 0, 0, 0, 0, -6.33, 0, 0, 0, 0),
 "times": PackedFloat32Array(0, 0.0333, 0.1333, 0.2667, 0.5333)
 }
@@ -4521,6 +4766,7 @@ tracks/40/path = NodePath("Skeleton2D/root/bone10:position:x")
 tracks/40/interp = 1
 tracks/40/loop_wrap = true
 tracks/40/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0, 0),
 "points": PackedFloat32Array(58.81, 0, 0, 0, 0, -37.88, 0, 0, 0, 0, -32.85, 0, 0, 0, 0, -6.67, 0, 0, 0, 0, 58.81, 0, 0, 0, 0),
 "times": PackedFloat32Array(0, 0.2333, 0.3, 0.4, 0.5333)
 }
@@ -4531,6 +4777,7 @@ tracks/41/path = NodePath("Skeleton2D/root/bone10:position:y")
 tracks/41/interp = 1
 tracks/41/loop_wrap = true
 tracks/41/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0, 0),
 "points": PackedFloat32Array(-12.73, 0, 0, 0, 0, -15.31, 0, 0, 0, 0, -25.16, 0, 0, 0, 0, -39.94, 0, 0, 0, 0, -12.73, 0, 0, 0, 0),
 "times": PackedFloat32Array(0, 0.2333, 0.3, 0.4, 0.5333)
 }
@@ -4773,6 +5020,7 @@ rest = Transform2D(-0.0417013, 0.99913, -0.99913, -0.0417013, -23.02, -3.44)
 auto_calculate_length_and_angle = false
 length = 38.82
 bone_angle = 0.0
+metadata/_local_pose_override_enabled_ = true
 
 [node name="bone6" type="Bone2D" parent="Skeleton2D/root/bone/bone5"]
 position = Vector2(38.82, 0)
@@ -4781,6 +5029,7 @@ rest = Transform2D(0.991169, 0.132602, -0.132602, 0.991169, 38.82, 0)
 auto_calculate_length_and_angle = false
 length = 41.84
 bone_angle = 0.0
+metadata/_local_pose_override_enabled_ = true
 
 [node name="bone8" type="Bone2D" parent="Skeleton2D/root/bone"]
 position = Vector2(15.36, -0.21)
@@ -4789,6 +5038,7 @@ rest = Transform2D(0.15471, 0.98796, -0.98796, 0.15471, 15.36, -0.21)
 auto_calculate_length_and_angle = false
 length = 33.94
 bone_angle = 0.0
+metadata/_local_pose_override_enabled_ = true
 
 [node name="bone9" type="Bone2D" parent="Skeleton2D/root/bone/bone8"]
 position = Vector2(33.94, 0)
@@ -4797,6 +5047,7 @@ rest = Transform2D(0.984442, 0.17571, -0.17571, 0.984442, 33.94, 0)
 auto_calculate_length_and_angle = false
 length = 37.98
 bone_angle = 0.0
+metadata/_local_pose_override_enabled_ = true
 
 [node name="bone32" type="Bone2D" parent="Skeleton2D/root/bone"]
 position = Vector2(-40.06, -5.76)
@@ -4833,68 +5084,69 @@ bone_angle = 0.0
 z_index = 4
 z_as_relative = false
 script = ExtResource("1")
-"切换名" = ""
+"切换名" = "010"
 
 [node name="010" type="Polygon2D" parent="010"]
+texture = ExtResource("jsmb.png")
 texture_offset = Vector2(543, 11)
 skeleton = NodePath("../../Skeleton2D")
 polygon = PackedVector2Array(135.976, -197.507, 93.9832, -197.519, 93.9791, -250.516, 135.981, -250.515)
 uv = PackedVector2Array(42, 53, 0, 53, 0, 0, 42, 0)
 polygons = [[1.0, 2.0, 3.0], [1.0, 3.0, 0.0]]
 bones = ["root/bone/bone2/bone3/bone4", PackedFloat32Array(1, 1, 1, 1)]
-texture = ExtResource("jsmb.png")
 
 [node name="011" type="Node2D" parent="."]
 z_index = 2
 z_as_relative = false
 script = ExtResource("1")
-"切换名" = ""
+"切换名" = "011"
 
 [node name="011" type="Polygon2D" parent="011"]
+texture = ExtResource("jsmb.png")
 texture_offset = Vector2(595, 356)
 skeleton = NodePath("../../Skeleton2D")
 polygon = PackedVector2Array(0.970912, -83.4714, 2.81959, -51.8871, 3.09929, -47.3862, 3.33771, -43.5367, 3.67873, -39.4199, 5.68916, -15.6067, 5.95, -2.82, 15.61, 2.92, 34.4, 2.14, 43.98, -3.08, 43.0065, -17.4325, 42.7885, -41.4956, 42.7485, -45.6292, 42.4759, -50.0199, 42.2205, -53.978, 40.1366, -87.3879)
 uv = PackedVector2Array(0, 4.05587, 1.84083, 35.6374, 2.12205, 40.1374, 2.36285, 43.9894, 2.709, 48.1026, 4.71194, 71.9164, 4.97295, 84.7055, 14.6299, 90.4476, 33.4222, 89.6641, 43, 84.4444, 42.0351, 70.0891, 41.8123, 46.0333, 41.7741, 41.901, 41.4993, 37.5075, 41.252, 33.549, 39.164, 0.14105)
 polygons = [[8.0, 7.0, 5.0], [9.0, 8.0, 10.0], [10.0, 8.0, 5.0], [5.0, 7.0, 6.0], [5.0, 4.0, 10.0], [4.0, 11.0, 10.0], [4.0, 3.0, 11.0], [3.0, 12.0, 11.0], [12.0, 3.0, 13.0], [3.0, 2.0, 13.0], [2.0, 14.0, 13.0], [2.0, 1.0, 14.0], [1.0, 0.0, 14.0], [0.0, 15.0, 14.0]]
 bones = ["root/bone/bone8", PackedFloat32Array(1, 0.74889, 0.57905, 0.43369, 0.36982, 0, 0, 0, 0, 0, 0, 0.42698, 0.50032, 0.69201, 0.86474, 1), "root/bone/bone8/bone9", PackedFloat32Array(0, 0.25111, 0.42095, 0.56631, 0.56067, 0.528, 0, 0, 0, 0, 0.42175, 0.48181, 0.49212, 0.30433, 0.13513, 0), "root/bone10", PackedFloat32Array(0, 0, 0, 0, 0.06951, 0.472, 1, 1, 1, 1, 0.57825, 0.09121, 0.00756, 0.00365, 0.00013, 0)]
-texture = ExtResource("jsmb.png")
 
 [node name="012" type="Node2D" parent="."]
 z_index = 3
 z_as_relative = false
 script = ExtResource("1")
-"切换名" = ""
+"切换名" = "012"
 
 [node name="012" type="Polygon2D" parent="012"]
+texture = ExtResource("jsmb.png")
 texture_offset = Vector2(595, 449)
 skeleton = NodePath("../../Skeleton2D")
 polygon = PackedVector2Array(-34.8487, -88.669, -40.6425, -52.83, -41.1994, -49.2726, -41.7243, -45.9533, -42.1786, -42.4591, -45.8354, -14.2046, -46.5057, -5.18352, -47.0272, 1.72636, -39.3168, 9.50993, -19.589, 11.479, -6.56258, 7.88074, -5.93885, 0.763835, -5.28985, -6.77386, -2.12419, -35.9274, -1.6751, -40.0826, -1.12692, -44.9717, -0.40612, -49.8609, 2.97371, -79.5438)
 uv = PackedVector2Array(12.1785, 1.85232, 6.3865, 37.691, 5.824, 41.2519, 5.3005, 44.5689, 4.848, 48.0665, 1.1935, 76.3215, 0.517, 85.3475, 0, 92.2488, 7.71, 100.032, 27.439, 102, 40.471, 98.4035, 41.086, 91.288, 41.738, 83.742, 44.9065, 54.5914, 45.358, 50.438, 45.901, 45.5512, 46.625, 40.6643, 50, 10.9803)
 polygons = [[10.0, 9.0, 11.0], [12.0, 11.0, 9.0], [5.0, 12.0, 9.0], [6.0, 9.0, 8.0], [8.0, 7.0, 6.0], [9.0, 6.0, 5.0], [14.0, 2.0, 15.0], [2.0, 1.0, 15.0], [15.0, 1.0, 16.0], [16.0, 1.0, 17.0], [1.0, 0.0, 17.0], [12.0, 5.0, 13.0], [5.0, 4.0, 13.0], [13.0, 4.0, 14.0], [4.0, 3.0, 14.0], [3.0, 2.0, 14.0]]
 bones = ["root/bone/bone5", PackedFloat32Array(1, 0.54126, 0.40087, 0.27822, 0.16997, 0, 0, 0, 0, 0, 0, 0, 0, 0.31465, 0.50005, 0.72403, 0.88304, 1), "root/bone/bone5/bone6", PackedFloat32Array(0, 0.45874, 0.59913, 0.72178, 0.83003, 1, 0, 0, 0, 0, 0, 0, 0.26698, 0.66786, 0.49387, 0.27506, 0.11695, 0), "root/bone7", PackedFloat32Array(0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0.73302, 0.01749, 0.00609, 0.00092, 1e-05, 0)]
-texture = ExtResource("jsmb.png")
 
 [node name="013" type="Node2D" parent="."]
 z_index = 1
 z_as_relative = false
 script = ExtResource("1")
-"切换名" = ""
+"切换名" = "013"
 
 [node name="013" type="Polygon2D" parent="013"]
+texture = ExtResource("jsmb.png")
 texture_offset = Vector2(474, 1)
 skeleton = NodePath("../../Skeleton2D")
 polygon = PackedVector2Array(19.4929, -163.745, 11.702, -150.998, 9.66985, -133.569, 9.5308, -114.736, 9.76735, -106.69, 18.8028, -105.404, 21.9629, -98.2054, 31.7853, -79.3807, 38.5702, -72.9372, 45.4142, -64.9845, 62.1826, -63.3374, 69.9366, -72.0946, 71.5401, -85.8083, 66.9368, -93.8829, 55.1518, -111.991, 52.4408, -117.026, 57.3464, -120.689, 49.1497, -139.312, 39.8685, -160.661)
 uv = PackedVector2Array(6.2578, 0.91296, 0, 14.4854, 0, 32.0352, 2.04618, 50.7552, 3.216, 58.7117, 12.3421, 58.945, 16.3199, 65.7312, 28.2539, 83.2819, 35.7418, 88.8979, 43.4642, 96, 60.3121, 95.6832, 67, 86.0899, 67, 72.2832, 61.4819, 64.7952, 47.6759, 48.1814, 44.4002, 43.5014, 48.8464, 39.289, 38.5498, 21.7392, 26.8503, 1.61568)
 polygons = [[18.0, 2.0, 1.0], [15.0, 17.0, 16.0], [3.0, 2.0, 15.0], [0.0, 18.0, 1.0], [17.0, 2.0, 18.0], [3.0, 5.0, 4.0], [17.0, 15.0, 2.0], [15.0, 5.0, 3.0], [6.0, 5.0, 15.0], [6.0, 15.0, 14.0], [7.0, 6.0, 14.0], [7.0, 14.0, 13.0], [8.0, 13.0, 12.0], [8.0, 7.0, 13.0], [12.0, 11.0, 8.0], [11.0, 9.0, 8.0], [10.0, 9.0, 11.0]]
 bones = ["root/bone/bone2/bone3/bone14", PackedFloat32Array(1, 1, 1, 0.98798, 0.95979, 0.79876, 0.40265, 0.00243, 0, 0, 0, 0, 0, 0, 0.19877, 0.54892, 0.72332, 0.9819, 1), "root/bone/bone2/bone3/bone14/bone15", PackedFloat32Array(0, 0, 0, 0.01202, 0.04021, 0.20124, 0.59735, 0.83027, 0.38939, 0.05578, 0, 0.00466, 0.16637, 0.45036, 0.78975, 0.45093, 0.27668, 0.0181, 0), "root/bone/bone2/bone3/bone14/bone15/bone16", PackedFloat32Array(0, 0, 0, 0, 0, 0, 0, 0.1673, 0.61061, 0.94422, 1, 0.99534, 0.83363, 0.54964, 0.01149, 0.00015, 0, 0, 0)]
-texture = ExtResource("jsmb.png")
 
 [node name="014" type="Node2D" parent="."]
 z_as_relative = false
 script = ExtResource("1")
-"切换名" = ""
+"切换名" = "014"
 
 [node name="014" type="Polygon2D" parent="014"]
+texture = ExtResource("jsmb.png")
 texture_offset = Vector2(0, 152)
 skeleton = NodePath("../../Skeleton2D")
 polygon = PackedVector2Array(5.61458, -428.522, -16.3932, -412.686, -21.4171, -400.12, -22.676, -393.419, -72.118, -387.553, -112.76, -358.648, -139.16, -318.425, -175.011, -309.626, -175.019, -292.033, -150.059, -291.609, -158.271, -250.246, -160.325, -219.976, -159.304, -184.58, -158.278, -150.724, -157.774, -114.297, -161.876, -79.4163, -169.068, -61.9712, -175.043, -49.1559, -165.485, -40.9467, -140.351, -49.6627, -130.085, -67.1039, -116.229, -49.6485, -98.7857, -35.8047, -79.8022, -36.3089, -78.3476, -44.6235, -61.0594, -35.0472, -41.5541, -31.002, -12.8461, -30.5131, 7.39363, -32.0956, 25.0572, -40.1922, 37.7547, -32.834, 66.8323, -39.0851, 84.8621, -50.4907, 97.7458, -63.0017, 102.523, -45.7041, 111.73, -42.3889, 122.404, -59.3116, 131.758, -88.7979, 139.857, -123.397, 146.477, -162.782, 149.059, -195.905, 149.8, -226.079, 149.808, -247.423, 166.368, -237.119, 169.983, -241.534, 169.983, -268.394, 143.917, -330.632, 95.7185, -382.153, 53.0321, -397.976, 20.6483, -396.882, 33.8966, -422.265, 25.4356, -428.525, -82.4113, -207.693, -84.8675, -149.744, -85.4765, -92.3961, 77.4056, -208.274, 76.7826, -144.834, 73.7288, -74.6881)
@@ -4902,15 +5154,15 @@ uv = PackedVector2Array(180.614, 0, 158.617, 15.8364, 153.587, 28.4053, 152.331,
 polygons = [[11.0, 10.0, 52.0], [53.0, 52.0, 56.0], [42.0, 45.0, 44.0], [43.0, 42.0, 44.0], [41.0, 55.0, 42.0], [49.0, 0.0, 51.0], [49.0, 51.0, 50.0], [1.0, 0.0, 49.0], [2.0, 1.0, 49.0], [42.0, 46.0, 45.0], [55.0, 46.0, 42.0], [55.0, 48.0, 47.0], [55.0, 47.0, 46.0], [3.0, 2.0, 49.0], [49.0, 55.0, 3.0], [55.0, 49.0, 48.0], [56.0, 52.0, 55.0], [9.0, 8.0, 7.0], [6.0, 9.0, 7.0], [52.0, 5.0, 4.0], [6.0, 5.0, 52.0], [9.0, 6.0, 52.0], [10.0, 9.0, 52.0], [52.0, 4.0, 3.0], [55.0, 52.0, 3.0], [40.0, 55.0, 41.0], [39.0, 55.0, 40.0], [12.0, 11.0, 52.0], [52.0, 53.0, 12.0], [56.0, 29.0, 54.0], [57.0, 56.0, 37.0], [33.0, 57.0, 37.0], [36.0, 33.0, 37.0], [32.0, 57.0, 33.0], [34.0, 33.0, 36.0], [35.0, 34.0, 36.0], [56.0, 57.0, 29.0], [57.0, 30.0, 29.0], [32.0, 31.0, 57.0], [31.0, 30.0, 57.0], [54.0, 29.0, 27.0], [29.0, 28.0, 27.0], [56.0, 55.0, 39.0], [38.0, 56.0, 39.0], [37.0, 56.0, 38.0], [54.0, 14.0, 53.0], [20.0, 15.0, 14.0], [54.0, 20.0, 14.0], [19.0, 15.0, 20.0], [16.0, 15.0, 19.0], [21.0, 20.0, 54.0], [54.0, 25.0, 24.0], [21.0, 54.0, 24.0], [18.0, 16.0, 19.0], [17.0, 16.0, 18.0], [24.0, 22.0, 21.0], [23.0, 22.0, 24.0], [25.0, 54.0, 26.0], [54.0, 27.0, 26.0], [53.0, 13.0, 12.0], [14.0, 13.0, 53.0], [54.0, 53.0, 56.0]]
 bones = ["root/bone/bone2/bone3/bone4", PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0.41435, 0.15741, 0.03704, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.03704, 0.15741, 0.41435, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0.86806, 0, 0, 0.86806, 0, 0), "root/bone/bone2/bone3/bone4/bone25", PackedFloat32Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.43257, 0.4672, 0.3298, 0.14742, 0.03721, 0.00042, 0, 0, 0, 0, 1e-05, 2e-05, 5e-05, 8e-05, 0.00017, 0.00037, 0.00066, 0.00091, 0.00093, 0.00071, 0.00039, 0.00017, 7e-05, 4e-05, 2e-05, 1e-05, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.10336, 0.23581, 0.01706, 0.02778, 0.03778, 0.00373), "root/bone/bone2/bone3/bone4/bone25/bone26", PackedFloat32Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.13101, 0.27215, 0.3526, 0.32772, 0.20074, 0.08152, 0.01533, 0.00223, 0.00724, 0.01652, 0.02942, 0.04459, 0.06025, 0.07519, 0.08687, 0.09285, 0.09142, 0.08321, 0.07022, 0.05449, 0.0383, 0.02343, 0.012, 0.00473, 0.00131, 0.00018, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.00081, 0.50675, 0.2337, 0, 0.03294, 0.02563), "root/bone/bone2/bone3/bone4/bone25/bone26/bone27", PackedFloat32Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.02207, 0.10325, 0.28056, 0.52486, 0.76205, 0.91798, 0.9831, 0.98921, 0.96613, 0.92462, 0.86972, 0.80837, 0.74496, 0.67317, 0.59089, 0.49831, 0.40598, 0.31888, 0.24256, 0.17495, 0.1173, 0.06936, 0.03467, 0.01334, 0.00362, 0.00047, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.11929, 0.58736, 0, 0.02611, 0.06055), "root/bone/bone2/bone3/bone4/bone28", PackedFloat32Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1e-05, 3e-05, 6e-05, 7e-05, 7e-05, 8e-05, 0.00012, 0.00019, 0.0002, 0.00016, 8e-05, 2e-05, 0, 0, 0, 0.00066, 0.03901, 0.15209, 0.33794, 0.47617, 0.43947, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.02778, 0.03501, 0.00669, 0.10417, 0.12638, 0.00259), "root/bone/bone2/bone3/bone4/bone28/bone29", PackedFloat32Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1e-05, 7e-05, 0.00023, 0.00054, 0.00104, 0.00183, 0.00295, 0.00444, 0.00614, 0.00783, 0.00894, 0.00893, 0.00746, 0.00501, 0.00256, 0.00094, 0.00024, 6e-05, 0.03634, 0.14533, 0.32701, 0.47247, 0.47253, 0.32722, 0.14545, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.02623, 0.01165, 0, 0.52382, 0.02884), "root/bone/bone2/bone3/bone4/bone28/bone29/bone30", PackedFloat32Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8e-05, 0.00156, 0.00849, 0.0264, 0.05832, 0.0998, 0.14515, 0.19173, 0.24704, 0.31585, 0.40056, 0.49288, 0.58789, 0.67864, 0.76468, 0.84136, 0.90607, 0.95302, 0.98183, 0.95871, 0.85336, 0.63398, 0.37544, 0.15249, 0.03921, 0.00072, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.0769, 0.14354, 0, 0.25298, 0.87867)]
 internal_vertex_count = 6
-texture = ExtResource("jsmb.png")
 
 [node name="001" type="Node2D" parent="."]
 z_index = 11
 z_as_relative = false
 script = ExtResource("1")
-"切换名" = ""
+"切换名" = "001"
 
 [node name="001" type="Polygon2D" parent="001"]
+texture = ExtResource("jsmb.png")
 texture_offset = Vector2(395, 7)
 skeleton = NodePath("../../Skeleton2D")
 polygon = PackedVector2Array(0.124083, -311.085, -1.00734, -292.291, -1.0143, -268.923, -0.902135, -248.349, 5.45103, -232.602, 21.956, -230.524, 39.7352, -230.522, 60.0616, -240.717, 74.0314, -256.211, 75.9909, -276.277, 71.2374, -293.3, 60.8331, -308.793, 46.8567, -319.973, 7.74964, -317.441, 29.5906, -299.657, 38.2215, -277.808, 37.1955, -249.103)
@@ -4918,100 +5170,100 @@ uv = PackedVector2Array(1.13421, 14.44, 0, 33.2367, 0, 56.6039, 0.11781, 77.178,
 polygons = [[5.0, 16.0, 6.0], [6.0, 16.0, 7.0], [16.0, 5.0, 3.0], [5.0, 4.0, 3.0], [7.0, 16.0, 8.0], [16.0, 3.0, 15.0], [0.0, 14.0, 1.0], [0.0, 13.0, 14.0], [2.0, 15.0, 3.0], [16.0, 15.0, 8.0], [14.0, 15.0, 2.0], [8.0, 15.0, 9.0], [14.0, 2.0, 1.0], [15.0, 10.0, 9.0], [15.0, 11.0, 10.0], [11.0, 14.0, 12.0], [11.0, 15.0, 14.0], [14.0, 13.0, 12.0]]
 bones = ["root/bone/bone2/bone3/bone4/bone20", PackedFloat32Array(0.98565, 0.83483, 0.34207, 0.06417, 0.00622, 0, 0, 0, 0.00254, 0.10959, 0.39139, 0.76255, 0.95627, 0.99843, 1, 0, 0), "root/bone/bone2/bone3/bone4/bone20/bone21", PackedFloat32Array(0.01435, 0.16517, 0.65793, 0.93583, 0.99378, 1, 1, 1, 0.99746, 0.89041, 0.60861, 0.23745, 0.04373, 0.00157, 0, 1, 1)]
 internal_vertex_count = 3
-texture = ExtResource("jsmb.png")
 
 [node name="002" type="Node2D" parent="."]
 z_index = 10
 z_as_relative = false
 script = ExtResource("1")
-"切换名" = ""
+"切换名" = "002"
 
 [node name="002" type="Polygon2D" parent="002"]
+texture = ExtResource("jsmb.png")
 texture_offset = Vector2(463, 174)
 skeleton = NodePath("../../Skeleton2D")
 polygon = PackedVector2Array(107.979, -178.517, -54.0253, -178.522, -54.0187, -251.522, 107.986, -251.517)
 uv = PackedVector2Array(162, 73, 0, 73, 0, 0, 162, 0)
 polygons = [[1.0, 2.0, 3.0], [1.0, 3.0, 0.0]]
 bones = ["root/bone/bone2/bone3/bone4", PackedFloat32Array(1, 1, 1, 1)]
-texture = ExtResource("jsmb.png")
 
 [node name="002_2" type="Polygon2D" parent="002"]
 visible = false
+texture = ExtResource("jsmb.png")
 texture_offset = Vector2(395, 99)
 skeleton = NodePath("../../Skeleton2D")
 polygon = PackedVector2Array(107.889, -179.071, -54.1058, -179.077, -54.1092, -252.076, 107.895, -252.071)
 uv = PackedVector2Array(162, 73, 0, 73, 0, 0, 162, 0)
 polygons = [[1.0, 2.0, 3.0], [1.0, 3.0, 0.0]]
 bones = ["root/bone/bone2/bone3/bone4", PackedFloat32Array(1, 1, 1, 1)]
-texture = ExtResource("jsmb.png")
 
 [node name="003" type="Node2D" parent="."]
 z_index = 9
 z_as_relative = false
 script = ExtResource("1")
-"切换名" = ""
+"切换名" = "003"
 
 [node name="003" type="Polygon2D" parent="003"]
+texture = ExtResource("jsmb.png")
 texture_offset = Vector2(331, 9)
 skeleton = NodePath("../../Skeleton2D")
 polygon = PackedVector2Array(-86.4184, -272.909, -93.9054, -247.177, -97.6523, -221.431, -99.028, -196.16, -99.0329, -168.08, -92.9863, -148.429, -81.7525, -145.613, -74.0288, -152.409, -64.7553, -141.968, -51.4581, -138.529, -39.0321, -138.532, -39.8957, -152.079, -44.233, -167.1, -47.688, -187.046, -47.9827, -208.434, -45.0819, -231.269, -39.8835, -256.121, -37.0128, -278.657, -64.7299, -275.77)
 uv = PackedVector2Array(12.5984, 11.6201, 5.11066, 37.3599, 1.36648, 63.0997, 0, 88.3723, 0, 116.453, 6.04624, 136.109, 17.2782, 138.916, 24.9972, 132.121, 34.2817, 142.565, 47.5757, 146, 60.0024, 146, 59.1356, 132.45, 54.8006, 117.422, 51.3323, 97.4813, 51.0434, 76.0952, 53.9338, 53.2637, 59.1356, 28.4101, 62, 5.86774, 34.2817, 8.75708)
 polygons = [[16.0, 18.0, 17.0], [15.0, 18.0, 16.0], [1.0, 0.0, 18.0], [18.0, 15.0, 1.0], [15.0, 2.0, 1.0], [14.0, 2.0, 15.0], [3.0, 2.0, 14.0], [3.0, 14.0, 13.0], [4.0, 3.0, 13.0], [7.0, 4.0, 13.0], [12.0, 7.0, 13.0], [8.0, 7.0, 12.0], [5.0, 4.0, 7.0], [6.0, 5.0, 7.0], [11.0, 8.0, 12.0], [9.0, 8.0, 11.0], [9.0, 11.0, 10.0]]
 bones = ["root/bone/bone2/bone3/bone4/bone17", PackedFloat32Array(1, 0.93974, 0.22707, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.00055, 0.12137, 0.73833, 0.99758, 1, 1), "root/bone/bone2/bone3/bone4/bone17/bone18", PackedFloat32Array(0, 0.06026, 0.77293, 0.91154, 0.1881, 0.00576, 0, 0, 0, 0, 0, 0.00151, 0.07205, 0.62155, 0.87385, 0.26167, 0.00242, 0, 0), "root/bone/bone2/bone3/bone4/bone17/bone18/bone19", PackedFloat32Array(0, 0, 0, 0.08846, 0.8119, 0.99424, 1, 1, 1, 1, 1, 0.99849, 0.92795, 0.3779, 0.00478, 0, 0, 0, 0)]
-texture = ExtResource("jsmb.png")
 
 [node name="004" type="Node2D" parent="."]
 z_index = 8
 z_as_relative = false
 script = ExtResource("1")
-"切换名" = ""
+"切换名" = "004"
 
 [node name="004" type="Polygon2D" parent="004"]
+texture = ExtResource("jsmb.png")
 texture_offset = Vector2(0, 12)
 skeleton = NodePath("../../Skeleton2D")
 polygon = PackedVector2Array(123.977, -239.514, -137.015, -239.535, -137.008, -377.532, 123.994, -377.512)
 uv = PackedVector2Array(261, 138, 0, 138, 0, 0, 261, 0)
 polygons = [[1.0, 2.0, 3.0], [1.0, 3.0, 0.0]]
 bones = ["root/bone/bone2/bone3/bone4", PackedFloat32Array(1, 1, 1, 1)]
-texture = ExtResource("jsmb.png")
 
 [node name="005" type="Node2D" parent="."]
 z_index = 7
 z_as_relative = false
 script = ExtResource("1")
-"切换名" = ""
+"切换名" = "005"
 
 [node name="005" type="Polygon2D" parent="005"]
+texture = ExtResource("jsmb.png")
 texture_offset = Vector2(347, 332)
 skeleton = NodePath("../../Skeleton2D")
 polygon = PackedVector2Array(112.981, -156.509, -133.02, -156.536, -133.01, -374.531, 112.99, -374.514)
 uv = PackedVector2Array(246, 218, 0, 218, 0, 0, 246, 0)
 polygons = [[1.0, 2.0, 3.0], [1.0, 3.0, 0.0]]
 bones = ["root/bone/bone2/bone3/bone4", PackedFloat32Array(1, 1, 1, 1)]
-texture = ExtResource("jsmb.png")
 
 [node name="006" type="Node2D" parent="."]
 z_index = 6
 z_as_relative = false
 script = ExtResource("1")
-"切换名" = ""
+"切换名" = "006"
 
 [node name="006" type="Polygon2D" parent="006"]
+texture = ExtResource("jsmb.png")
 texture_offset = Vector2(263, 0)
 skeleton = NodePath("../../Skeleton2D")
 polygon = PackedVector2Array(79.1342, -272.977, 78.8073, -251.133, 78.8056, -230.611, 75.8236, -204.465, 71.1916, -179.642, 64.9055, -157.791, 63.9812, -141.243, 69.5451, -137.522, 83.109, -139.924, 96.6823, -149.847, 101.317, -141.245, 111.912, -138.922, 119.187, -151.508, 125.807, -170.705, 128.461, -190.887, 129.979, -211.411, 129.984, -236.236, 128.123, -262.388, 123.495, -287.515, 98.9951, -280.927)
 uv = PackedVector2Array(15.1576, 14.538, 14.8262, 36.384, 14.8262, 56.907, 11.847, 83.055, 7.21314, 107.88, 0.924, 129.726, 0, 146.277, 5.55852, 150, 19.1294, 147.6, 32.7004, 137.67, 37.3342, 146.277, 47.9266, 148.593, 55.2083, 136.016, 61.8281, 116.817, 64.4761, 96.627, 66, 76.104, 66, 51.279, 64.1454, 25.131, 59.5115, 0, 35.017, 6.594)
 polygons = [[19.0, 18.0, 17.0], [19.0, 2.0, 1.0], [16.0, 2.0, 17.0], [19.0, 1.0, 0.0], [17.0, 2.0, 19.0], [16.0, 15.0, 2.0], [2.0, 15.0, 3.0], [14.0, 3.0, 15.0], [4.0, 3.0, 14.0], [13.0, 4.0, 14.0], [13.0, 9.0, 4.0], [9.0, 5.0, 4.0], [13.0, 12.0, 9.0], [5.0, 7.0, 6.0], [10.0, 9.0, 12.0], [9.0, 8.0, 5.0], [11.0, 10.0, 12.0], [8.0, 7.0, 5.0]]
 bones = ["root/bone/bone2/bone3/bone4/bone22", PackedFloat32Array(1, 0.9558, 0.57356, 0.04114, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.10612, 0.87294, 1, 1, 1), "root/bone/bone2/bone3/bone4/bone22/bone23", PackedFloat32Array(0, 0.0442, 0.42644, 0.86305, 0.23418, 0.0022, 0, 0, 0, 0, 0, 8e-05, 0.03649, 0.423, 0.94185, 0.89388, 0.12706, 0, 0, 0), "root/bone/bone2/bone3/bone4/bone22/bone23/bone24", PackedFloat32Array(0, 0, 0, 0.09581, 0.76582, 0.9978, 1, 1, 1, 1, 1, 0.99992, 0.96351, 0.577, 0.05815, 0, 0, 0, 0, 0)]
-texture = ExtResource("jsmb.png")
 
 [node name="007" type="Node2D" parent="."]
 z_index = 13
 z_as_relative = false
 script = ExtResource("1")
-"切换名" = ""
+"切换名" = "007"
 
 [node name="007" type="Polygon2D" parent="007"]
+texture = ExtResource("jsmb.png")
 texture_offset = Vector2(559, 66)
 skeleton = NodePath("../../Skeleton2D")
 polygon = PackedVector2Array(-24.5108, -164.528, -46.1487, -147.891, -65.5462, -131.932, -61.9065, -123.855, -65.5016, -118.04, -79.8449, -96.0237, -84.4889, -88.1459, -85.0277, -71.3806, -78.4287, -60.2649, -55.4014, -58.5342, -50.1477, -66.5253, -46.3149, -77.0306, -29.5429, -102.884, -20.4536, -101.872, -14.7125, -112.181, -6.63946, -138.638, -5.22138, -153.997, -14.1109, -164.526, -46.0301, -110.157)
@@ -5019,30 +5271,30 @@ uv = PackedVector2Array(60.504, 0, 38.8672, 16.6399, 19.4752, 32.5971, 23.1112, 
 polygons = [[16.0, 0.0, 17.0], [3.0, 2.0, 1.0], [0.0, 15.0, 1.0], [16.0, 15.0, 0.0], [14.0, 1.0, 15.0], [18.0, 3.0, 1.0], [14.0, 18.0, 1.0], [4.0, 3.0, 18.0], [12.0, 18.0, 14.0], [13.0, 12.0, 14.0], [18.0, 5.0, 4.0], [11.0, 18.0, 12.0], [11.0, 5.0, 18.0], [11.0, 6.0, 5.0], [11.0, 7.0, 6.0], [10.0, 7.0, 11.0], [8.0, 7.0, 10.0], [9.0, 8.0, 10.0]]
 bones = ["root/bone/bone2/bone3/bone11", PackedFloat32Array(1, 1, 0.92772, 0.72259, 0.32221, 0, 0, 0, 0, 0, 0, 0.0002, 0.66351, 0.85411, 0.94616, 1, 1, 1, 0.47787), "root/bone/bone2/bone3/bone11/bone12", PackedFloat32Array(0, 0, 0.07228, 0.27741, 0.67779, 0.80373, 0.48854, 0.04179, 0, 0.06264, 0.22306, 0.6894, 0.33649, 0.14589, 0.05384, 0, 0, 0, 0.52213), "root/bone/bone2/bone3/bone11/bone12/bone13", PackedFloat32Array(0, 0, 0, 0, 0, 0.19627, 0.51146, 0.95821, 1, 0.93736, 0.77694, 0.31039, 0, 0, 0, 0, 0, 0, 0)]
 internal_vertex_count = 1
-texture = ExtResource("jsmb.png")
 
 [node name="008" type="Node2D" parent="."]
 z_index = 12
 z_as_relative = false
 script = ExtResource("1")
-"切换名" = ""
+"切换名" = "008"
 
 [node name="008" type="Polygon2D" parent="008"]
+texture = ExtResource("jsmb.png")
 texture_offset = Vector2(463, 249)
 skeleton = NodePath("../../Skeleton2D")
 polygon = PackedVector2Array(56.9749, -15.5298, -82.0281, -15.5339, -82.0284, -96.5335, 56.9746, -96.5295)
 uv = PackedVector2Array(139, 81, 0, 81, 0, 0, 139, 0)
 polygons = [[1.0, 2.0, 3.0], [1.0, 3.0, 0.0]]
 bones = ["root/bone/bone2/bone3/bone11/bone12/bone13/bone31", PackedFloat32Array(1, 1, 1, 1)]
-texture = ExtResource("jsmb.png")
 
 [node name="009" type="Node2D" parent="."]
 z_index = 5
 z_as_relative = false
 script = ExtResource("1")
-"切换名" = ""
+"切换名" = "009"
 
 [node name="009" type="Polygon2D" parent="009"]
+texture = ExtResource("jsmb.png")
 texture_offset = Vector2(347, 194)
 skeleton = NodePath("../../Skeleton2D")
 polygon = PackedVector2Array(-22.8588, -168.533, -28.4005, -149.665, -33.2857, -131.233, -37.51, -113.25, -40.84, -93.94, -41.72, -87.94, -47.5, -74.18, -54.02, -61.64, -54.02, -55.87, -33.93, -48.99, -30.6, -43.88, -0.85, -42.11, 4.92, -39.53, 26.68, -46.1, 34.56, -44.55, 56.09, -57.65, 54.1, -64.97, 59.98, -75.41, 51.43, -84.29, 44.11, -90.95, 42.77, -110.93, 39.2204, -133.573, 36.1104, -148.228, 39.0026, -163.101, 30.3365, -175.53, -7.84482, -175.527, -19.25, -87.31, 4.95, -86.04, 29.34, -87.86)
@@ -5050,7 +5302,6 @@ uv = PackedVector2Array(31.1699, 6.9972, 25.6192, 25.8672, 20.7355, 44.2938, 16.
 polygons = [[16.0, 28.0, 18.0], [16.0, 18.0, 17.0], [14.0, 13.0, 16.0], [14.0, 16.0, 15.0], [9.0, 8.0, 7.0], [26.0, 6.0, 5.0], [9.0, 6.0, 26.0], [9.0, 7.0, 6.0], [20.0, 27.0, 21.0], [26.0, 3.0, 2.0], [22.0, 24.0, 23.0], [25.0, 24.0, 22.0], [1.0, 0.0, 25.0], [1.0, 22.0, 21.0], [25.0, 22.0, 1.0], [21.0, 2.0, 1.0], [21.0, 27.0, 2.0], [16.0, 13.0, 28.0], [28.0, 20.0, 19.0], [20.0, 28.0, 27.0], [13.0, 27.0, 28.0], [11.0, 26.0, 27.0], [11.0, 10.0, 9.0], [11.0, 27.0, 13.0], [12.0, 11.0, 13.0], [11.0, 9.0, 26.0], [26.0, 4.0, 3.0], [28.0, 19.0, 18.0], [2.0, 27.0, 26.0], [5.0, 4.0, 26.0]]
 bones = ["root/bone", PackedFloat32Array(0, 0, 0, 0.33333, 0.50001, 0.33335, 0.00059, 0.00348, 0.10868, 0.24325, 0.49012, 0.6381, 0.68694, 0.58177, 0.36597, 0.20197, 0.05738, 0.01999, 0.33333, 0.5, 0.33333, 0, 0, 0, 0, 0, 1, 1, 1), "root/bone/bone2", PackedFloat32Array(0.00401, 0.04803, 0.17495, 0.17093, 0.09574, 0.00075, 0.00075, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.13722, 0.23259, 0.24058, 0.05773, 0.0081, 0.00011, 0, 0, 0, 0), "root/bone/bone2/bone3", PackedFloat32Array(0.99599, 0.95197, 0.82505, 0.49574, 0.1565, 0.00225, 0.00225, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.11278, 0.43408, 0.75942, 0.94227, 0.9919, 0.99989, 1, 0, 0, 0), "root/bone/bone32", PackedFloat32Array(0, 0, 0, 0, 0.24774, 0.66365, 0.99641, 0.99652, 0.89132, 0.75661, 0.48098, 0.29089, 0.09677, 0.04268, 0.00464, 0.00071, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), "root/bone/bone33", PackedFloat32Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0.00014, 0.02891, 0.07101, 0.21629, 0.37555, 0.62939, 0.79732, 0.94262, 0.98001, 0.66667, 0.25, 0, 0, 0, 0, 0, 0, 0, 0, 0)]
 internal_vertex_count = 3
-texture = ExtResource("jsmb.png")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
