@@ -65,9 +65,9 @@ public partial class SampleEnemy : GameActor
         return direction == Vector2.Zero ? Vector2.Zero : direction.Normalized();
     }
     
-        public void PerformAttack()
-        {
-        AttackTimer = AttackCooldown; 
+    public void PerformAttack()
+    {
+    AttackTimer = AttackCooldown; 
         GameLogger.Info(nameof(SampleEnemy), "Enemy PerformAttack");
         
         RefreshPlayerReference();
@@ -83,12 +83,7 @@ public partial class SampleEnemy : GameActor
                 }
             }
         }
-        else if (_player != null)
-            {
-                _player.TakeDamage((int)AttackDamage);
-                GameLogger.Info(nameof(SampleEnemy), "Enemy attacked player (Fallback)!");
-        }
-        }
+    }
     
     public override void TakeDamage(int damage)
     {
