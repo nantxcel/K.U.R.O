@@ -17,6 +17,7 @@ public partial class SamplePlayer : GameActor, IPlayerStatsSource
 	public PlayerFrozenState? FrozenState { get; private set; }
 	public PlayerInventoryComponent? InventoryComponent { get; private set; }
 	public InventoryContainer? Backpack => InventoryComponent?.Backpack;
+	public PlayerWeaponSkillController? WeaponSkillController { get; private set; }
 	
 	[ExportCategory("UI")]
 	[Export] public Label StatsLabel { get; private set; } = null!; // Drag & Drop in Editor
@@ -90,6 +91,7 @@ public partial class SamplePlayer : GameActor, IPlayerStatsSource
 		if (FrozenState == null) FrozenState = StateMachine?.GetNodeOrNull<PlayerFrozenState>("Frozen");
 		if (StatsLabel == null) StatsLabel = GetNodeOrNull<Label>("../UI/PlayerStats");
 		if (InventoryComponent == null) InventoryComponent = GetNodeOrNull<PlayerInventoryComponent>("Inventory");
+		if (WeaponSkillController == null) WeaponSkillController = GetNodeOrNull<PlayerWeaponSkillController>("WeaponSkillController");
 		
 		// 连接快捷栏变化信号，确保左手物品与选中槽位严格对应
 		ConnectQuickBarSignals();
@@ -97,8 +99,18 @@ public partial class SamplePlayer : GameActor, IPlayerStatsSource
 		// 设置左手默认选中快捷栏2（索引1）
 		// 使用 CallDeferred 确保在快捷栏初始化完成后再设置
 		CallDeferred(MethodName.InitializeLeftHandSelection);
+		CallDeferred(MethodName.ApplyUnarmedSkillIfEmpty);
 		
 		UpdateStatsUI();
+	}
+
+	private void ApplyUnarmedSkillIfEmpty()
+	{
+		if (InventoryComponent == null) return;
+		if (InventoryComponent.GetSelectedBackpackStack() == null)
+		{
+			WeaponSkillController?.ApplyUnarmedFallback();
+		}
 	}
 	
 	public override void _UnhandledInput(InputEvent @event)
@@ -132,6 +144,15 @@ public partial class SamplePlayer : GameActor, IPlayerStatsSource
 				GetViewport().SetInputAsHandled();
 			}
 		}
+
+		if (@event.IsActionPressed("weapon_skill_block"))
+		{
+			if (WeaponSkillController?.TryTriggerActionSkill("weapon_skill_block") == true)
+			{
+				GetViewport().SetInputAsHandled();
+				return;
+			}
+		}
 		
 		base._UnhandledInput(@event);
 	}
@@ -139,6 +160,7 @@ public partial class SamplePlayer : GameActor, IPlayerStatsSource
 	/// <summary>
 	/// 切换到指定快捷栏槽位的物品
 	/// 严格绑定：LeftHandSlotIndex 和 LeftHandItem 必须严格对应
+	/// 同時同步 PlayerInventoryComponent.SelectedQuickBarSlot
 	/// </summary>
 	/// <param name="slotIndex">快捷栏槽位索引（1-4，对应数字键2-5）</param>
 	private void SwitchToQuickBarSlot(int slotIndex)
@@ -146,7 +168,6 @@ public partial class SamplePlayer : GameActor, IPlayerStatsSource
 		// 验证槽位索引范围（1-4，跳过索引0的小木剑）
 		if (slotIndex < 1 || slotIndex > 4)
 		{
-			GD.PrintErr($"SwitchToQuickBarSlot: Invalid slot index {slotIndex}, must be 1-4");
 			return;
 		}
 		
@@ -155,17 +176,24 @@ public partial class SamplePlayer : GameActor, IPlayerStatsSource
 		{
 			// 仅记录槽位索引，等待 QuickBar 初始化后再同步物品
 			LeftHandSlotIndex = slotIndex;
-			GD.Print($"SwitchToQuickBarSlot: QuickBar not yet available, recorded slot index {slotIndex} for later sync");
+			// 同步到 PlayerInventoryComponent
+			if (InventoryComponent != null)
+			{
+				InventoryComponent.SelectedQuickBarSlot = slotIndex;
+			}
 			return;
 		}
 		
-		GD.Print($"SwitchToQuickBarSlot: Switching from slot {LeftHandSlotIndex} to slot {slotIndex}");
-		
 		// 严格绑定：设置 LeftHandSlotIndex，然后同步 LeftHandItem
 		LeftHandSlotIndex = slotIndex;
-		SyncLeftHandItemFromSlot();
 		
-		GD.Print($"SwitchToQuickBarSlot: LeftHandSlotIndex is now {LeftHandSlotIndex}, LeftHandItem is {(LeftHandItem != null ? LeftHandItem.DisplayName : "null")}");
+		// 同步到 PlayerInventoryComponent
+		if (InventoryComponent != null)
+		{
+			InventoryComponent.SelectedQuickBarSlot = slotIndex;
+		}
+		
+		SyncLeftHandItemFromSlot();
 		
 		// 更新视觉反馈：显示/隐藏手上的物品
 		UpdateHandItemVisual();
@@ -199,13 +227,11 @@ public partial class SamplePlayer : GameActor, IPlayerStatsSource
 		{
 			// 严格绑定：LeftHandItem 必须等于选中槽位的物品
 			LeftHandItem = stack.Item;
-			GD.Print($"SyncLeftHandItemFromSlot: Left hand item synced to {LeftHandItem.DisplayName} from quickbar slot {LeftHandSlotIndex + 1}");
 		}
 		else
 		{
 			// 槽位为空或只有空白道具，清除左手物品
 			LeftHandItem = null;
-			GD.Print($"SyncLeftHandItemFromSlot: Quickbar slot {LeftHandSlotIndex + 1} is empty or has empty item, cleared left hand item");
 		}
 	}
 	
@@ -214,12 +240,9 @@ public partial class SamplePlayer : GameActor, IPlayerStatsSource
 	/// </summary>
 	private void OnQuickBarSlotChanged(int slotIndex, string itemId, int quantity)
 	{
-		GD.Print($"OnQuickBarSlotChanged: Slot {slotIndex} changed (ItemId: {itemId}, Quantity: {quantity}), current LeftHandSlotIndex: {LeftHandSlotIndex}");
-		
 		// 如果变化的是当前选中的槽位，同步更新左手物品
 		if (slotIndex == LeftHandSlotIndex)
 		{
-			GD.Print($"OnQuickBarSlotChanged: Selected slot {slotIndex} changed, syncing left hand item");
 			SyncLeftHandItemFromSlot();
 			UpdateHandItemVisual();
 		}
@@ -230,12 +253,9 @@ public partial class SamplePlayer : GameActor, IPlayerStatsSource
 	/// </summary>
 	private void OnQuickBarInventoryChanged()
 	{
-		GD.Print($"OnQuickBarInventoryChanged: QuickBar inventory changed, current LeftHandSlotIndex: {LeftHandSlotIndex}");
-		
 		// 如果当前有选中的槽位，同步更新左手物品
 		if (LeftHandSlotIndex >= 1 && LeftHandSlotIndex <= 4)
 		{
-			GD.Print("OnQuickBarInventoryChanged: Syncing left hand item from selected slot");
 			SyncLeftHandItemFromSlot();
 			UpdateHandItemVisual();
 		}
@@ -259,7 +279,6 @@ public partial class SamplePlayer : GameActor, IPlayerStatsSource
 				{
 					// 如果左手有物品，显示；如果没有，隐藏
 					node2d.Visible = LeftHandItem != null;
-					GD.Print($"UpdateHandItemVisual: Left hand item visibility set to {node2d.Visible} (Item: {LeftHandItem?.DisplayName ?? "null"})");
 				}
 			}
 		}
@@ -370,14 +389,15 @@ public partial class SamplePlayer : GameActor, IPlayerStatsSource
 		// 重要：只在 LeftHandSlotIndex 无效时才初始化，避免覆盖用户已选择的其他快捷栏
 		if (LeftHandSlotIndex < 1 || LeftHandSlotIndex > 4)
 		{
-			int previousIndex = LeftHandSlotIndex;
 			SwitchToQuickBarSlot(1);
-			GD.Print($"SamplePlayer: Initialized left hand selection to quickbar slot 2 (index 1). Previous LeftHandSlotIndex: {previousIndex}");
 		}
 		else
 		{
-			GD.Print($"SamplePlayer: Left hand selection already set to slot {LeftHandSlotIndex}, skipping initialization");
 			// 即使已经选中，也要确保同步
+			if (InventoryComponent != null)
+			{
+				InventoryComponent.SelectedQuickBarSlot = LeftHandSlotIndex;
+			}
 			SyncLeftHandItemFromSlot();
 			UpdateHandItemVisual();
 		}
@@ -398,12 +418,17 @@ public partial class SamplePlayer : GameActor, IPlayerStatsSource
 			// 连接信号
 			InventoryComponent.QuickBar.SlotChanged += OnQuickBarSlotChanged;
 			InventoryComponent.QuickBar.InventoryChanged += OnQuickBarInventoryChanged;
-			GD.Print("SamplePlayer: Connected QuickBar signals for left hand item synchronization");
+			
+			// 通知 PlayerItemAttachment 订阅 QuickBar 事件
+			var itemAttachment = GetNodeOrNull<PlayerItemAttachment>("ItemAttachment");
+			itemAttachment?.SubscribeToQuickBar();
 			
 			// 如果当前有选中的槽位，同步一次左手物品（可能是在 QuickBar 可用之前设置的）
 			if (LeftHandSlotIndex >= 1 && LeftHandSlotIndex <= 4)
 			{
-				GD.Print($"SamplePlayer: Syncing left hand item for previously selected slot {LeftHandSlotIndex}");
+				// 同步 SelectedQuickBarSlot
+				InventoryComponent.SelectedQuickBarSlot = LeftHandSlotIndex;
+				
 				SyncLeftHandItemFromSlot();
 				UpdateHandItemVisual();
 				UpdateBattleHUDHandHighlight();
@@ -483,7 +508,7 @@ public partial class SamplePlayer : GameActor, IPlayerStatsSource
 			{
 				if (body is SampleEnemy enemy)
 				{
-					enemy.TakeDamage((int)AttackDamage);
+					enemy.TakeDamage((int)AttackDamage, GlobalPosition, this);
 					hitCount++;
 					GameLogger.Info(nameof(SamplePlayer), $"Hit enemy: {enemy.Name}");
 				}
@@ -500,10 +525,10 @@ public partial class SamplePlayer : GameActor, IPlayerStatsSource
 		}
 	}
 	
-	public override void TakeDamage(int damage)
+	public override void TakeDamage(int damage, Vector2? attackOrigin = null, GameActor? attacker = null)
 	{
 		_pendingAttackSourceState = string.Empty;
-		base.TakeDamage(damage);
+		base.TakeDamage(damage, attackOrigin, attacker);
 		UpdateStatsUI();
 	}
 	

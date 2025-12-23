@@ -1,9 +1,11 @@
 using Godot;
 using System;
 using Kuros.Systems.FSM;
+using Kuros.Systems.Loot;
 using Kuros.Core.Effects;
 using Kuros.Utils;
 using Kuros.Core.Stats;
+using Kuros.Core.Events;
 
 namespace Kuros.Core
 {
@@ -24,10 +26,14 @@ namespace Kuros.Core
         [Export] public EffectController EffectController { get; private set; } = null!;
         [Export] public CharacterStatProfile? StatProfile { get; private set; }
 
+        [ExportCategory("Loot")]
+        [Export] public LootDropTable? LootTable { get; set; }
+
         // Exposed state for States to use
         public int CurrentHealth { get; protected set; }
         public float AttackTimer { get; set; } = 0.0f;
         public bool FacingRight { get; protected set; } = true;
+        public event Func<DamageEventArgs, bool>? DamageIntercepted;
         public AnimationPlayer? AnimPlayer => _animationPlayer;
         
         protected Node2D _spineCharacter = null!;
@@ -139,8 +145,30 @@ namespace Kuros.Core
             // StateMachine._PhysicsProcess is called automatically by Godot if it's in the tree
         }
 
-        public virtual void TakeDamage(int damage)
+        public virtual void TakeDamage(int damage, Vector2? attackOrigin = null, GameActor? attacker = null)
         {
+            if (damage <= 0) return;
+
+            if (DamageIntercepted != null)
+            {
+                var args = new DamageEventArgs(this, damage, attackOrigin);
+                foreach (Func<DamageEventArgs, bool> handler in DamageIntercepted.GetInvocationList())
+                {
+                    handler(args);
+                    if (args.IsBlocked)
+                    {
+                        GameLogger.Info(nameof(GameActor), $"{Name} blocked incoming damage.");
+                        return;
+                    }
+                }
+
+                damage = args.Damage;
+                if (damage <= 0)
+                {
+                    return;
+                }
+            }
+
             CurrentHealth -= damage;
             CurrentHealth = Mathf.Max(CurrentHealth, 0);
             NotifyHealthChanged();
@@ -161,6 +189,40 @@ namespace Kuros.Core
                     StateMachine.ChangeState("Hit");
                 }
             }
+
+            if (attacker != null)
+            {
+                Events.DamageEventBus.Publish(attacker, this, damage);
+            }
+        }
+
+        public sealed class DamageEventArgs
+        {
+            public GameActor Target { get; }
+            public int Damage { get; set; }
+            public Vector2? AttackOrigin { get; }
+            public Vector2 AttackDirection { get; }
+            public bool IsBlocked { get; set; }
+
+            internal DamageEventArgs(GameActor target, int damage, Vector2? attackOrigin)
+            {
+                Target = target;
+                Damage = damage;
+                AttackOrigin = attackOrigin;
+                if (attackOrigin.HasValue)
+                {
+                    var delta = target.GlobalPosition - attackOrigin.Value;
+                    AttackDirection = delta.LengthSquared() > Mathf.Epsilon
+                        ? delta.Normalized()
+                        : Vector2.Zero;
+                }
+                else
+                {
+                    AttackDirection = Vector2.Zero;
+                }
+            }
+
+            public Vector2 Forward => Target.FacingRight ? Vector2.Right : Vector2.Left;
         }
 
         /// <summary>
@@ -203,8 +265,19 @@ namespace Kuros.Core
 
         protected virtual void OnDeathFinalized()
         {
+            HandleLootDrops();
             EffectController?.ClearAll();
             QueueFree();
+        }
+
+        protected virtual void HandleLootDrops()
+        {
+            if (LootTable == null)
+            {
+                return;
+            }
+
+            LootDropSystem.SpawnLootForActor(this, LootTable);
         }
 
         public void ApplyEffect(ActorEffect effect)

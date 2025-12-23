@@ -1,7 +1,11 @@
 using System;
 using System.Collections.Generic;
 using Godot;
+using Kuros.Core;
 using Kuros.Items;
+using Kuros.Items.Durability;
+using Kuros.Items.Effects;
+using Kuros.Items.Tags;
 using Kuros.Systems.Inventory;
 using Kuros.Utils;
 
@@ -17,6 +21,8 @@ namespace Kuros.Actors.Heroes
 
         public InventoryContainer Backpack { get; private set; } = null!;
         public InventoryContainer? QuickBar { get; set; }
+        [Export] public ItemDefinition? UnarmedWeaponDefinition { get; set; }
+        private const string DefaultUnarmedWeaponPath = "res://resources/items/Weapon_Unarmed_Default.tres";
 
         // 跟踪已获得的物品ID（用于判断是否是第一次获得）
         private HashSet<string> _obtainedItemIds = new HashSet<string>();
@@ -35,6 +41,24 @@ namespace Kuros.Actors.Heroes
         public SpecialInventorySlot? WeaponSlot => GetSpecialSlot(SpecialInventorySlotIds.PrimaryWeapon);
         public int SelectedBackpackSlot { get; private set; }
         public bool HasSelectedItem => GetSelectedBackpackStack() != null;
+        
+        /// <summary>
+        /// 當前左手選中的快捷欄槽位索引（1-4，對應快捷欄2-5）
+        /// -1 表示未選中任何槽位
+        /// </summary>
+        public int SelectedQuickBarSlot { get; set; } = 1;
+        
+        /// <summary>
+        /// 檢查左手選中的快捷欄槽位是否有物品
+        /// </summary>
+        public bool HasSelectedQuickBarItem
+        {
+            get
+            {
+                var stack = GetSelectedQuickBarStack();
+                return stack != null && !stack.IsEmpty && stack.Item.ItemId != "empty_item";
+            }
+        }
 
         // 事件
         public event Action<ItemDefinition>? ItemPicked;
@@ -50,6 +74,11 @@ namespace Kuros.Actors.Heroes
             Backpack = GetNodeOrNull<InventoryContainer>("Backpack") ?? CreateBackpack();
             Backpack.SlotCount = BackpackSlots;
             Backpack.InventoryChanged += OnBackpackInventoryChanged;
+
+            if (UnarmedWeaponDefinition == null)
+            {
+                UnarmedWeaponDefinition = ResourceLoader.Load<ItemDefinition>(DefaultUnarmedWeaponPath);
+            }
 
             // 初始化特殊槽位
             InitializeSpecialSlots();
@@ -73,7 +102,6 @@ namespace Kuros.Actors.Heroes
         public void SetQuickBar(InventoryContainer quickBar)
         {
             QuickBar = quickBar;
-            GD.Print($"PlayerInventoryComponent: QuickBar has been set. QuickBar is {(quickBar != null ? "valid" : "null")}");
         }
 
         /// <summary>
@@ -100,8 +128,11 @@ namespace Kuros.Actors.Heroes
         }
 
         /// <summary>
-        /// 智能添加物品：优先放入快捷栏2345的第一个空槽位或可合并的槽位，剩余放入物品栏
-        /// 注意：快捷栏1（索引0）被小木剑占位，不会被填充
+        /// 智能添加物品：
+        /// 1. 優先放入當前選中的快捷欄槽位（左手選中的槽位）
+        /// 2. 如果選中槽位已有物品，依次查看快捷欄的各個索引（1-4），優先放置在最左側的空槽位
+        /// 3. 快捷欄1（索引0）是小木劍，永遠不會被更改
+        /// 4. 快捷欄滿時，溢出的物品放置到物品欄中
         /// </summary>
         public int AddItemSmart(ItemDefinition item, int amount, bool showPopupIfFirstTime = true)
         {
@@ -123,14 +154,31 @@ namespace Kuros.Actors.Heroes
             int remaining = amount;
             bool isFirstTime = IsFirstTimeObtaining(item);
 
-            // 优先放入快捷栏2345（索引1-4，因为索引0是默认小木剑，需要跳过）
+            // 优先放入快捷栏（索引1-4，因为索引0是默认小木剑，需要跳过）
             if (QuickBar != null && remaining > 0)
             {
-                GD.Print($"AddItemSmart: Attempting to add {amount} x {item.DisplayName} to quickbar");
+                // 步驟1：優先嘗試放入當前選中的快捷欄槽位
+                if (SelectedQuickBarSlot >= 1 && SelectedQuickBarSlot <= 4)
+                {
+                    var selectedStack = QuickBar.GetStack(SelectedQuickBarSlot);
+                    // 檢查選中槽位是否為空、空白道具或可合併的相同物品
+                    if (selectedStack == null || selectedStack.IsEmpty || 
+                        selectedStack.Item.ItemId == "empty_item" ||
+                        (selectedStack.Item.ItemId == item.ItemId && !selectedStack.IsFull))
+                    {
+                        int added = QuickBar.TryAddItemToSlot(item, remaining, SelectedQuickBarSlot);
+                        if (added > 0)
+                        {
+                            remaining -= added;
+                        }
+                    }
+                }
                 
-                // 首先尝试合并到已有相同物品的槽位
+                // 步驟2：如果還有剩餘，嘗試合併到已有相同物品的槽位
                 for (int i = 1; i < 5 && remaining > 0; i++)
                 {
+                    if (i == SelectedQuickBarSlot) continue; // 跳過已處理的選中槽位
+                    
                     var existingStack = QuickBar.GetStack(i);
                     if (existingStack != null && !existingStack.IsEmpty && 
                         existingStack.Item.ItemId == item.ItemId && !existingStack.IsFull)
@@ -138,17 +186,18 @@ namespace Kuros.Actors.Heroes
                         int added = QuickBar.TryAddItemToSlot(item, remaining, i);
                         if (added > 0)
                         {
-                            GD.Print($"AddItemSmart: Merged {added} x {item.DisplayName} into existing stack at slot {i}");
                             remaining -= added;
                         }
                     }
                 }
                 
-                // 如果还有剩余，找到第一个空槽位或空白道具槽位添加
+                // 步驟3：如果还有剩余，找到最左側的空槽位或空白道具槽位添加
                 if (remaining > 0)
                 {
                     for (int i = 1; i < 5 && remaining > 0; i++)
                     {
+                        if (i == SelectedQuickBarSlot) continue; // 跳過已處理的選中槽位
+                        
                         var existingStack = QuickBar.GetStack(i);
                         // 检查槽位是否为空或包含空白道具
                         if (existingStack == null || existingStack.IsEmpty || 
@@ -157,7 +206,6 @@ namespace Kuros.Actors.Heroes
                             int added = QuickBar.TryAddItemToSlot(item, remaining, i);
                             if (added > 0)
                             {
-                                GD.Print($"AddItemSmart: Added {added} x {item.DisplayName} to slot {i} (replaced empty item if present)");
                                 remaining -= added;
                                 break;
                             }
@@ -165,21 +213,15 @@ namespace Kuros.Actors.Heroes
                     }
                 }
             }
-            else
-            {
-                GD.PrintErr($"AddItemSmart: QuickBar is null! Item will only be added to backpack.");
-            }
 
-            // 剩余物品放入物品栏（会自动替换空白道具）
+            // 步驟4：剩余物品放入物品栏（会自动替换空白道具）
             if (remaining > 0)
             {
-                GD.Print($"AddItemSmart: Adding {remaining} remaining items to backpack");
                 int addedToBackpack = Backpack.AddItem(item, remaining);
                 remaining -= addedToBackpack;
             }
 
             int totalAdded = amount - remaining;
-            GD.Print($"AddItemSmart: Total added: {totalAdded} out of {amount}");
 
             // 如果成功添加了物品且是第一次获得，标记为已获得
             if (totalAdded > 0 && isFirstTime)
@@ -351,6 +393,75 @@ namespace Kuros.Actors.Heroes
             return true;
         }
 
+        /// <summary>
+        /// 消耗当前选中槽位中的可食用物品（需要 Food 标签），触发 OnConsume 效果并根据耐久/数量扣除。
+        /// </summary>
+        public bool TryConsumeSelectedItem(GameActor? consumer)
+        {
+            if (Backpack == null) return false;
+            var stack = GetSelectedBackpackStack();
+            if (stack == null || stack.IsEmpty) return false;
+            if (!stack.HasTag(ItemTagIds.Food))
+            {
+                return false;
+            }
+
+            if (stack.DurabilityState != null && stack.DurabilityState.IsBroken)
+            {
+                return false;
+            }
+
+            var item = stack.Item;
+            bool usesDurability = item.DurabilityConfig != null && stack.HasDurability;
+            bool removedStack = false;
+
+            if (usesDurability && item.DurabilityConfig != null)
+            {
+                int damage = item.DurabilityConfig.DamagePerUse;
+                if (damage <= 0)
+                {
+                    damage = 1;
+                }
+
+                bool broke = stack.ApplyDurabilityDamage(damage, consumer, triggerEffects: true);
+                if (broke && item.DurabilityConfig.BreakBehavior == DurabilityBreakBehavior.Disappear)
+                {
+                    removedStack = true;
+                }
+            }
+            else
+            {
+                int removed = Backpack.RemoveItemFromSlot(SelectedBackpackSlot, 1);
+                if (removed <= 0)
+                {
+                    return false;
+                }
+
+                removedStack = Backpack.GetStack(SelectedBackpackSlot) == null;
+            }
+
+            if (consumer != null)
+            {
+                item.ApplyEffects(consumer, ItemEffectTrigger.OnConsume);
+            }
+
+            if (removedStack)
+            {
+                if (usesDurability)
+                {
+                    Backpack.SetStack(SelectedBackpackSlot, null);
+                }
+                NotifyItemRemoved(item.ItemId);
+            }
+            else if (usesDurability)
+            {
+                Backpack.EmitSignal(InventoryContainer.SignalName.SlotChanged, SelectedBackpackSlot, item.ItemId, stack.Quantity);
+                Backpack.EmitSignal(InventoryContainer.SignalName.InventoryChanged);
+            }
+
+            return true;
+        }
+
         public int TryAddItemToSelectedSlot(ItemDefinition item, int quantity)
         {
             if (Backpack == null || item == null || quantity <= 0) return 0;
@@ -380,6 +491,85 @@ namespace Kuros.Actors.Heroes
         public InventoryItemStack? GetSelectedBackpackStack()
         {
             return Backpack?.GetStack(SelectedBackpackSlot);
+        }
+
+        public float GetSelectedAttributeValue(string attributeId, float defaultValue = 0f)
+        {
+            if (string.IsNullOrWhiteSpace(attributeId)) return defaultValue;
+            var stack = GetSelectedBackpackStack();
+            if (stack != null)
+            {
+                return stack.GetAttributeValue(attributeId, defaultValue);
+            }
+
+            if (UnarmedWeaponDefinition != null &&
+                UnarmedWeaponDefinition.TryResolveAttribute(attributeId, 1, out var attribute) &&
+                attribute.IsValid)
+            {
+                return attribute.Value;
+            }
+            return defaultValue;
+        }
+
+        public ItemDefinition? GetCurrentWeaponDefinition()
+        {
+            var stack = GetSelectedBackpackStack();
+            return stack?.Item ?? UnarmedWeaponDefinition;
+        }
+
+        /// <summary>
+        /// 獲取當前選中的快捷欄槽位的物品堆疊
+        /// </summary>
+        public InventoryItemStack? GetSelectedQuickBarStack()
+        {
+            if (QuickBar == null || SelectedQuickBarSlot < 1 || SelectedQuickBarSlot > 4)
+            {
+                return null;
+            }
+            return QuickBar.GetStack(SelectedQuickBarSlot);
+        }
+
+        /// <summary>
+        /// 嘗試從選中的快捷欄槽位提取物品
+        /// </summary>
+        public bool TryExtractFromSelectedQuickBarSlot(int amount, out InventoryItemStack? extracted)
+        {
+            extracted = null;
+            if (QuickBar == null || SelectedQuickBarSlot < 1 || SelectedQuickBarSlot > 4)
+            {
+                return false;
+            }
+            return QuickBar.TryExtractFromSlot(SelectedQuickBarSlot, amount, out extracted);
+        }
+
+        /// <summary>
+        /// 嘗試將物品堆疊返回到選中的快捷欄槽位
+        /// </summary>
+        public bool TryReturnStackToSelectedQuickBarSlot(InventoryItemStack? stack, out int acceptedQuantity)
+        {
+            acceptedQuantity = 0;
+            if (QuickBar == null || stack == null || stack.IsEmpty)
+            {
+                return false;
+            }
+            if (SelectedQuickBarSlot < 1 || SelectedQuickBarSlot > 4)
+            {
+                return false;
+            }
+
+            int accepted = QuickBar.TryAddItemToSlot(stack.Item, stack.Quantity, SelectedQuickBarSlot);
+            if (accepted <= 0)
+            {
+                return false;
+            }
+
+            acceptedQuantity = Math.Min(accepted, stack.Quantity);
+            if (acceptedQuantity > 0)
+            {
+                stack.Remove(acceptedQuantity);
+            }
+
+            return true;
         }
 
         public float GetBackpackAttributeValue(string attributeId, float baseValue = 0f)
