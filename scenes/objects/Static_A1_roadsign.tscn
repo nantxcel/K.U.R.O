@@ -1,0 +1,19 @@
+[gd_scene load_steps=3 format=3 uid="uid://0k5p2tny0qe"]
+
+[ext_resource type="Texture2D" uid="uid://hgywt5xvygxc" path="res://assets/furnitures/出租车牌子.png" id="1_dbhg2"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_6vw8c"]
+radius = 31.257
+
+[node name="Static_A1_roadsign" type="StaticBody2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.345, 0.345)
+texture = ExtResource("1_dbhg2")
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="."]
+position = Vector2(-3.0000114, 104.00001)
+rotation = -0.37350047
+scale = Vector2(0.66, 0.66)
+skew = -0.7749262
+shape = SubResource("CircleShape2D_6vw8c")

@@ -7,11 +7,13 @@ namespace Kuros.Actors.Heroes.States
     /// </summary>
     public partial class PlayerPickUpState : PlayerState
     {
-        [Export] public string PickAnimation = "animations/pickup";
+        public string PickAnimation = "animations/pickup";
+        public float PickUpAnimationSpeed = 1.0f;
 
         private PlayerItemInteractionComponent? _interaction;
         private float _animRemaining;
         private bool _animationFinished;
+        private float _originalSpeedScale = 1.0f;
 
         protected override void _ReadyState()
         {
@@ -24,6 +26,15 @@ namespace Kuros.Actors.Heroes.States
             Player.Velocity = Vector2.Zero;
             _animationFinished = false;
             PlayAnimation();
+        }
+        
+        public override void Exit()
+        {
+            // Restore original animation speed when leaving pick up state
+            if (Actor.AnimPlayer != null)
+            {
+                Actor.AnimPlayer.SpeedScale = _originalSpeedScale;
+            }
         }
 
         public override void PhysicsUpdate(double delta)
@@ -41,7 +52,12 @@ namespace Kuros.Actors.Heroes.States
         {
             if (Actor.AnimPlayer != null && Actor.AnimPlayer.HasAnimation(PickAnimation))
             {
+                // Save original speed scale before modifying
+                _originalSpeedScale = Actor.AnimPlayer.SpeedScale;
+                
                 Actor.AnimPlayer.Play(PickAnimation);
+                // Set animation playback speed only for pick up animation
+                Actor.AnimPlayer.SpeedScale = PickUpAnimationSpeed;
                 _animRemaining = (float)Actor.AnimPlayer.CurrentAnimationLength;
             }
             else
