@@ -25,6 +25,14 @@ namespace Kuros.Actors.Heroes.States
         {
             Player.Velocity = Vector2.Zero;
             _animationFinished = false;
+
+            // 无论动画是否存在，只要有 AnimPlayer 就立即缓存当前 SpeedScale，
+            // 避免 Exit 时错误地恢复为硬编码的 1.0f。
+            if (Actor.AnimPlayer != null)
+            {
+                _originalSpeedScale = Actor.AnimPlayer.SpeedScale;
+            }
+
             PlayAnimation();
         }
         
@@ -52,9 +60,6 @@ namespace Kuros.Actors.Heroes.States
         {
             if (Actor.AnimPlayer != null && Actor.AnimPlayer.HasAnimation(PickAnimation))
             {
-                // Save original speed scale before modifying
-                _originalSpeedScale = Actor.AnimPlayer.SpeedScale;
-                
                 Actor.AnimPlayer.Play(PickAnimation);
                 // Set animation playback speed only for pick up animation
                 Actor.AnimPlayer.SpeedScale = PickUpAnimationSpeed;

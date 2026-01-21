@@ -60,7 +60,7 @@ namespace Kuros.Actors.Heroes.States
                 return;
             }
             
-            // Run Logic (1.5x Speed)
+            // Run Logic (2x Speed)
             Vector2 velocity = Actor.Velocity;
             velocity.X = input.X * (Actor.Speed * 2.0f);
             velocity.Y = input.Y * (Actor.Speed * 2.0f);

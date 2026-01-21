@@ -83,7 +83,9 @@ namespace Kuros.Actors.Heroes.States
                 Actor.AnimPlayer.Play(ThrowAnimation);
                 // Set animation playback speed only for throw animation
                 Actor.AnimPlayer.SpeedScale = ThrowAnimationSpeed;
-                _animRemaining = (float)Actor.AnimPlayer.CurrentAnimationLength;
+
+                var speed = Mathf.Max(Actor.AnimPlayer.SpeedScale, 0.0001f);
+                _animRemaining = (float)Actor.AnimPlayer.CurrentAnimationLength / speed;
             }
             else
             {

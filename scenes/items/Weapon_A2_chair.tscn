@@ -8,7 +8,7 @@ size = Vector2(18, 6.588234)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_gy46y"]
 size = Vector2(60, 131)
 
-[node name="Weapon_A0_chair" type="RigidBody2D"]
+[node name="Weapon_A2_chair" type="RigidBody2D"]
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 scale = Vector2(0.34, 0.34)

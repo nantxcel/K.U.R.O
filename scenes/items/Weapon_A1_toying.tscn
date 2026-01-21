@@ -3,7 +3,7 @@
 [ext_resource type="Texture2D" uid="uid://c47aqt0abqxhi" path="res://assets/furnitures/房间卧室家具导出_0000s_0001_投影.png" id="1_mxfcx"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_mxfcx"]
-radius = 57.245087
+radius = 79.47399
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_mxfcx"]
 radius = 70.0
@@ -16,10 +16,9 @@ scale = Vector2(0.34, 0.34)
 texture = ExtResource("1_mxfcx")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(4.0000105, 130)
+position = Vector2(3.9999971, 96.99999)
 rotation = -0.43284166
 scale = Vector2(0.805, 0.805)
-skew = -0.6318092
 shape = SubResource("CircleShape2D_mxfcx")
 
 [node name="Hitbox" type="Area2D" parent="."]
