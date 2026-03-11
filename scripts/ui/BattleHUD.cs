@@ -20,8 +20,6 @@ namespace Kuros.UI
 	[Export] public Label ScoreLabel { get; private set; } = null!;
 	[Export] public Button PauseButton { get; private set; } = null!;
 	[Export] public Label GoldLabel { get; private set; } = null!;
-	[Export] public Control MinimapContainer { get; private set; } = null!;
-	[Export] public ColorRect PlayerMarker { get; private set; } = null!;
 
 		[ExportCategory("Default Items")]
 		[Export] public ItemDefinition? DefaultSwordItem { get; set; } // 默认小木剑物品定义
@@ -41,10 +39,6 @@ namespace Kuros.UI
 		private readonly Label[] _quickSlotLabels = new Label[5];
 		private readonly Panel[] _quickSlotPanels = new Panel[5];
 		private readonly TextureRect[] _quickSlotIcons = new TextureRect[5];
-		
-		// 小地图相关
-		private Vector2 _mapSize = new Vector2(2000, 1500); // 地图总大小（可以根据实际地图调整）
-		private Vector2 _minimapSize = new Vector2(200, 200); // 小地图显示大小
 		
 		// 颜色定义
 		private static readonly Color LeftHandColor = new Color(0.2f, 0.5f, 1.0f, 1.0f); // 蓝色
@@ -89,17 +83,6 @@ namespace Kuros.UI
 			if (GoldLabel == null)
 			{
 				GoldLabel = GetNodeOrNull<Label>("GoldLabel");
-			}
-
-			// 初始化小地图引用
-			if (MinimapContainer == null)
-			{
-				MinimapContainer = GetNodeOrNull<Control>("MinimapPanel/MinimapContainer");
-			}
-
-			if (PlayerMarker == null)
-			{
-				PlayerMarker = GetNodeOrNull<ColorRect>("MinimapPanel/MinimapContainer/PlayerMarker");
 			}
 
 			// 使用 Godot 原生 Connect 方法连接信号，在导出版本中更可靠
@@ -573,7 +556,6 @@ namespace Kuros.UI
 		}
 
 		private SamplePlayer? _player;
-		private Vector2 _lastPlayerPosition = Vector2.Zero; // 上次的玩家位置，用于小地图更新优化
 		
 		/// <summary>
 		/// 设置玩家引用（用于获取最大生命值等属性）
@@ -586,8 +568,6 @@ namespace Kuros.UI
 				int maxHealth = _player.MaxHealth;
 				int score = _player is IPlayerStatsSource statsSource ? statsSource.Score : _score;
 				UpdateStats(_player.CurrentHealth, maxHealth, score);
-				// 重置位置缓存，强制下次更新
-				_lastPlayerPosition = Vector2.Zero;
 			}
 		}
 
@@ -631,81 +611,6 @@ namespace Kuros.UI
 					GetViewport().SetInputAsHandled();
 				}
 			}
-		}
-
-		public override void _Process(double delta)
-		{
-			base._Process(delta);
-			UpdateMinimap();
-		}
-
-		/// <summary>
-		/// 更新小地图上的玩家位置
-		/// </summary>
-		private void UpdateMinimap()
-		{
-			if (MinimapContainer == null || PlayerMarker == null)
-			{
-				return;
-			}
-
-			// 获取玩家位置
-			Vector2 playerPosition = Vector2.Zero;
-			Node2D? playerNode = null;
-			
-			// 如果缓存的玩家引用有效，使用它
-			if (_player != null && GodotObject.IsInstanceValid(_player))
-			{
-				playerNode = _player;
-				playerPosition = _player.GlobalPosition;
-			}
-			else
-			{
-				// 如果玩家不存在，尝试从场景中查找并缓存
-				playerNode = GetTree().GetFirstNodeInGroup("player") as Node2D;
-				if (playerNode != null)
-				{
-					playerPosition = playerNode.GlobalPosition;
-					// 缓存玩家引用（如果是 SamplePlayer）
-					if (playerNode is SamplePlayer samplePlayer)
-					{
-						_player = samplePlayer;
-					}
-				}
-				else
-				{
-					// 没有找到玩家，提前返回
-					return;
-				}
-			}
-
-			// 位置变化检测：如果位置没有改变，提前返回
-			if (playerPosition == _lastPlayerPosition)
-			{
-				return;
-			}
-			
-			// 更新缓存的位置
-			_lastPlayerPosition = playerPosition;
-
-			// 将玩家世界坐标转换为小地图坐标
-			// 假设地图范围从 (0, 0) 到 _mapSize
-			float normalizedX = Mathf.Clamp(playerPosition.X / _mapSize.X, 0.0f, 1.0f);
-			float normalizedY = Mathf.Clamp(playerPosition.Y / _mapSize.Y, 0.0f, 1.0f);
-
-			// 获取小地图容器的实际大小
-			var containerSize = MinimapContainer.Size;
-			if (containerSize.X <= 0 || containerSize.Y <= 0)
-			{
-				return;
-			}
-
-			// 计算玩家标记在小地图中的位置
-			float markerX = normalizedX * containerSize.X;
-			float markerY = normalizedY * containerSize.Y;
-
-			// 更新玩家标记位置（相对于小地图容器）
-			PlayerMarker.Position = new Vector2(markerX - PlayerMarker.Size.X / 2, markerY - PlayerMarker.Size.Y / 2);
 		}
 	}
 }
