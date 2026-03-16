@@ -253,6 +253,7 @@ namespace Kuros.Scenes
 			{
 				_isLoadingScene = false;
 				GameLogger.Error(nameof(MainMenuManager), $"场景加载失败: {_pendingScenePath}");
+				_pendingScenePath = "";
 				if (_loadingScreen != null && !_loadingScreen.IsLoadingComplete())
 					_loadingScreen.SetLoadingComplete();
 			}
@@ -273,6 +274,12 @@ namespace Kuros.Scenes
 			string path = _pendingScenePath;
 			_loadedBattleScene = null;
 			_pendingScenePath = "";
+			// 如果异步加载失败（未获取到场景且没有待切换路径），则不进行场景切换，保持当前场景
+			if (scene == null && string.IsNullOrEmpty(path))
+			{
+				GameLogger.Error(nameof(MainMenuManager), "异步加载失败，保持当前场景不变");
+				return;
+			}
 			if (scene != null)
 				PerformSceneChangeWithPacked(scene);
 			else if (!string.IsNullOrEmpty(path))
