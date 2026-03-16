@@ -46,8 +46,10 @@ size = Vector2(723, 1355)
 [node name="MainCharacter" type="CharacterBody2D" node_paths=PackedStringArray("AttackArea", "AttackArea", "StateMachine", "EffectController")]
 scale = Vector2(0.16, 0.16)
 script = ExtResource("1_om6pm")
+WalkAnimationSpeed = 2.0
+RunAnimationSpeed = 3.0
 AttackArea = NodePath("AttackArea")
-
+AttackArea = NodePath("AttackArea")
 StateMachine = NodePath("StateMachine")
 EffectController = NodePath("EffectController")
 
@@ -61,8 +63,8 @@ texture = ExtResource("3_tdm7a")
 skeleton_data_res = SubResource("SpineSkeletonDataResource_ixg0x")
 bones_thickness = 10.09
 preview_skin = "Default"
-preview_animation = "attack_thrust"
-preview_frame = true
+preview_animation = "-- Empty --"
+preview_frame = false
 preview_time = 0.0
 script = ExtResource("4_ixg0x")
 
@@ -123,8 +125,9 @@ script = ExtResource("16_oc5yk")
 [node name="Inventory" type="Node" parent="."]
 script = ExtResource("17_13pt2")
 
-[node name="WeaponSkillController" type="Node" parent="."]
+[node name="WeaponSkillController" type="Node" parent="." node_paths=PackedStringArray("Inventory")]
 script = ExtResource("18_utqjm")
+Inventory = NodePath("../Inventory")
 
 [node name="ItemInteraction" type="Node" parent="."]
 script = ExtResource("19_t3prk")
