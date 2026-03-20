@@ -4,6 +4,9 @@ extends SpineSprite
 # 定義一個信號，讓父節點或其他腳本可以輕鬆監聽
 signal hit_received(hit_step: int, animation_name: String)
 
+var _current_animation_name: String = ""
+var _hit_sequence: int = 0
+
 func _ready() -> void:
 	# 在初始化時連結 Spine 原生的事件信號
 	self.animation_event.connect(_on_animation_event)
@@ -11,14 +14,23 @@ func _ready() -> void:
 ## 處理 Spine 事件
 func _on_animation_event(_sprite: SpineSprite, _anim_state: SpineAnimationState, track_entry: SpineTrackEntry, event: SpineEvent):
 	if event.get_data().get_event_name() == "hit":
-		var hit_step = event.get_int_value()
 		var anim_name = track_entry.get_animation().get_name()
+		var raw_hit_step = event.get_int_value()
+
+		if anim_name != _current_animation_name:
+			_current_animation_name = anim_name
+			_hit_sequence = 0
+
+		_hit_sequence += 1
+
+		# Spine 事件的 int 值不会自动递增；若未在 Spine 中手动填写，则回退为脚本内自增序号
+		var hit_step = raw_hit_step if raw_hit_step != 0 else _hit_sequence
 		
 		# 發出我們自定義的信號
 		hit_received.emit(hit_step, anim_name)
 
 		# 打印調試資訊
-		print("[Spine Event] 觸發 hit: ", anim_name, " 段數: ", hit_step)
+		print("[Spine Event] 觸發 hit: ", anim_name, " 原始值: ", raw_hit_step, " 自增段數: ", _hit_sequence, " 輸出段數: ", hit_step)
 
 ## 播放动画
 ## anim: 动画名称
@@ -29,6 +41,9 @@ func play(anim: String, loop := true, mix_duration := 0.1, time_scale := 1.0):
 	var state = get_animation_state()
 	if not state:
 		return null
+
+	_current_animation_name = anim
+	_hit_sequence = 0
 	
 	var entry = state.set_animation(anim, loop)
 	if entry:

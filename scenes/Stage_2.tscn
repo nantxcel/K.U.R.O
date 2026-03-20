@@ -7,7 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://pan0auvatm1f" path="res://assets/environments/scene_2_hotel/电梯墙前.png" id="4_hq53u"]
 [ext_resource type="PackedScene" uid="uid://c88kwpwoxtoev" path="res://scenes/ui/hud/BattleHUD.tscn" id="5_qokfb"]
 [ext_resource type="PackedScene" uid="uid://cofm45kotvgto" path="res://scenes/actors/enemies/Enemy_B1_fat.tscn" id="6_ctuyy"]
-[ext_resource type="Script" uid="uid://co6mikk3codni" path="res://scripts/items/world/DropItemDebugger.cs" id="7_k0qph"]
+[ext_resource type="Script" uid="uid://b7afb3wjghskq" path="res://scripts/items/world/DropItemDebugger.cs" id="7_k0qph"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_s0pgc"]
 size = Vector2(16974, 774)

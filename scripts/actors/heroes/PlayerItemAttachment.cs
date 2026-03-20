@@ -17,10 +17,11 @@ namespace Kuros.Actors.Heroes
         [Export] public Godot.Collections.Array<NodePath> SpineBoneNodePaths { get; set; } = new();
         [Export] public Godot.Collections.Array<string> SpineBoneOrder { get; set; } = new() { "WQ1", "WQ2", "WP" };
         [Export] public bool FlipBoneAttachmentWithFacing { get; set; } = false;
-        [Export(PropertyHint.Range, "-512,512,1")] public Vector2 BoneIconOffset { get; set; } = Vector2.Zero;
+        [Export(PropertyHint.Range, "-1024,1024,1")] public Vector2 BoneIconOffset { get; set; } = Vector2.Zero;
+        [Export] public bool RotateBoneOffsetWithBone { get; set; } = false;
         [Export(PropertyHint.Range, "-512,512,1")] public Vector2 IconOffset { get; set; } = new Vector2(32, -32);
         [Export] public bool FlipWithFacing { get; set; } = true;
-        [Export] public int ZIndex { get; set; } = 100;
+        [Export] public int ZIndex { get; set; } = 0;
         [Export] public string SpineSlotDefaultSelection { get; set; } = string.Empty;
 
         private Node2D? _attachmentParent;
@@ -32,6 +33,8 @@ namespace Kuros.Actors.Heroes
         private readonly List<Node2D> _spineBoneNodes = new();
         private Node2D? _activeBoneNode;
         private bool _iconUsesBoneTracking;
+        private bool _useSlotAnchorBinding;
+        private Area2D? _equippedAttackArea;
         private const string SlotSelectProperty = "切换名";
         private const string SlotIconName = "HeldItemSlotIcon";
 
@@ -126,6 +129,7 @@ namespace Kuros.Actors.Heroes
         public override void _Process(double delta)
         {
             base._Process(delta);
+            MaintainSlotAnchorBinding();
             UpdateBoneAttachmentTransform();
         }
 
@@ -177,20 +181,35 @@ namespace Kuros.Actors.Heroes
 
         private void UpdateAttachmentIcon()
         {
+            ItemDefinition? activeItem = null;
+
             // 优先从 QuickBar 获取选中的物品（左手物品）
             var stack = Inventory?.GetSelectedQuickBarStack();
             
             // 检查是否为空白道具
             if (stack != null && !stack.IsEmpty && stack.Item.ItemId != "empty_item")
             {
-                ShowItemIcon(stack.Item.Icon);
+                activeItem = stack.Item;
             }
             else
             {
                 // 如果 QuickBar 没有有效物品，尝试从 Backpack 获取
                 var backpackStack = Inventory?.GetSelectedBackpackStack();
-                ShowItemIcon(backpackStack?.Item.Icon);
+                activeItem = backpackStack?.Item;
             }
+
+            ShowItemIcon(activeItem?.Icon);
+            UpdateEquippedAttackArea(activeItem);
+        }
+
+        public Area2D? GetEquippedAttackArea()
+        {
+            if (_equippedAttackArea == null || !GodotObject.IsInstanceValid(_equippedAttackArea) || !_equippedAttackArea.IsInsideTree())
+            {
+                return null;
+            }
+
+            return _equippedAttackArea;
         }
 
         private void ShowOnSpineSlot(Texture2D? texture)
@@ -207,7 +226,23 @@ namespace Kuros.Actors.Heroes
             }
 
             _iconSprite ??= CreateIconSprite(SlotIconName);
-            AttachIconTo(_SpineSlotIconContainer ?? _spineSlotNode, texture);
+
+            var slotAnchorNode = (_SpineSlotIconContainer as Node2D) ?? (_spineSlotNode as Node2D);
+            if (slotAnchorNode != null)
+            {
+                _useSlotAnchorBinding = true;
+                _activeBoneNode = slotAnchorNode;
+                _iconUsesBoneTracking = false;
+                AttachIconTo(slotAnchorNode, texture);
+                ApplySlotAnchorLocalTransform();
+
+                return;
+            }
+            else
+            {
+                _useSlotAnchorBinding = false;
+                AttachIconTo(_SpineSlotIconContainer ?? _spineSlotNode, texture);
+            }
 
             if (_spineSlotNode.HasMethod("set_slot") && texture is AtlasTexture atlasTexture)
             {
@@ -332,6 +367,108 @@ namespace Kuros.Actors.Heroes
             {
                 _iconSprite.Visible = false;
             }
+
+            _activeBoneNode = null;
+            _iconUsesBoneTracking = false;
+            _useSlotAnchorBinding = false;
+        }
+
+        private void UpdateEquippedAttackArea(ItemDefinition? item)
+        {
+            if (item == null)
+            {
+                ClearEquippedAttackArea();
+                return;
+            }
+
+            string scenePath = item.ResolveWorldScenePath();
+            if (string.IsNullOrWhiteSpace(scenePath) || !scenePath.StartsWith("res://", StringComparison.OrdinalIgnoreCase))
+            {
+                ClearEquippedAttackArea();
+                return;
+            }
+
+            var scene = ResourceLoader.Load<PackedScene>(scenePath);
+            if (scene == null)
+            {
+                ClearEquippedAttackArea();
+                GD.PushWarning($"{Name}: 无法加载物品场景 {scenePath}，无法生成武器 AttackArea。");
+                return;
+            }
+
+            var instance = scene.Instantiate();
+            if (instance == null)
+            {
+                ClearEquippedAttackArea();
+                return;
+            }
+
+            var sourceArea = instance.GetNodeOrNull<Area2D>("AttackArea")
+                ?? instance.FindChild("AttackArea", recursive: true, owned: false) as Area2D;
+            if (sourceArea == null)
+            {
+                instance.QueueFree();
+                ClearEquippedAttackArea();
+                return;
+            }
+
+            var duplicatedArea = sourceArea.Duplicate() as Area2D;
+            instance.QueueFree();
+            if (duplicatedArea == null)
+            {
+                ClearEquippedAttackArea();
+                return;
+            }
+
+            ClearEquippedAttackArea();
+            _equippedAttackArea = duplicatedArea;
+            _equippedAttackArea.Name = "AttackArea";
+            ConfigureEquippedAttackArea(_equippedAttackArea);
+            AttachEquippedAttackAreaToIcon();
+        }
+
+        private void ConfigureEquippedAttackArea(Area2D area)
+        {
+            area.TopLevel = false;
+            area.Monitoring = true;
+            area.Monitorable = false;
+            area.CollisionLayer = 0;
+
+            if (_actor is SamplePlayer player && player.AttackArea != null)
+            {
+                area.CollisionMask = player.AttackArea.CollisionMask;
+            }
+
+            foreach (Node child in area.GetChildren())
+            {
+                if (child is CollisionShape2D shape)
+                {
+                    shape.Disabled = false;
+                }
+            }
+        }
+
+        private void AttachEquippedAttackAreaToIcon()
+        {
+            if (_equippedAttackArea == null || _iconSprite == null)
+            {
+                return;
+            }
+
+            if (_equippedAttackArea.GetParent() != _iconSprite)
+            {
+                _iconSprite.AddChild(_equippedAttackArea);
+            }
+        }
+
+        private void ClearEquippedAttackArea()
+        {
+            if (_equippedAttackArea != null && GodotObject.IsInstanceValid(_equippedAttackArea))
+            {
+                _equippedAttackArea.QueueFree();
+            }
+
+            _equippedAttackArea = null;
         }
 
         private Sprite2D CreateIconSprite(string name)
@@ -359,12 +496,12 @@ namespace Kuros.Actors.Heroes
             _iconSprite.Visible = true;
             _iconSprite.Texture = texture;
             _iconSprite.ZIndex = ZIndex;
-            _iconSprite.ZAsRelative = false;
+            _iconSprite.ZAsRelative = true;
+            AttachEquippedAttackAreaToIcon();
 
             if (isBoneAnchor)
             {
                 UpdateBoneAttachmentTransform(force: true);
-                ApplyFacingFlip(applyForBone: true);
             }
             else
             {
@@ -388,16 +525,92 @@ namespace Kuros.Actors.Heroes
             }
 
             var boneTransform = _activeBoneNode.GetGlobalTransform();
-            var final = boneTransform;
-            final.Origin = boneTransform * BoneIconOffset;
-            _iconSprite.GlobalTransform = final;
+            _iconSprite.GlobalPosition = RotateBoneOffsetWithBone
+                ? boneTransform * BoneIconOffset
+                : _activeBoneNode.GlobalPosition + BoneIconOffset;
+            _iconSprite.GlobalRotation = _activeBoneNode.GlobalRotation;
+
+            var scale = _iconSprite.Scale;
+            float absX = MathF.Abs(scale.X);
+            float absY = MathF.Abs(scale.Y);
 
             if (_actor != null && FlipBoneAttachmentWithFacing)
             {
-                var scale = _iconSprite.Scale;
-                scale.X = MathF.Abs(scale.X) * (_actor.FacingRight ? 1f : -1f);
-                _iconSprite.Scale = scale;
+                scale.X = absX * (_actor.FacingRight ? 1f : -1f);
             }
+            else
+            {
+                scale.X = absX;
+            }
+
+            scale.Y = absY;
+            _iconSprite.Scale = scale;
+        }
+
+        private void MaintainSlotAnchorBinding()
+        {
+            if (!_useSlotAnchorBinding || _iconSprite == null || !_iconSprite.Visible)
+            {
+                return;
+            }
+
+            var slotAnchorNode = ResolveCurrentSlotAnchorNode();
+            if (slotAnchorNode == null)
+            {
+                return;
+            }
+
+            _activeBoneNode = slotAnchorNode;
+
+            if (_iconSprite.GetParent() != slotAnchorNode)
+            {
+                slotAnchorNode.AddChild(_iconSprite);
+            }
+
+            ApplySlotAnchorLocalTransform();
+        }
+
+        private Node2D? ResolveCurrentSlotAnchorNode()
+        {
+            var slotAnchorNode = (_SpineSlotIconContainer as Node2D) ?? (_spineSlotNode as Node2D);
+            if (slotAnchorNode != null && IsInstanceValid(slotAnchorNode))
+            {
+                return slotAnchorNode;
+            }
+
+            _spineSlotNode = ResolveSpineSlotNode();
+            slotAnchorNode = (_SpineSlotIconContainer as Node2D) ?? (_spineSlotNode as Node2D);
+            if (slotAnchorNode != null && IsInstanceValid(slotAnchorNode))
+            {
+                return slotAnchorNode;
+            }
+
+            return ResolveActiveBoneNode();
+        }
+
+        private void ApplySlotAnchorLocalTransform()
+        {
+            if (_iconSprite == null)
+            {
+                return;
+            }
+
+            _iconSprite.Position = BoneIconOffset;
+            _iconSprite.Rotation = 0f;
+
+            var scale = _iconSprite.Scale;
+            float absX = MathF.Abs(scale.X);
+            float absY = MathF.Abs(scale.Y);
+            if (_actor != null && FlipBoneAttachmentWithFacing)
+            {
+                scale.X = absX * (_actor.FacingRight ? 1f : -1f);
+            }
+            else
+            {
+                scale.X = absX;
+            }
+            scale.Y = absY;
+            _iconSprite.Scale = scale;
         }
 
         private void ApplyFacingFlip(bool applyForBone)

@@ -16,6 +16,7 @@ public partial class SamplePlayer : GameActor, IPlayerStatsSource
 	[ExportCategory("Combat")]
 	[Export] public Area2D AttackArea { get; private set; } = null!;
 	private CollisionShape2D? _attackCollisionShape;
+	private Area2D? _cachedAttackAreaOwner;
 	private readonly Godot.Collections.Array<Rid> _attackQueryExclude = new();
 	public PlayerFrozenState? FrozenState { get; private set; }
 	public PlayerInventoryComponent? InventoryComponent { get; private set; }
@@ -300,12 +301,9 @@ public partial class SamplePlayer : GameActor, IPlayerStatsSource
 		{
 			return _cachedLeftHandAttachment;
 		}
-		
-		// 如果已经搜索过但未找到，不再重复搜索（使用标记避免重复日志）
-		if (_leftHandAttachmentSearched)
-		{
-			return null;
-		}
+
+		// 允许重试搜索，避免场景延迟挂载导致永久找不到左手挂点。
+		// 仅用于抑制重复“未找到”日志，不阻止后续再次解析。
 		_leftHandAttachmentSearched = true;
 		
 		// 方法1：嘗試使用編輯器設置的路徑
@@ -497,12 +495,15 @@ public partial class SamplePlayer : GameActor, IPlayerStatsSource
 	{
 		AttackTimer = AttackCooldown;
 		GameLogger.Info(nameof(SamplePlayer), "=== Player attacking frame! ===");
-		
-		if (AttackArea == null)
+
+		var activeAttackArea = ResolveAttackAreaForHitDetection(out string areaSource);
+		if (activeAttackArea == null)
 		{
 			GameLogger.Error(nameof(SamplePlayer), "AttackArea is missing! Assign it in Inspector.");
 			return;
 		}
+
+		GameLogger.Info(nameof(SamplePlayer), $"AttackArea Source: {areaSource}, Node: {activeAttackArea.GetPath()}");
 
 		int hitCount = ApplyDamageWithArea(AttackDamage, (target, isFallback) =>
 		{
@@ -518,34 +519,152 @@ public partial class SamplePlayer : GameActor, IPlayerStatsSource
 
 	protected int ApplyDamageWithArea(float damageAmount, Action<GameActor, bool>? onHit)
 	{
-		if (AttackArea == null)
+		var activeAttackArea = ResolveAttackAreaForHitDetection();
+		if (activeAttackArea == null)
 		{
 			return 0;
 		}
 
-		CacheAttackCollisionShape();
-		int hitCount = DealDamageFromBodies(damageAmount, onHit);
-		if (hitCount == 0)
+		int hitCount = ApplyDamageWithSpecificArea(activeAttackArea, damageAmount, onHit);
+		GameLogger.Info(nameof(SamplePlayer), $"AttackArea hit test: {activeAttackArea.GetPath()} -> {hitCount} hit(s)");
+		if (hitCount == 0 && AttackArea != null && activeAttackArea != AttackArea)
 		{
-			hitCount = DealDamageViaShapeQuery(damageAmount, onHit);
+			GameLogger.Info(nameof(SamplePlayer), $"WeaponArea produced 0 hit(s), fallback to PlayerArea: {AttackArea.GetPath()}");
+			hitCount = ApplyDamageWithSpecificArea(AttackArea, damageAmount, onHit);
+			GameLogger.Info(nameof(SamplePlayer), $"PlayerArea fallback hit test: {AttackArea.GetPath()} -> {hitCount} hit(s)");
 		}
+
 		return hitCount;
 	}
 
-	private void CacheAttackCollisionShape()
+	public Area2D? ResolveAttackAreaForHitDetection()
 	{
-		if (_attackCollisionShape != null || AttackArea == null)
+		return ResolveAttackAreaForHitDetection(out _);
+	}
+
+	private Area2D? ResolveAttackAreaForHitDetection(out string areaSource)
+	{
+		if (AttackArea == null)
+		{
+			areaSource = "PlayerArea";
+			return null;
+		}
+
+		var itemAttachment = GetNodeOrNull<PlayerItemAttachment>("ItemAttachment");
+		var attachedWeaponArea = itemAttachment?.GetEquippedAttackArea();
+		if (IsAttackAreaUsable(attachedWeaponArea))
+		{
+			areaSource = "WeaponArea";
+			return attachedWeaponArea;
+		}
+
+		var leftHandAttachment = GetLeftHandAttachment();
+		if (leftHandAttachment == null)
+		{
+			GameLogger.Info(nameof(SamplePlayer), "AttackArea fallback -> PlayerArea (left hand attachment not found)");
+			areaSource = "PlayerArea";
+			return AttackArea;
+		}
+
+		var weaponArea = FindUsableWeaponAttackArea(leftHandAttachment);
+		if (weaponArea != null)
+		{
+			areaSource = "WeaponArea";
+			return weaponArea;
+		}
+
+		GameLogger.Info(nameof(SamplePlayer), $"AttackArea fallback -> PlayerArea (no usable weapon area under {leftHandAttachment.GetPath()})");
+
+		areaSource = "PlayerArea";
+		return AttackArea;
+	}
+
+	private Area2D? FindUsableWeaponAttackArea(Node subtreeRoot)
+	{
+		if (subtreeRoot is Area2D rootArea && rootArea != AttackArea && IsAttackAreaUsable(rootArea))
+		{
+			return rootArea;
+		}
+
+		foreach (Node node in subtreeRoot.FindChildren("*", "Area2D", recursive: true, owned: false))
+		{
+			if (node is not Area2D area || area == AttackArea)
+			{
+				continue;
+			}
+
+			if (!string.Equals(area.Name.ToString(), "AttackArea", StringComparison.OrdinalIgnoreCase))
+			{
+				continue;
+			}
+
+			if (IsAttackAreaUsable(area))
+			{
+				return area;
+			}
+		}
+
+		return null;
+	}
+
+	private int ApplyDamageWithSpecificArea(Area2D attackArea, float damageAmount, Action<GameActor, bool>? onHit)
+	{
+		CacheAttackCollisionShape(attackArea);
+		int hitCount = DealDamageFromBodies(attackArea, damageAmount, onHit);
+		if (hitCount == 0)
+		{
+			hitCount = DealDamageViaShapeQuery(attackArea, damageAmount, onHit);
+		}
+
+		return hitCount;
+	}
+
+	private static bool IsAttackAreaUsable(Area2D? area)
+	{
+		if (area == null || !GodotObject.IsInstanceValid(area) || !area.IsInsideTree())
+		{
+			return false;
+		}
+
+		if (!area.Monitoring)
+		{
+			return false;
+		}
+
+		var shape = area.GetNodeOrNull<CollisionShape2D>("CollisionShape2D");
+		if (shape != null)
+		{
+			return !shape.Disabled && shape.Shape != null;
+		}
+
+		foreach (Node child in area.GetChildren())
+		{
+			if (child is CollisionShape2D collisionShape && !collisionShape.Disabled && collisionShape.Shape != null)
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	private void CacheAttackCollisionShape(Area2D attackArea)
+	{
+		if (_cachedAttackAreaOwner == attackArea && _attackCollisionShape != null)
 		{
 			return;
 		}
 
-		_attackCollisionShape = AttackArea.GetNodeOrNull<CollisionShape2D>("CollisionShape2D");
+		_cachedAttackAreaOwner = attackArea;
+		_attackCollisionShape = null;
+
+		_attackCollisionShape = attackArea.GetNodeOrNull<CollisionShape2D>("CollisionShape2D");
 		if (_attackCollisionShape != null)
 		{
 			return;
 		}
 
-		foreach (Node child in AttackArea.GetChildren())
+		foreach (Node child in attackArea.GetChildren())
 		{
 			if (child is CollisionShape2D shape)
 			{
@@ -560,14 +679,9 @@ public partial class SamplePlayer : GameActor, IPlayerStatsSource
 		}
 	}
 
-	private int DealDamageFromBodies(float damageAmount, Action<GameActor, bool>? onHit)
+	private int DealDamageFromBodies(Area2D attackArea, float damageAmount, Action<GameActor, bool>? onHit)
 	{
-		if (AttackArea == null)
-		{
-			return 0;
-		}
-
-		var bodies = AttackArea.GetOverlappingBodies();
+		var bodies = attackArea.GetOverlappingBodies();
 		int hitCount = 0;
 		foreach (Node body in bodies)
 		{
@@ -581,9 +695,9 @@ public partial class SamplePlayer : GameActor, IPlayerStatsSource
 		return hitCount;
 	}
 
-	private int DealDamageViaShapeQuery(float damageAmount, Action<GameActor, bool>? onHit)
+	private int DealDamageViaShapeQuery(Area2D attackArea, float damageAmount, Action<GameActor, bool>? onHit)
 	{
-		if (_attackCollisionShape == null || _attackCollisionShape.Shape == null || AttackArea == null)
+		if (_attackCollisionShape == null || _attackCollisionShape.Shape == null)
 		{
 			return 0;
 		}

@@ -22,10 +22,6 @@ namespace Kuros.Actors.Heroes.Attacks
             TriggerActions.Clear();
             TriggerActions.Add("attack");
             RequiresTargetInRange = false;
-            WarmupDuration = 0.15f;
-            ActiveDuration = 0.2f;
-            RecoveryDuration = 0.35f;
-            CooldownDuration = 0.5f;
             AnimationName = _defaultAnimation;
             _weaponSkillController = Player.GetNodeOrNull<PlayerWeaponSkillController>("WeaponSkillController");
             _inventory = Player.InventoryComponent ?? Player.GetNodeOrNull<PlayerInventoryComponent>("Inventory");

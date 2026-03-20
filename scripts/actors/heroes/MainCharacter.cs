@@ -206,6 +206,11 @@ namespace Kuros.Actors.Heroes
 			}
 		}
 
+		public Node? GetSpineControllerNode()
+		{
+			return _spineController;
+		}
+
 
 		/// <summary>
 		/// 执行攻击检测（集成 WeaponSkillController）
@@ -213,7 +218,7 @@ namespace Kuros.Actors.Heroes
 		/// </summary>
 		public new void PerformAttackCheck()
 		{
-			if (AttackArea == null)
+			if (ResolveAttackAreaForHitDetection() == null)
 			{
 				GD.PushWarning($"[{Name}] AttackArea 未设置，无法执行攻击检测");
 				return;

@@ -168,6 +168,7 @@ namespace Kuros.Core
 
 		public virtual void TakeDamage(int damage, Vector2? attackOrigin = null, GameActor? attacker = null)
 		{
+			if (IsDeathSequenceActive || IsDead) return;
 			if (damage <= 0) return;
 
 			if (DamageIntercepted != null)

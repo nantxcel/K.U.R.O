@@ -1,3 +1,4 @@
+using System;
 using Godot;
 using Godot.Collections;
 using Kuros.Actors.Heroes;
@@ -46,6 +47,9 @@ namespace Kuros.Actors.Heroes.Attacks
         [Export] public string AnimationName = "animations/attack";
         [Export] public bool RestartAnimationOnLoop = true;
 
+        [ExportCategory("Animation Sync")]
+        [Export] public bool UseSpineHitEvents = true;
+
             public enum HitEffectAnchor
         {
             Target,
@@ -84,6 +88,11 @@ namespace Kuros.Actors.Heroes.Attacks
         private bool _hitWindowActive = false;
         private Node? _hitEffectParent;
         private Node2D? _customAnchor;
+        private Node? _spineControllerNode;
+        private Callable _spineHitCallable;
+        private bool _spineHitSubscribed = false;
+        private bool _spineHitWindowActive = false;
+        private string _spineAttackAnimationName = string.Empty;
 
         public bool IsRunning => _phase != AttackPhase.Idle;
         public bool IsOnCooldown => _cooldownTimer > 0f;
@@ -103,6 +112,7 @@ namespace Kuros.Actors.Heroes.Attacks
             }
 
             InitializeHitEffectSupport();
+            InitializeSpineHitSupport();
 
             OnInitialized();
         }
@@ -115,6 +125,8 @@ namespace Kuros.Actors.Heroes.Attacks
                 DamageEventBus.Unsubscribe(OnDamageResolved);
                 _hitEffectSubscribed = false;
             }
+
+            UnsubscribeSpineHitSignal();
         }
 
         protected virtual void OnInitialized() { }
@@ -164,6 +176,9 @@ namespace Kuros.Actors.Heroes.Attacks
 
         public void Cancel(bool clearCooldown = false)
         {
+            _spineHitWindowActive = false;
+            _spineAttackAnimationName = string.Empty;
+
             if (clearCooldown)
             {
                 _cooldownTimer = 0f;
@@ -262,6 +277,10 @@ namespace Kuros.Actors.Heroes.Attacks
 
         protected virtual void OnAttackStarted()
         {
+            EnsureSpineHitSupport();
+            _spineAttackAnimationName = AnimationName;
+            _spineHitWindowActive = ShouldUseSpineHitEvents();
+
             // 如果是 MainCharacter，使用 Spine 动画
             if (Player is MainCharacter mainChar)
             {
@@ -296,6 +315,11 @@ namespace Kuros.Actors.Heroes.Attacks
 
         protected virtual void OnActivePhase()
         {
+            if (ShouldUseSpineHitEvents())
+            {
+                return;
+            }
+
             PerformDefaultHitDetection();
         }
 
@@ -313,26 +337,38 @@ namespace Kuros.Actors.Heroes.Attacks
             {
                 case AttackPhase.Idle:
                     _phaseTimer = 0f;
+                    _hitWindowActive = false;
+                    _spineHitWindowActive = false;
+                    _spineAttackAnimationName = string.Empty;
                     OnAttackFinished();
                     break;
                 case AttackPhase.Warmup:
                     _phaseTimer = WarmupDuration;
+                    _hitWindowActive = false;
                     OnWarmupStarted();
                     break;
                 case AttackPhase.Active:
                     _phaseTimer = ActiveDuration;
                     _hitWindowActive = HitEffectScene != null;
-                    try
+                    if (ShouldUseSpineHitEvents())
                     {
                         OnActivePhase();
                     }
-                    finally
+                    else
                     {
-                        _hitWindowActive = false;
+                        try
+                        {
+                            OnActivePhase();
+                        }
+                        finally
+                        {
+                            _hitWindowActive = false;
+                        }
                     }
                     break;
                 case AttackPhase.Recovery:
                     _phaseTimer = RecoveryDuration;
+                    _hitWindowActive = false;
                     OnRecoveryStarted();
                     break;
             }
@@ -369,6 +405,78 @@ namespace Kuros.Actors.Heroes.Attacks
             Player.PerformAttackCheck();
 
             Player.AttackDamage = originalDamage;
+        }
+
+        private void InitializeSpineHitSupport()
+        {
+            UnsubscribeSpineHitSignal();
+
+            EnsureSpineHitSupport();
+        }
+
+        private void EnsureSpineHitSupport()
+        {
+            if (_spineHitSubscribed)
+            {
+                return;
+            }
+
+            if (Player is not MainCharacter mainChar)
+            {
+                return;
+            }
+
+            _spineControllerNode = mainChar.GetSpineControllerNode();
+            if (_spineControllerNode == null || !_spineControllerNode.HasSignal("hit_received"))
+            {
+                _spineControllerNode = null;
+                return;
+            }
+
+            _spineHitCallable = Callable.From<int, string>(OnSpineHitReceived);
+            _spineControllerNode.Connect("hit_received", _spineHitCallable);
+            _spineHitSubscribed = true;
+            GD.Print($"[{GetType().Name}] 已连接 Spine hit_received 信号");
+        }
+
+        private void UnsubscribeSpineHitSignal()
+        {
+            if (!_spineHitSubscribed || _spineControllerNode == null)
+            {
+                _spineHitSubscribed = false;
+                _spineControllerNode = null;
+                return;
+            }
+
+            if (_spineControllerNode.IsConnected("hit_received", _spineHitCallable))
+            {
+                _spineControllerNode.Disconnect("hit_received", _spineHitCallable);
+            }
+
+            _spineHitSubscribed = false;
+            _spineControllerNode = null;
+        }
+
+        private bool ShouldUseSpineHitEvents()
+        {
+            EnsureSpineHitSupport();
+            return UseSpineHitEvents && Player is MainCharacter && _spineControllerNode != null;
+        }
+
+        private void OnSpineHitReceived(int hitStep, string animationName)
+        {
+            if (!_spineHitWindowActive || !IsRunning)
+            {
+                return;
+            }
+
+            if (!string.IsNullOrEmpty(_spineAttackAnimationName) && !string.Equals(animationName, _spineAttackAnimationName, StringComparison.Ordinal))
+            {
+                return;
+            }
+
+            GD.Print($"[{GetType().Name}] Spine hit_received 触发伤害判定: 动画={animationName}, 段数={hitStep}");
+            PerformDefaultHitDetection();
         }
 
         private void InitializeHitEffectSupport()

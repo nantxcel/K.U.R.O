@@ -155,19 +155,35 @@ namespace Kuros.Actors.Heroes
         private void InitializeFallbackSkill()
         {
             _fallbackWeaponDefinition = Inventory?.UnarmedWeaponDefinition;
+            _fallbackUnarmedSkill = null;
             if (_fallbackWeaponDefinition == null) return;
+
             foreach (var skill in _fallbackWeaponDefinition.GetWeaponSkillDefinitions())
             {
-                if (skill.SkillType == WeaponSkillType.Passive)
+                if (skill.SkillType == WeaponSkillType.Active)
                 {
                     _fallbackUnarmedSkill = skill;
-                    break;
+                    if (skill.SkillId == DefaultSkillId)
+                    {
+                        break;
+                    }
                 }
             }
         }
 
         private void ApplyFallbackIfNoWeapon()
         {
+            if (Inventory?.QuickBar != null)
+            {
+                if (TryApplyQuickBarWeapon())
+                {
+                    return;
+                }
+
+                ApplyUnarmedFallback();
+                return;
+            }
+
             if (TryApplyQuickBarWeapon())
             {
                 return;
@@ -226,13 +242,30 @@ namespace Kuros.Actors.Heroes
         }
         public void ApplyUnarmedFallback()
         {
-            if (_fallbackUnarmedSkill == null || _actor == null) return;
-            if (_defaultActiveSkill == _fallbackUnarmedSkill) return;
+            if (_actor == null) return;
 
             ClearSkills();
-            _skills[_fallbackUnarmedSkill.SkillId] = _fallbackUnarmedSkill;
-            _defaultActiveSkill = _fallbackUnarmedSkill;
-            ApplySkillEffects(_fallbackUnarmedSkill, ItemEffectTrigger.OnEquip);
+
+            if (_fallbackWeaponDefinition == null)
+            {
+                return;
+            }
+
+            foreach (var skill in _fallbackWeaponDefinition.GetWeaponSkillDefinitions())
+            {
+                _skills[skill.SkillId] = skill;
+
+                if (skill.SkillType == WeaponSkillType.Passive)
+                {
+                    ApplySkillEffects(skill, ItemEffectTrigger.OnEquip);
+                    continue;
+                }
+
+                if (_defaultActiveSkill == null || skill.SkillId == DefaultSkillId)
+                {
+                    _defaultActiveSkill = skill;
+                }
+            }
         }
 
         private void ApplySkillEffects(WeaponSkillDefinition skill, ItemEffectTrigger trigger, GameActor? target = null)
