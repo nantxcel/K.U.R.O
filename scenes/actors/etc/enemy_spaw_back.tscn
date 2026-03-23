@@ -1,0 +1,274 @@
+[gd_scene load_steps=66 format=3 uid="uid://ct7yf5l4li46d"]
+
+[ext_resource type="Texture2D" uid="uid://ce8546mj8ckro" path="res://assets/environments/Spawm_Emeny_Pod/back/时间轴 1_0000.png" id="1_u4ebr"]
+[ext_resource type="Texture2D" uid="uid://n1sx266m3f0r" path="res://assets/environments/Spawm_Emeny_Pod/back/时间轴 1_0001.png" id="2_r0agv"]
+[ext_resource type="Texture2D" uid="uid://cs1a4uuyn0csv" path="res://assets/environments/Spawm_Emeny_Pod/back/时间轴 1_0002.png" id="3_tc4fe"]
+[ext_resource type="Texture2D" uid="uid://bjfran1tdihid" path="res://assets/environments/Spawm_Emeny_Pod/back/时间轴 1_0003.png" id="4_pk5im"]
+[ext_resource type="Texture2D" uid="uid://ylowvuwnb2l6" path="res://assets/environments/Spawm_Emeny_Pod/back/时间轴 1_0004.png" id="5_twppx"]
+[ext_resource type="Texture2D" uid="uid://caupu8u6a3v2r" path="res://assets/environments/Spawm_Emeny_Pod/back/时间轴 1_0005.png" id="6_n7f01"]
+[ext_resource type="Texture2D" uid="uid://c2a2mgje5lqyl" path="res://assets/environments/Spawm_Emeny_Pod/back/时间轴 1_0006.png" id="7_wrnqu"]
+[ext_resource type="Texture2D" uid="uid://b2fk2j02mw1td" path="res://assets/environments/Spawm_Emeny_Pod/back/时间轴 1_0007.png" id="8_7xyfb"]
+[ext_resource type="Texture2D" uid="uid://d0ucebpedsctr" path="res://assets/environments/Spawm_Emeny_Pod/back/时间轴 1_0008.png" id="9_2mmcw"]
+[ext_resource type="Texture2D" uid="uid://cn8a7efyrh03n" path="res://assets/environments/Spawm_Emeny_Pod/back/时间轴 1_0009.png" id="10_6n1qd"]
+[ext_resource type="Texture2D" uid="uid://mghm6fa8a0rk" path="res://assets/environments/Spawm_Emeny_Pod/back/时间轴 1_0010.png" id="11_uvvpo"]
+[ext_resource type="Texture2D" uid="uid://m4o7moaqlp1c" path="res://assets/environments/Spawm_Emeny_Pod/back/时间轴 1_0011.png" id="12_dixoy"]
+[ext_resource type="Texture2D" uid="uid://ddjcslbix18a6" path="res://assets/environments/Spawm_Emeny_Pod/back/时间轴 1_0012.png" id="13_j844y"]
+[ext_resource type="Texture2D" uid="uid://d4al28q26qrqf" path="res://assets/environments/Spawm_Emeny_Pod/back/时间轴 1_0013.png" id="14_v7j4s"]
+[ext_resource type="Texture2D" uid="uid://uohg7tss0t1h" path="res://assets/environments/Spawm_Emeny_Pod/back/时间轴 1_0014.png" id="15_3i0ha"]
+[ext_resource type="Texture2D" uid="uid://c05iwan514ra3" path="res://assets/environments/Spawm_Emeny_Pod/back/时间轴 1_0015.png" id="16_n3njr"]
+[ext_resource type="Texture2D" uid="uid://bjy1g07gjj8mb" path="res://assets/environments/Spawm_Emeny_Pod/back/时间轴 1_0016.png" id="17_sajry"]
+[ext_resource type="Texture2D" uid="uid://ck75hm4go4t37" path="res://assets/environments/Spawm_Emeny_Pod/back/时间轴 1_0017.png" id="18_mgwx8"]
+[ext_resource type="Texture2D" uid="uid://vln2pipd6tuq" path="res://assets/environments/Spawm_Emeny_Pod/back/时间轴 1_0018.png" id="19_4oy36"]
+[ext_resource type="Texture2D" uid="uid://d2g6v1lyrjf5p" path="res://assets/environments/Spawm_Emeny_Pod/back/时间轴 1_0019.png" id="20_fu33d"]
+[ext_resource type="Texture2D" uid="uid://0wckw2x8i60f" path="res://assets/environments/Spawm_Emeny_Pod/back/时间轴 1_0020.png" id="21_bb3ar"]
+[ext_resource type="Texture2D" uid="uid://b0p21kr0egfsp" path="res://assets/environments/Spawm_Emeny_Pod/back/时间轴 1_0021.png" id="22_l633r"]
+[ext_resource type="Texture2D" uid="uid://dtqi5bufg7xye" path="res://assets/environments/Spawm_Emeny_Pod/back/时间轴 1_0022.png" id="23_mbdbk"]
+[ext_resource type="Texture2D" uid="uid://db5ujc4kisl2j" path="res://assets/environments/Spawm_Emeny_Pod/back/时间轴 1_0023.png" id="24_64pxx"]
+[ext_resource type="Texture2D" uid="uid://dq5b8cuikgk5m" path="res://assets/environments/Spawm_Emeny_Pod/back/时间轴 1_0024.png" id="25_tabwg"]
+[ext_resource type="Texture2D" uid="uid://sl13fh0rs07a" path="res://assets/environments/Spawm_Emeny_Pod/back/时间轴 1_0025.png" id="26_3n2fb"]
+[ext_resource type="Texture2D" uid="uid://deubp73yoy3gd" path="res://assets/environments/Spawm_Emeny_Pod/back/时间轴 1_0026.png" id="27_d0aja"]
+[ext_resource type="Texture2D" uid="uid://dvgi5obvtfn06" path="res://assets/environments/Spawm_Emeny_Pod/back/时间轴 1_0027.png" id="28_e7gim"]
+[ext_resource type="Texture2D" uid="uid://bk163h7uxf7rg" path="res://assets/environments/Spawm_Emeny_Pod/back/时间轴 1_0028.png" id="29_muv46"]
+[ext_resource type="Texture2D" uid="uid://culsp4hnhj4me" path="res://assets/environments/Spawm_Emeny_Pod/back/时间轴 1_0029.png" id="30_k1g8l"]
+[ext_resource type="Texture2D" uid="uid://bj3cysx1id2rt" path="res://assets/environments/Spawm_Emeny_Pod/back/时间轴 1_0030.png" id="31_shwjd"]
+[ext_resource type="Texture2D" uid="uid://bcdilm8soqdec" path="res://assets/environments/Spawm_Emeny_Pod/back/时间轴 1_0031.png" id="32_wnodh"]
+[ext_resource type="Texture2D" uid="uid://cj1bpp70undux" path="res://assets/environments/Spawm_Emeny_Pod/back/时间轴 1_0032.png" id="33_20lql"]
+[ext_resource type="Texture2D" uid="uid://cpl7fpexruryn" path="res://assets/environments/Spawm_Emeny_Pod/back/时间轴 1_0033.png" id="34_gqvge"]
+[ext_resource type="Texture2D" uid="uid://41d60xqcu6ny" path="res://assets/environments/Spawm_Emeny_Pod/back/时间轴 1_0034.png" id="35_ydth4"]
+[ext_resource type="Texture2D" uid="uid://kc148v5dlja4" path="res://assets/environments/Spawm_Emeny_Pod/back/时间轴 1_0035.png" id="36_mnikf"]
+[ext_resource type="Texture2D" uid="uid://ce0cufty7g57m" path="res://assets/environments/Spawm_Emeny_Pod/back/时间轴 1_0036.png" id="37_nfqw0"]
+[ext_resource type="Texture2D" uid="uid://dgf8vkry3ukoo" path="res://assets/environments/Spawm_Emeny_Pod/back/时间轴 1_0037.png" id="38_hahd2"]
+[ext_resource type="Texture2D" uid="uid://cy27kvf7glvex" path="res://assets/environments/Spawm_Emeny_Pod/back/时间轴 1_0038.png" id="39_frydp"]
+[ext_resource type="Texture2D" uid="uid://r615eeh2jp6r" path="res://assets/environments/Spawm_Emeny_Pod/back/时间轴 1_0039.png" id="40_8p5ip"]
+[ext_resource type="Texture2D" uid="uid://cu5pb2poemgl6" path="res://assets/environments/Spawm_Emeny_Pod/back/时间轴 1_0040.png" id="41_1syp6"]
+[ext_resource type="Texture2D" uid="uid://bbklpb6h77ymm" path="res://assets/environments/Spawm_Emeny_Pod/back/时间轴 1_0041.png" id="42_ok02a"]
+[ext_resource type="Texture2D" uid="uid://ctqvqvdf8bksu" path="res://assets/environments/Spawm_Emeny_Pod/back/时间轴 1_0042.png" id="43_vyo2t"]
+[ext_resource type="Texture2D" uid="uid://r5li3hs6f5sl" path="res://assets/environments/Spawm_Emeny_Pod/back/时间轴 1_0043.png" id="44_sr8t2"]
+[ext_resource type="Texture2D" uid="uid://bxlmvd4i2dwua" path="res://assets/environments/Spawm_Emeny_Pod/back/时间轴 1_0044.png" id="45_ppyww"]
+[ext_resource type="Texture2D" uid="uid://c4nex5fd0pmyf" path="res://assets/environments/Spawm_Emeny_Pod/back/时间轴 1_0045.png" id="46_h87cf"]
+[ext_resource type="Texture2D" uid="uid://cpognowmj1n12" path="res://assets/environments/Spawm_Emeny_Pod/back/时间轴 1_0046.png" id="47_qqyd8"]
+[ext_resource type="Texture2D" uid="uid://cii5sijfu5863" path="res://assets/environments/Spawm_Emeny_Pod/back/时间轴 1_0047.png" id="48_dcu3s"]
+[ext_resource type="Texture2D" uid="uid://cwqtuvxykdpg7" path="res://assets/environments/Spawm_Emeny_Pod/back/时间轴 1_0048.png" id="49_1ijag"]
+[ext_resource type="Texture2D" uid="uid://cnoer0sy6cm87" path="res://assets/environments/Spawm_Emeny_Pod/back/时间轴 1_0049.png" id="50_s7jv8"]
+[ext_resource type="Texture2D" uid="uid://bfdjuqamy1l1" path="res://assets/environments/Spawm_Emeny_Pod/back/时间轴 1_0050.png" id="51_p5n81"]
+[ext_resource type="Texture2D" uid="uid://bbb8lu4mesh0s" path="res://assets/environments/Spawm_Emeny_Pod/back/时间轴 1_0051.png" id="52_l0o7v"]
+[ext_resource type="Texture2D" uid="uid://cc1wqvij500pa" path="res://assets/environments/Spawm_Emeny_Pod/back/时间轴 1_0052.png" id="53_frcti"]
+[ext_resource type="Texture2D" uid="uid://cfq04ktp0n014" path="res://assets/environments/Spawm_Emeny_Pod/back/时间轴 1_0053.png" id="54_dqrhg"]
+[ext_resource type="Texture2D" uid="uid://dkqojclwkkcu4" path="res://assets/environments/Spawm_Emeny_Pod/back/时间轴 1_0054.png" id="55_rqx0w"]
+[ext_resource type="Texture2D" uid="uid://d20e1yd3ajtu4" path="res://assets/environments/Spawm_Emeny_Pod/back/时间轴 1_0055.png" id="56_h8oun"]
+[ext_resource type="Texture2D" uid="uid://3kkfiyltnfp1" path="res://assets/environments/Spawm_Emeny_Pod/back/时间轴 1_0056.png" id="57_p5yv5"]
+[ext_resource type="Texture2D" uid="uid://bt038ejglajl4" path="res://assets/environments/Spawm_Emeny_Pod/back/时间轴 1_0057.png" id="58_4ucmh"]
+[ext_resource type="Texture2D" uid="uid://cafbxpppkfk14" path="res://assets/environments/Spawm_Emeny_Pod/back/时间轴 1_0058.png" id="59_d3p81"]
+[ext_resource type="Texture2D" uid="uid://bpe0hcvq8tk3l" path="res://assets/environments/Spawm_Emeny_Pod/back/时间轴 1_0059.png" id="60_xafos"]
+[ext_resource type="Texture2D" uid="uid://cbt4ftco44hsq" path="res://assets/environments/Spawm_Emeny_Pod/back/时间轴 1_0060.png" id="61_6ax0r"]
+[ext_resource type="Texture2D" uid="uid://yqvchrbow171" path="res://assets/environments/Spawm_Emeny_Pod/back/时间轴 1_0061.png" id="62_onquk"]
+[ext_resource type="Texture2D" uid="uid://c47m7tcnm0eam" path="res://assets/environments/Spawm_Emeny_Pod/back/时间轴 1_0062.png" id="63_lpn5o"]
+[ext_resource type="Texture2D" uid="uid://bj83m3pt7j1aw" path="res://assets/environments/Spawm_Emeny_Pod/back/时间轴 1_0063.png" id="64_btsdm"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_1w55o"]
+resource_name = "Emeny_Spawn_Back"
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_u4ebr")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_r0agv")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_tc4fe")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_pk5im")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_twppx")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_n7f01")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_wrnqu")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_7xyfb")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_2mmcw")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_6n1qd")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_uvvpo")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_dixoy")
+}, {
+"duration": 1.0,
+"texture": ExtResource("13_j844y")
+}, {
+"duration": 1.0,
+"texture": ExtResource("14_v7j4s")
+}, {
+"duration": 1.0,
+"texture": ExtResource("15_3i0ha")
+}, {
+"duration": 1.0,
+"texture": ExtResource("16_n3njr")
+}, {
+"duration": 1.0,
+"texture": ExtResource("17_sajry")
+}, {
+"duration": 1.0,
+"texture": ExtResource("18_mgwx8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("19_4oy36")
+}, {
+"duration": 1.0,
+"texture": ExtResource("20_fu33d")
+}, {
+"duration": 1.0,
+"texture": ExtResource("21_bb3ar")
+}, {
+"duration": 1.0,
+"texture": ExtResource("22_l633r")
+}, {
+"duration": 1.0,
+"texture": ExtResource("23_mbdbk")
+}, {
+"duration": 1.0,
+"texture": ExtResource("24_64pxx")
+}, {
+"duration": 1.0,
+"texture": ExtResource("25_tabwg")
+}, {
+"duration": 1.0,
+"texture": ExtResource("26_3n2fb")
+}, {
+"duration": 1.0,
+"texture": ExtResource("27_d0aja")
+}, {
+"duration": 1.0,
+"texture": ExtResource("28_e7gim")
+}, {
+"duration": 1.0,
+"texture": ExtResource("29_muv46")
+}, {
+"duration": 1.0,
+"texture": ExtResource("30_k1g8l")
+}, {
+"duration": 1.0,
+"texture": ExtResource("31_shwjd")
+}, {
+"duration": 1.0,
+"texture": ExtResource("32_wnodh")
+}, {
+"duration": 1.0,
+"texture": ExtResource("33_20lql")
+}, {
+"duration": 1.0,
+"texture": ExtResource("34_gqvge")
+}, {
+"duration": 1.0,
+"texture": ExtResource("35_ydth4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("36_mnikf")
+}, {
+"duration": 1.0,
+"texture": ExtResource("37_nfqw0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("38_hahd2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("39_frydp")
+}, {
+"duration": 1.0,
+"texture": ExtResource("40_8p5ip")
+}, {
+"duration": 1.0,
+"texture": ExtResource("41_1syp6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("42_ok02a")
+}, {
+"duration": 1.0,
+"texture": ExtResource("43_vyo2t")
+}, {
+"duration": 1.0,
+"texture": ExtResource("44_sr8t2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("45_ppyww")
+}, {
+"duration": 1.0,
+"texture": ExtResource("46_h87cf")
+}, {
+"duration": 1.0,
+"texture": ExtResource("47_qqyd8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("48_dcu3s")
+}, {
+"duration": 1.0,
+"texture": ExtResource("49_1ijag")
+}, {
+"duration": 1.0,
+"texture": ExtResource("50_s7jv8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("51_p5n81")
+}, {
+"duration": 1.0,
+"texture": ExtResource("52_l0o7v")
+}, {
+"duration": 1.0,
+"texture": ExtResource("53_frcti")
+}, {
+"duration": 1.0,
+"texture": ExtResource("54_dqrhg")
+}, {
+"duration": 1.0,
+"texture": ExtResource("55_rqx0w")
+}, {
+"duration": 1.0,
+"texture": ExtResource("56_h8oun")
+}, {
+"duration": 1.0,
+"texture": ExtResource("57_p5yv5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("58_4ucmh")
+}, {
+"duration": 1.0,
+"texture": ExtResource("59_d3p81")
+}, {
+"duration": 1.0,
+"texture": ExtResource("60_xafos")
+}, {
+"duration": 1.0,
+"texture": ExtResource("61_6ax0r")
+}, {
+"duration": 1.0,
+"texture": ExtResource("62_onquk")
+}, {
+"duration": 1.0,
+"texture": ExtResource("63_lpn5o")
+}, {
+"duration": 1.0,
+"texture": ExtResource("64_btsdm")
+}],
+"loop": true,
+"name": &"spawn",
+"speed": 25.0
+}]
+
+[node name="SpawnPodBack" type="AnimatedSprite2D"]
+scale = Vector2(0.3, 0.3)
+sprite_frames = SubResource("SpriteFrames_1w55o")
+animation = &"spawn"
+autoplay = "spawn"
+frame_progress = 0.91853017
