@@ -275,6 +275,9 @@
 		}
 	}
 ],
+"events": {
+	"hit": {}
+},
 "animations": {
 	"attack": {
 		"bones": {
@@ -410,7 +413,10 @@
 					{ "time": 1.5 }
 				]
 			}
-		}
+		},
+		"events": [
+			{ "time": 1.00, "name": "hit" }
+		]
 	},
 	"death": {
 		"bones": {
@@ -1061,7 +1067,11 @@
 					{ "value": 4.59 }
 				]
 			}
-		}
+		},
+		"events": [
+			{ "time": 0.17, "name": "hit" },
+			{ "time": 0.47, "name": "hit" }
+		]
 	},
 	"skill_03": {
 		"bones": {

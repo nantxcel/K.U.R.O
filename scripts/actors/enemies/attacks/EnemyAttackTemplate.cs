@@ -34,6 +34,9 @@ namespace Kuros.Actors.Enemies.Attacks
         [Export] public bool RequireAnimationHitTrigger = false;
         [Export] public bool AllowMultipleAnimationHits = false;
 
+        [ExportCategory("Interrupt")]
+        [Export] public bool EnableSuperArmor = false;
+
         protected SampleEnemy Enemy { get; private set; } = null!;
         protected SamplePlayer? Player => Enemy.PlayerTarget;
         protected Area2D? AttackArea { get; private set; }
@@ -41,7 +44,8 @@ namespace Kuros.Actors.Enemies.Attacks
         private AttackPhase _phase = AttackPhase.Idle;
         private float _phaseTimer = 0.0f;
         private float _cooldownTimer = 0.0f;
-        private bool _animationHitReady = false;
+        protected bool _animationHitReady = false;
+        private bool? _previousIgnoreHitStateOnDamage;
 
         public bool IsRunning => _phase != AttackPhase.Idle;
         public bool IsOnCooldown => _cooldownTimer > 0.0f;
@@ -128,6 +132,12 @@ namespace Kuros.Actors.Enemies.Attacks
 
         protected virtual void OnAttackStarted()
         {
+            if (EnableSuperArmor && Enemy != null)
+            {
+                _previousIgnoreHitStateOnDamage = Enemy.IgnoreHitStateOnDamage;
+                Enemy.IgnoreHitStateOnDamage = true;
+            }
+
             if (!string.IsNullOrEmpty(AnimationName))
             {
                 Enemy.AnimPlayer?.Play(AnimationName);
@@ -156,7 +166,15 @@ namespace Kuros.Actors.Enemies.Attacks
             _animationHitReady = false;
         }
 
-        protected virtual void OnAttackFinished() { }
+        protected virtual void OnAttackFinished()
+        {
+            if (Enemy != null && _previousIgnoreHitStateOnDamage.HasValue)
+            {
+                Enemy.IgnoreHitStateOnDamage = _previousIgnoreHitStateOnDamage.Value;
+            }
+
+            _previousIgnoreHitStateOnDamage = null;
+        }
 
         protected virtual bool ShouldHoldRecoveryPhase()
         {
@@ -228,6 +246,16 @@ namespace Kuros.Actors.Enemies.Attacks
             Enemy.PerformAttack();
         }
 
+        /// <summary>
+        /// Spine 帧事件 hit 到达时执行的逻辑。
+        /// 默认调用 PerformAttackNow()，子类可覆写以追加击退等额外效果。
+        /// 仅在 RequireAnimationHitTrigger = true 时才会被 TriggerAnimationHit 调用。
+        /// </summary>
+        protected virtual void OnAnimationHit()
+        {
+            PerformAttackNow();
+        }
+
         public void TriggerAnimationHit()
         {
             if (!RequireAnimationHitTrigger)
@@ -240,7 +268,7 @@ namespace Kuros.Actors.Enemies.Attacks
                 return;
             }
 
-            PerformAttackNow();
+            OnAnimationHit();
 
             if (!AllowMultipleAnimationHits)
             {

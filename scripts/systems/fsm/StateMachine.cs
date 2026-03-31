@@ -86,12 +86,47 @@ namespace Kuros.Systems.FSM
             CurrentState.Enter();
         }
 
+        public void ReenterState(string stateName)
+        {
+            if (!_states.ContainsKey(stateName))
+            {
+                GameLogger.Error(nameof(StateMachine), $"State '{stateName}' not found!");
+                return;
+            }
+
+            if (!CanTransitionTo(stateName))
+            {
+                return;
+            }
+
+            State newState = _states[stateName];
+
+            CurrentState?.Exit();
+            CurrentState = newState;
+            CurrentState.Enter();
+        }
+
         private bool CanTransitionTo(string stateName)
         {
             if (_actor is GameActor actor)
             {
                 bool isDeathState = stateName == "Dying" || stateName == "Dead";
                 if ((actor.IsDeathSequenceActive || actor.IsDead) && !isDeathState)
+                {
+                    return false;
+                }
+            }
+
+            //这是一个可选的转换检查。当前状态可以通过重写 CanExitTo 来阻止转换，目标状态也可以通过重写 CanEnterFrom 来拒绝进入。默认情况下它们都允许转换。
+            if (CurrentState != null && !CurrentState.CanExitTo(stateName))
+            {
+                return false;
+            }
+
+            if (_states.TryGetValue(stateName, out State? nextState))
+            {
+                string? currentStateName = CurrentState?.Name;
+                if (!nextState.CanEnterFrom(currentStateName))
                 {
                     return false;
                 }

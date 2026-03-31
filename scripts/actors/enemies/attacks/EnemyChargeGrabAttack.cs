@@ -8,7 +8,7 @@ namespace Kuros.Actors.Enemies.Attacks
 	/// 1. 玩家进入检测区域后触发预热；
 	/// 2. 预热结束直线冲刺至玩家先前位置；
 	/// 3. 冲刺结束若命中，施加冻结并进入逃脱判定；
-	/// 4. 逃脱失败造成伤害，任一阶段被打断则立即结束。
+	/// 4. 抓取期间由 Spine hit 关键帧触发伤害结算。
     /// </summary>
     public partial class EnemyChargeGrabAttack : EnemyAttackTemplate
     {
@@ -25,7 +25,7 @@ namespace Kuros.Actors.Enemies.Attacks
 
         [ExportCategory("Effects")]
 		[Export(PropertyHint.Range, "0,10,0.1")] public float AppliedFrozenDuration = 5.0f;
-        [Export(PropertyHint.Range, "0,1000,1")] public int DamageOnEscapeFailure = 20;
+        [Export(PropertyHint.Range, "0,1000,1")] public int GrabHitDamage = 1;
 		[Export] public StringName CooldownStateName = "CooldownFrozen";
 
 		[ExportCategory("Escape")]
@@ -55,6 +55,8 @@ namespace Kuros.Actors.Enemies.Attacks
 		private float _snapshotTimer = 0f;
 		private bool _waitingForSnapshot = false;
 		private bool _pendingSkill3Finisher;
+		private bool _grabFrozenDisplacementOriginal = true;
+		private bool _hasGrabFrozenDisplacementOverride;
 
 		public bool IsEvaluatingEscape => _isEvaluatingEscape;
 		public bool IsDashing => _isDashing;
@@ -176,6 +178,11 @@ namespace Kuros.Actors.Enemies.Attacks
 			if (Enemy == null) return;
 			_isDashing = true;
 			Enemy.Velocity = _dashDirection * DashSpeed;
+
+			if (RequireAnimationHitTrigger)
+			{
+				_animationHitReady = true;
+			}
         }
 
 		private bool HasActiveGrab => _grabbedPlayer != null || _isEvaluatingEscape;
@@ -192,6 +199,10 @@ namespace Kuros.Actors.Enemies.Attacks
 			if (_skipRecoveryGrab)
 			{
 				_skipRecoveryGrab = false;
+				if (RequireAnimationHitTrigger && HasActiveGrab)
+				{
+					_animationHitReady = true;
+				}
 				return;
 			}
 
@@ -202,6 +213,10 @@ namespace Kuros.Actors.Enemies.Attacks
 
 			if (HasActiveGrab)
 			{
+				if (RequireAnimationHitTrigger)
+				{
+					_animationHitReady = true;
+				}
 				return;
 			}
 
@@ -304,11 +319,11 @@ namespace Kuros.Actors.Enemies.Attacks
 
 			if (!escaped)
 			{
-				ReleasePlayer(applyDamage: true);
+				ReleasePlayer();
         }
 			else
 			{
-				ReleasePlayer(applyDamage: false);
+				ReleasePlayer();
 			}
 
 			if (player != null)
@@ -316,7 +331,7 @@ namespace Kuros.Actors.Enemies.Attacks
 				OnEscapeSequenceFinished(player, escaped);
 			}
 
-			// 抓到后进入挣脱，判定结束（成功/失败）都应进入 skill3 收尾。
+			// 抓到后进入挣脱，判定结束（成功/失败）都进入 skill3 收尾；伤害由 hit 帧事件结算。
 			_pendingSkill3Finisher = true;
 
 			// 挣脱判定结束后不立即取消攻击，让恢复阶段自然收尾，避免瞬切冷却状态。
@@ -398,6 +413,10 @@ namespace Kuros.Actors.Enemies.Attacks
 
 			_isEvaluatingEscape = true;
 			_escapeTimer = EscapeWindowSeconds > 0f ? EscapeWindowSeconds : AppliedFrozenDuration;
+			if (RequireAnimationHitTrigger)
+			{
+				_animationHitReady = true;
+			}
 			OnEscapeSequenceStarted(player);
 			return true;
         }
@@ -417,36 +436,51 @@ namespace Kuros.Actors.Enemies.Attacks
             var frozenState = player.StateMachine?.GetNodeOrNull<PlayerFrozenState>("Frozen");
             if (frozenState != null)
             {
+				_grabFrozenDisplacementOriginal = frozenState.AllowExternalDisplacementWhileFrozen;
+				_hasGrabFrozenDisplacementOverride = true;
+				frozenState.AllowExternalDisplacementWhileFrozen = false;
                 frozenState.FrozenDuration = AppliedFrozenDuration;
 				frozenState.BeginExternalHold();
             player.StateMachine?.ChangeState("Frozen");
 			}
         }
 
-		private void ReleasePlayer(bool applyDamage)
+		private void ReleasePlayer()
 		{
 			if (_grabbedPlayer == null) return;
 
-			if (applyDamage)
-			{
-				var sourcePosition = Enemy?.GlobalPosition;
-				if (Enemy != null)
-				{
-					_grabbedPlayer.TakeDamage(DamageOnEscapeFailure, sourcePosition, Enemy);
-				}
-				else
-				{
-					_grabbedPlayer.TakeDamage(DamageOnEscapeFailure, sourcePosition);
-				}
-				_grabbedPlayer.StateMachine?.ChangeState("Hit");
-			}
-
 			var frozenState = _grabbedPlayer.StateMachine?.GetNodeOrNull<PlayerFrozenState>("Frozen");
-			frozenState?.EndExternalHold();
+			if (frozenState != null)
+			{
+				frozenState.EndExternalHold();
+				if (_hasGrabFrozenDisplacementOverride)
+				{
+					frozenState.AllowExternalDisplacementWhileFrozen = _grabFrozenDisplacementOriginal;
+				}
+			}
+			_hasGrabFrozenDisplacementOverride = false;
 
 			_grabbedPlayer = null;
 
 			// 交由 OnAttackFinished 统一进入冷却，避免在释放瞬间切状态打断动画。
+		}
+
+		protected override void OnAnimationHit()
+		{
+			if (_grabbedPlayer == null)
+			{
+				return;
+			}
+
+			var sourcePosition = Enemy?.GlobalPosition;
+			if (Enemy != null)
+			{
+				_grabbedPlayer.TakeDamage(GrabHitDamage, sourcePosition, Enemy);
+			}
+			else
+			{
+				_grabbedPlayer.TakeDamage(GrabHitDamage, sourcePosition);
+			}
 		}
 
 		private void StartPostCooldown()

@@ -7,7 +7,8 @@ namespace Kuros.Actors.Enemies.Animation
     {
         Loop,
         Once,
-        PartialLoop
+        PartialLoop,
+        PartialOnce
     }
 
     /// <summary>
@@ -19,6 +20,12 @@ namespace Kuros.Actors.Enemies.Animation
         [Export(PropertyHint.Range, "0,4,1")] public int TrackIndex { get; set; } = 0;
         [Export(PropertyHint.Range, "0,4,1")] public int QueueTrackIndex { get; set; } = 0;
         [Export] public string DefaultLoopAnimation { get; set; } = string.Empty;
+        [Export(PropertyHint.Range, "0,1,0.01")] public float IdleMixDuration = 0.05f;
+        [Export(PropertyHint.Range, "0,1,0.01")] public float WalkMixDuration = 0.05f;
+        [Export(PropertyHint.Range, "0,1,0.01")] public float HitMixDuration = 0.05f;
+        [Export(PropertyHint.Range, "0,1,0.01")] public float DieMixDuration = 0.05f;
+        [Export(PropertyHint.Range, "0,1,0.01")] public float AttackMixDuration = 0.5f;
+        [Export(PropertyHint.Range, "0,1,0.01")] public float SkillMixDuration = 0.5f;
 
         protected SampleEnemy? Enemy { get; private set; }
         
@@ -145,6 +152,26 @@ namespace Kuros.Actors.Enemies.Animation
             catch (Exception ex)
             {
                 GD.PushWarning($"[{Name}] PlayPartialLoop Failed: {ex.Message}");
+                return false;
+            }
+        }
+
+        protected bool PlayPartialOnce(string animationName, float partStart, float partEnd, float mixDuration = 0.5f, float timeScale = 1f)
+        {
+            if (string.IsNullOrEmpty(animationName) || _spineHelper == null || partEnd <= partStart)
+            {
+                return false;
+            }
+
+            Node targetRoot = Owner ?? (Node?)Enemy ?? this;
+            try
+            {
+                var result = _spineHelper.Call("play_partial_once_animation", targetRoot, animationName, partStart, partEnd, mixDuration, timeScale);
+                return result.AsBool();
+            }
+            catch (Exception ex)
+            {
+                GD.PushWarning($"[{Name}] PlayPartialOnce Failed: {ex.Message}");
                 return false;
             }
         }

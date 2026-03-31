@@ -95,7 +95,7 @@ metadata/_custom_type_script = "uid://nd1f744icb05"
 
 [resource]
 script = ExtResource("1_table")
-MaxDrops = 3
+MaxDrops = 6
 ScatterRadius = 48.0
 DefaultImpulse = 400.0
 Entries = [SubResource("Resource_5acox"), SubResource("Resource_0syin"), SubResource("Resource_rsspt")]
