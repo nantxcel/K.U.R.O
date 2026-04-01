@@ -15,6 +15,7 @@ namespace Kuros.Actors.Enemies.Animation
         [Export] public string AttackAnimation = "attack";
         [Export] public string SkillAnimation = "skill";
         [Export] public string HitAnimation = "hit";
+        [Export] public string BackDashAnimation = "idle"; // 没有专门的后撤动画，暂时用 idle 代替
         [Export] public string StunAnimation = "stun";
         [Export] public string DieAnimation = "death";
         private EnemyB1ThinAttackController? _attackController;

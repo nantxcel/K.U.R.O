@@ -45,6 +45,7 @@ namespace Kuros.Actors.Enemies.Attacks
         private float _phaseTimer = 0.0f;
         private float _cooldownTimer = 0.0f;
         protected bool _animationHitReady = false;
+        private bool _pendingAnimationHitFromWarmup;
         private bool? _previousIgnoreHitStateOnDamage;
 
         public bool IsRunning => _phase != AttackPhase.Idle;
@@ -94,6 +95,8 @@ namespace Kuros.Actors.Enemies.Attacks
 
             _cooldownTimer = CooldownDuration;
             Enemy.AttackTimer = Mathf.Max(Enemy.AttackTimer, CooldownDuration);
+            _animationHitReady = false;
+            _pendingAnimationHitFromWarmup = false;
 
             OnAttackStarted();
             SetPhase(AttackPhase.Warmup);
@@ -201,6 +204,7 @@ namespace Kuros.Actors.Enemies.Attacks
                 case AttackPhase.Active:
                     _phaseTimer = ActiveDuration;
                     OnActivePhase();
+                    TryConsumePendingAnimationHit();
                     break;
                 case AttackPhase.Recovery:
                     _phaseTimer = RecoveryDuration;
@@ -227,6 +231,7 @@ namespace Kuros.Actors.Enemies.Attacks
                     break;
                 case AttackPhase.Active:
                     _animationHitReady = false;
+                    _pendingAnimationHitFromWarmup = false;
                     SetPhase(AttackPhase.Recovery);
                     break;
                 case AttackPhase.Recovery:
@@ -267,6 +272,13 @@ namespace Kuros.Actors.Enemies.Attacks
 
             if (!_animationHitReady)
             {
+                if (_phase == AttackPhase.Warmup)
+                {
+                    _pendingAnimationHitFromWarmup = true;
+                    GD.Print("[TriggerAnimationHit] _animationHitReady is false during Warmup, buffer this hit");
+                    return;
+                }
+
                 GD.Print("[TriggerAnimationHit] _animationHitReady is false, skip");
                 return;
             }
@@ -278,6 +290,29 @@ namespace Kuros.Actors.Enemies.Attacks
             {
                 _animationHitReady = false;
                 GD.Print("[TriggerAnimationHit] Set _animationHitReady = false");
+            }
+        }
+
+        private void TryConsumePendingAnimationHit()
+        {
+            if (!RequireAnimationHitTrigger)
+            {
+                _pendingAnimationHitFromWarmup = false;
+                return;
+            }
+
+            if (!_pendingAnimationHitFromWarmup || !_animationHitReady)
+            {
+                return;
+            }
+
+            GD.Print("[TriggerAnimationHit] Consume buffered warmup hit");
+            OnAnimationHit();
+            _pendingAnimationHitFromWarmup = false;
+
+            if (!AllowMultipleAnimationHits)
+            {
+                _animationHitReady = false;
             }
         }
     }

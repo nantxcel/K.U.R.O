@@ -891,7 +891,7 @@
 			}
 		},
 		"events": [
-			{ "time": 0.6, "name": "hit" }
+			{ "time": 0.6333, "name": "hit" }
 		]
 	},
 	"death": {

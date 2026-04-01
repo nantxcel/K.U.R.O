@@ -26,9 +26,12 @@ namespace Kuros.Actors.Enemies.Attacks
 		[Export(PropertyHint.Range, "0,9999,1")] public int KickDamage = 25;
 
         [ExportCategory("Effects")]
+		[Export] public StringName CooldownStateName = "CooldownFrozen";
 		[Export(PropertyHint.Range, "0,2000,1")] public float KickKnockbackDistance = 180f;
 		[Export(PropertyHint.Range, "0.01,2,0.01")] public float KickKnockbackDuration = 0.18f;
 		[Export(PropertyHint.Range, "0,6000,1")] public float KickKnockbackSpeed = 0f;
+
+		private const float PostCooldownDuration = 1.0f;
 
 
         private Area2D? _detectionArea;
@@ -37,8 +40,11 @@ namespace Kuros.Actors.Enemies.Attacks
 		private bool _playerInsideDetection;
 
         private Vector2 _dashDirection = Vector2.Right;
+		private Vector2 _dashTarget;
 		private bool _isDashing;
 		private bool _dashFinalized;
+		private float _postAttackCooldown;
+		private bool _pendingCooldownExit;
 		private float _dashTimeElapsed;
 		private bool _canAttemptKickAttack;
 		private float _snapshotTimer = 0f;
@@ -89,6 +95,10 @@ namespace Kuros.Actors.Enemies.Attacks
 			if (Enemy == null || Enemy.PlayerTarget == null) return false;
 			if (IsRunning || IsOnCooldown) return false;
 			if (Enemy.AttackTimer > 0) return false;
+			if (_postAttackCooldown > 0f)
+			{
+				return false;
+			}
 
 			// 使用自己的 DetectionArea 或回退到 Enemy.DetectionArea
 			bool detectionSatisfied = _detectionArea != null
@@ -115,6 +125,8 @@ namespace Kuros.Actors.Enemies.Attacks
 			base.OnAttackStarted();
 			_isDashing = false;
 			_dashFinalized = false;
+			_postAttackCooldown = 0f;
+			_pendingCooldownExit = false;
 			_dashTimeElapsed = 0f;
 			_canAttemptKickAttack = MinDashTimeBeforeAttack <= 0f;
 			base.OnWarmupStarted();
@@ -180,6 +192,31 @@ namespace Kuros.Actors.Enemies.Attacks
 				return; 
 			}
 
+			if (_postAttackCooldown > 0f)
+			{
+				_postAttackCooldown -= (float)delta;
+				if (_postAttackCooldown <= 0f)
+				{
+					_postAttackCooldown = 0f;
+					if (_pendingCooldownExit)
+					{
+						FinishCooldownState();
+						_pendingCooldownExit = false;
+					}
+				}
+
+				var currentStateName = Enemy?.StateMachine?.CurrentState?.Name;
+				if (currentStateName == CooldownStateName || currentStateName == "Attack")
+				{
+					if (Enemy != null)
+					{
+						Enemy.Velocity = Vector2.Zero;
+						Enemy.MoveAndSlide();
+					}
+				}
+				return;
+			}
+
 			UpdateDashMovement(delta);
 			UpdateDetectionTracking();
 		}
@@ -212,6 +249,8 @@ namespace Kuros.Actors.Enemies.Attacks
             }
 
 			_dashDirection = direction.Normalized();
+			float targetDistance = DashSpeed * Mathf.Max(DashDuration, 0.05f);
+			_dashTarget = dashStart + _dashDirection * targetDistance;
 
             if (LockFacingDuringDash && _dashDirection.X != 0)
             {
@@ -333,17 +372,17 @@ namespace Kuros.Actors.Enemies.Attacks
 		private void UpdateDetectionTracking()
 		{
 			if (_detectionArea == null || Enemy?.PlayerTarget == null) return;
+			if (_postAttackCooldown > 0f) return;
 
 			bool overlaps = _detectionArea.OverlapsBody(Enemy.PlayerTarget);
-			if (overlaps && !_playerInsideDetection)
+			if (overlaps)
 			{
 				_playerInsideDetection = true;
 				TryRequestAttackFromDetection("Poll");
+				return;
 			}
-			else if (!overlaps && _playerInsideDetection)
-			{
-				_playerInsideDetection = false;
-			}
+
+			_playerInsideDetection = false;
 		}
 
 		private void TryRequestAttackFromDetection(string reason)
@@ -352,6 +391,7 @@ namespace Kuros.Actors.Enemies.Attacks
 			if (Enemy.IsDeathSequenceActive || Enemy.IsDead) return;
             if (IsRunning || IsOnCooldown) return;
 			if (Enemy.AttackTimer > 0) return;
+			if (_postAttackCooldown > 0f) return;
 
 			if (_controller != null && _controller.PeekQueuedAttack() != this)
 			{
@@ -381,26 +421,52 @@ namespace Kuros.Actors.Enemies.Attacks
 			// 命中检测：不中断冲刺，重叠期间可持续触发（启用动画事件触发时跳过此处）
 			if (!RequireAnimationHitTrigger && _canAttemptKickAttack && Enemy.PlayerTarget != null && IsPlayerInsideKickAttackZone(Enemy.PlayerTarget))
 			{
-				ApplyKickDamage(Enemy.PlayerTarget);
-				ApplyKickKnockback(Enemy.PlayerTarget);
+				FinishDash(forceKick: true);
+				return;
 			}
 
-			// 实时追踪玩家位置更新冲刺方向
-			if (Enemy.PlayerTarget != null)
+			Vector2 toTarget = _dashTarget - Enemy.GlobalPosition;
+			float projected = toTarget.Dot(_dashDirection);
+			if (projected <= 0f)
 			{
-				Vector2 toPlayer = Enemy.PlayerTarget.GlobalPosition - Enemy.GlobalPosition;
-				if (toPlayer != Vector2.Zero)
+				FinishDash();
+				return;
+			}
+
+			float maxStep = DashSpeed * (float)delta;
+			if (toTarget.LengthSquared() <= maxStep * maxStep)
+			{
+				FinishDash();
+				return;
+			}
+
+			// 持续冲刺，直到抵达终点或由基类时序切入 Recovery
+			Enemy.Velocity = _dashDirection * DashSpeed;
+		}
+
+		private void FinishDash(bool forceKick = false)
+		{
+			if (Enemy == null) return;
+
+			_dashFinalized = true;
+			if (!forceKick)
+			{
+				Enemy.GlobalPosition = _dashTarget;
+			}
+
+			Enemy.Velocity = Vector2.Zero;
+			_isDashing = false;
+
+			if (forceKick)
+			{
+				if (TryExecuteKickAttack())
 				{
-					_dashDirection = toPlayer.Normalized();
-					if (!LockFacingDuringDash && _dashDirection.X != 0)
-					{
-						Enemy.FlipFacing(_dashDirection.X > 0);
-					}
+					ForceEnterRecoveryPhase();
+					return;
 				}
 			}
 
-			// 持续冲刺，直到 DashDuration 到期由基类切入 Recovery
-			Enemy.Velocity = _dashDirection * DashSpeed;
+			ForceEnterRecoveryPhase();
 		}
 
 		protected override void OnAnimationHit()
@@ -444,8 +510,57 @@ namespace Kuros.Actors.Enemies.Attacks
 		protected override void OnAttackFinished()
 		{
 			base.OnAttackFinished();
+			_isDashing = false;
+			_dashFinalized = true;
+			if (Enemy != null)
+			{
+				Enemy.Velocity = Vector2.Zero;
+			}
 			_playerInsideDetection = false;
+			if (_postAttackCooldown <= 0f)
+			{
+				StartPostCooldown();
+			}
     }
+
+		private void StartPostCooldown()
+        {
+			if (Enemy == null) return;
+
+			bool starting = _postAttackCooldown <= 0f;
+			_postAttackCooldown = PostCooldownDuration;
+			Enemy.AttackTimer = Mathf.Max(Enemy.AttackTimer, PostCooldownDuration);
+			Enemy.Velocity = Vector2.Zero;
+
+			if (starting)
+			{
+				if (!CooldownStateName.IsEmpty && Enemy.StateMachine != null)
+				{
+					Enemy.StateMachine.ChangeState(CooldownStateName);
+				}
+			}
+
+			_pendingCooldownExit = true;
+		}
+
+		private void FinishCooldownState()
+		{
+			if (Enemy?.StateMachine == null) return;
+
+			if (Enemy.StateMachine.CurrentState?.Name == CooldownStateName)
+			{
+				Enemy.StateMachine.ChangeState("Walk");
+			}
+			else if (Enemy.StateMachine.CurrentState?.Name == "Attack")
+			{
+				Enemy.StateMachine.ChangeState("Walk");
+			}
+
+			if (IsRunning)
+			{
+				Cancel();
+            }
+        }
 
 }
 }

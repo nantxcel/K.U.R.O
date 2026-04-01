@@ -136,7 +136,6 @@ script = ExtResource("9_rbnx7")
 
 [node name="AttackController" type="Node" parent="StateMachine/Attack"]
 script = ExtResource("9_ooggc")
-MeleeCountBeforeCharge = 10
 PlayerDetectionAreaPath = NodePath("../../../Sprite2D/ControllerDetectionArea")
 
 [node name="SmashAttack" type="Node" parent="StateMachine/Attack/AttackController"]

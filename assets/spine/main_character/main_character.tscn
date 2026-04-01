@@ -64,7 +64,7 @@ AttackArea = NodePath("AttackArea")
 AttackArea = NodePath("AttackArea")
 LeftHandAttachmentPath = NodePath("SpineSprite/SpineBoneNode")
 Speed = 500.0
-AttackDamage = 10.0
+AttackDamage = 0.0
 StateMachine = NodePath("StateMachine")
 EffectController = NodePath("EffectController")
 
@@ -84,7 +84,7 @@ script = ExtResource("4_ixg0x")
 
 [node name="SpineBoneNode" type="SpineBoneNode" parent="SpineSprite"]
 show_behind_parent = true
-position = Vector2(0.511323, -450.08)
+position = Vector2(0.58334535, -452.08163)
 rotation = -1.6160004
 scale = Vector2(0.99999994, 0.99999994)
 bone_name = "Upper Body"
