@@ -257,16 +257,10 @@ namespace Kuros.Actors.Heroes.Attacks
         {
             if (Player.InventoryComponent != null)
             {
-                var quickBarStack = Player.InventoryComponent.GetSelectedQuickBarStack();
-                if (quickBarStack != null && !quickBarStack.IsEmpty && quickBarStack.Item.ItemId != "empty_item")
+                var activeWeapon = Player.InventoryComponent.GetActiveCombatWeaponDefinition();
+                if (activeWeapon != null && !string.Equals(activeWeapon.ItemId, "empty_item", StringComparison.OrdinalIgnoreCase))
                 {
-                    return quickBarStack.Item.ItemId;
-                }
-
-                var backpackStack = Player.InventoryComponent.GetSelectedBackpackStack();
-                if (backpackStack != null && !backpackStack.IsEmpty && backpackStack.Item.ItemId != "empty_item")
-                {
-                    return backpackStack.Item.ItemId;
+                    return activeWeapon.ItemId;
                 }
             }
 
