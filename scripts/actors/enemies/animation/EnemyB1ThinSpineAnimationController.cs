@@ -121,9 +121,9 @@ namespace Kuros.Actors.Enemies.Animation
                 }
 
                 var skillAttack = ResolveSkillKickAttack(controller);
-                if (skillAttack != null && !skillAttack.IsDashFinished)
+                if (skillAttack != null )
                 {
-                    PlayLoopIfNeeded("Skill", SkillAnimation, SkillMixDuration);
+                    PlayOnceIfNeeded("Skill", SkillAnimation, SkillMixDuration);
                     return;
                 }
             }

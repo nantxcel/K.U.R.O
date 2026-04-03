@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://qd5abd4opeob"]
+[gd_scene load_steps=24 format=3 uid="uid://qd5abd4opeob"]
 
 [ext_resource type="PackedScene" uid="uid://dd8xmpgwy0t2o" path="res://scenes/environments/scene2.tscn" id="1_7jsho"]
 [ext_resource type="Script" uid="uid://x1ic1ym4ykq8" path="res://scripts/scenes/BattleSceneManager.cs" id="1_ctuyy"]
@@ -6,12 +6,12 @@
 [ext_resource type="Texture2D" uid="uid://pl67o3rwu44h" path="res://assets/environments/scene_2_hotel/酒店大门口墙前.png" id="3_s0pgc"]
 [ext_resource type="Texture2D" uid="uid://pan0auvatm1f" path="res://assets/environments/scene_2_hotel/电梯墙前.png" id="4_hq53u"]
 [ext_resource type="Script" uid="uid://del8hgcg3sr4i" path="res://scripts/managers/CameraFollow.cs" id="4_vvtmr"]
-[ext_resource type="PackedScene" uid="uid://c88kwpwoxtoev" path="res://scenes/ui/hud/BattleHUD.tscn" id="5_qokfb"]
 [ext_resource type="PackedScene" uid="uid://cofm45kotvgto" path="res://scenes/actors/enemies/Enemy_B1_fat.tscn" id="6_ctuyy"]
 [ext_resource type="Script" uid="uid://b7afb3wjghskq" path="res://scripts/items/world/DropItemDebugger.cs" id="7_k0qph"]
-[ext_resource type="Script" uid="uid://bquq58vywbbot" path="res://scripts/controllers/EnemySpawnManager.cs" id="8_5klp8"]
+[ext_resource type="Script" uid="uid://b3iq6dm2pc5y0" path="res://scripts/controllers/EnemySpawnManager.cs" id="8_5klp8"]
 [ext_resource type="PackedScene" uid="uid://wqcdwpyo1nji" path="res://scenes/actors/enemies/Enemy_B1_thin.tscn" id="10_sfgmy"]
 [ext_resource type="PackedScene" uid="uid://cdnitqquebaw6" path="res://scenes/weapons/Weapon_Stab_drill.tscn" id="11_vvtmr"]
+[ext_resource type="PackedScene" uid="uid://djio6ojcqw8yf" path="res://scenes/actors/enemies/Enemy_Normal_guard2.tscn" id="12_2l4aj"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_s0pgc"]
 size = Vector2(16974, 774)
@@ -43,6 +43,9 @@ size = Vector2(193.5, 3232.25)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_2l4aj"]
 size = Vector2(1112.5, 1843)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_f0l3g"]
+size = Vector2(1000, 1500)
+
 [node name="BattleScene" type="Node2D" node_paths=PackedStringArray("Player")]
 script = ExtResource("1_ctuyy")
 Player = NodePath("World/MainCharacter")
@@ -70,14 +73,17 @@ drag_horizontal_enabled = true
 drag_vertical_enabled = true
 script = ExtResource("4_vvtmr")
 ShakeOnPlayerDamaged = true
+PlayerDamagedShakeStrength = 4.0
 ShakeOnPlayerAttackHit = true
+PlayerAttackHitShakeStrength = 6.0
 HitStopOnPlayerDamaged = true
-PlayerDamagedHitStopDuration = 0.08
+PlayerDamagedHitStopDuration = 0.049999999999999996
 HitStopOnPlayerAttackHit = true
-PlayerAttackHitHitStopDuration = 0.1
+PlayerAttackHitHitStopDuration = 0.049999999999999996
 HitStopDelay = 0.1
 
 [node name="FrontWall" type="Node2D" parent="World"]
+position = Vector2(26, 3)
 
 [node name="GateFrontWall" type="Sprite2D" parent="World/FrontWall"]
 z_index = 3
@@ -135,6 +141,13 @@ shape = SubResource("RectangleShape2D_k0qph")
 [node name="Node2D" type="Node2D" parent="World"]
 script = ExtResource("7_k0qph")
 
+[node name="Enemy_B1_thin" parent="World" instance=ExtResource("10_sfgmy")]
+position = Vector2(8357, -234)
+
+[node name="WeaponStabDrill" parent="World" instance=ExtResource("11_vvtmr")]
+y_sort_enabled = true
+position = Vector2(4462, 64)
+
 [node name="EnemySpawneManager" type="Node2D" parent="World" node_paths=PackedStringArray("TriggerArea")]
 top_level = true
 y_sort_enabled = true
@@ -164,30 +177,19 @@ collision_mask = 4
 shape = SubResource("RectangleShape2D_2l4aj")
 
 [node name="EnemySpawneManager2" type="Node2D" parent="World" node_paths=PackedStringArray("TriggerArea")]
-top_level = true
-y_sort_enabled = true
-position = Vector2(3174, 337)
+position = Vector2(3115, 0)
 script = ExtResource("8_5klp8")
-EnemyScene = ExtResource("10_x3vg8")
-SpawnInterval = 0.4
+EnemyScene = ExtResource("12_2l4aj")
 SpawnParentPath = NodePath("..")
-TriggerArea = NodePath("TriggerArea")
-TriggerSize = Vector2(320, 197.37)
+TriggerArea = NodePath("Area2D")
 TriggerCollisionLayer = 1
 TriggerCollisionMask = 1
-SpawnAreaExtents = Vector2(300, 300)
-SpawnBackEffectOffset = Vector2(0, -240)
-SpawnFrontEffectOffset = Vector2(0, -240)
 EnemyAppearDelay = 1.0
 BackEffectZOffset = 1
 FrontEffectZOffset = 3
-DebugLineWidth = 2.5
 
-[node name="TriggerArea" type="Area2D" parent="World/EnemySpawneManager2"]
+[node name="Area2D" type="Area2D" parent="World/EnemySpawneManager2"]
 collision_mask = 4
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="EnemySpawneManager2/TriggerArea"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="World/EnemySpawneManager2/Area2D"]
 shape = SubResource("RectangleShape2D_f0l3g")
-
-[node name="WeaponStabDrill" parent="." instance=ExtResource("11_vvtmr")]
-position = Vector2(4462, 64)

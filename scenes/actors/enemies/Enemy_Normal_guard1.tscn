@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=3 uid="uid://byi2utn347fwu"]
+[gd_scene load_steps=29 format=3 uid="uid://byi2utn347fwu"]
 
 [ext_resource type="Script" uid="uid://dk2iwmam78oa5" path="res://scripts/actors/enemies/EnemyNormalGuard1.cs" id="1_75dbm"]
 [ext_resource type="Resource" uid="uid://dj2v23mbucftf" path="res://resources/loot/EnemyB1FatDrops.tres" id="2_lxpom"]
@@ -20,6 +20,7 @@
 [ext_resource type="SpineSkeletonDataResource" uid="uid://bkpmrpkt4puta" path="res://animations/spine/Enemy_Normal_guard1.tres" id="17_s72su"]
 [ext_resource type="Script" uid="uid://dasv6eyuks8yq" path="res://scripts/actors/enemies/movement/EnemyFreezeOnTurnMovement.cs" id="18_u8fiq"]
 [ext_resource type="Script" uid="uid://266uyrs4q4pa" path="res://scripts/actors/enemies/animation/EnemyNormalGuard1SpineAnimationController.cs" id="19_lxpom"]
+[ext_resource type="Script" uid="uid://bbybuyitd10jr" path="res://scripts/controllers/SpineController.gd" id="20_0ugu3"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_b5vhy"]
 shader = ExtResource("4_f6qhq")
@@ -53,7 +54,6 @@ collision_layer = 2
 collision_mask = 7
 motion_mode = 1
 script = ExtResource("1_75dbm")
-SimpleAttackWarmupSeconds = 0.4
 EnableStateDebugOverlay = true
 DebugOverlayOffset = Vector2(-300, 50)
 DebugOverlayFontSize = 32
@@ -140,31 +140,31 @@ script = ExtResource("9_h8efu")
 
 [node name="AttackController" type="Node" parent="StateMachine/Attack"]
 script = ExtResource("9_75dbm")
-MeleeCountBeforeCharge = 5
+MeleeCountBeforeCharge = 1
 PlayerDetectionAreaPath = NodePath("../../../Sprite2D/ControllerDetectionArea")
 
 [node name="OnePunchAttack" type="Node" parent="StateMachine/Attack/AttackController"]
 script = ExtResource("10_75dbm")
 DetectionAreaPath = NodePath("../../../../Sprite2D/AttackDetectionArea")
 OnePunchAttackAreaPath = NodePath("../../../../Sprite2D/OnePunchAttackArea")
-DashSpeed = 2000.0
-DashDistance = 1500.0
+DashSpeed = 1500.0
+DashDistance = 500.0
 MinDashDistanceBeforeSmash = 0.0
 SnapshotDelaySeconds = 0.9
 OnePunchDmg = 1
-OnePunchKnockbackDistance = 500.0
+OnePunchKnockbackDistance = 0.0
 OnePunchKnockbackDuration = 0.1
-OnePunchKnockbackSpeed = 6000.0
+OnePunchKnockbackSpeed = 3000.0
 WarmupDuration = 1.0
-ActiveDuration = 0.5
-RecoveryDuration = 0.47
+ActiveDuration = 0.2
+RecoveryDuration = 0.45
+CooldownDuration = 0.0
 EnableSuperArmor = true
 IgnoreEnemyCollisionDuringAttack = true
 metadata/attack_weight = 60.0
 
 [node name="SimpleMeleeAttack" type="Node" parent="StateMachine/Attack/AttackController"]
 script = ExtResource("12_yoq8a")
-AttackIntervalSeconds = 0.1
 Damage = 1
 SimpleMeleeAttackKnockbackDistance = 50.0
 SimpleMeleeAttackKnockbackDuration = 0.1
@@ -173,6 +173,7 @@ WarmupDuration = 0.33
 ActiveDuration = 0.2
 RecoveryDuration = 0.47
 CooldownDuration = 0.0
+RequireAnimationHitTrigger = true
 metadata/attack_weight = 40.0
 
 [node name="Hit" type="Node" parent="StateMachine"]
@@ -198,9 +199,10 @@ script = ExtResource("18_u8fiq")
 scale = Vector2(0.33, 0.33)
 skeleton_data_res = ExtResource("17_s72su")
 preview_skin = "Default"
-preview_animation = "-- Empty --"
+preview_animation = "skill"
 preview_frame = true
-preview_time = 0.4
+preview_time = 1.9667
+script = ExtResource("20_0ugu3")
 
 [node name="AnimationController" type="Node" parent="."]
 script = ExtResource("19_lxpom")
@@ -209,3 +211,4 @@ WalkMixDuration = 0.0
 HitMixDuration = 0.0
 DieMixDuration = 0.0
 AttackMixDuration = 0.0
+SkillMixDuration = 0.0

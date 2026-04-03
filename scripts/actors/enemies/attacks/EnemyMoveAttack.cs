@@ -277,7 +277,6 @@ namespace Kuros.Actors.Enemies.Attacks
 
 			// 使用时间控制冲刺持续长度
             ActiveDuration = Mathf.Max(DashDuration, 0.05f);
-			RecoveryDuration = 1.0f;
         }
 
 		private bool TryExecuteMoveAttack()

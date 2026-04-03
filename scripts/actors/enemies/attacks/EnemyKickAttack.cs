@@ -256,10 +256,6 @@ namespace Kuros.Actors.Enemies.Attacks
             {
                 Enemy.FlipFacing(_dashDirection.X > 0);
             }
-
-			// 使用时间控制冲刺持续长度
-            ActiveDuration = Mathf.Max(DashDuration, 0.05f);
-			RecoveryDuration = 1.0f;
         }
 
 		private bool TryExecuteKickAttack()
@@ -408,14 +404,21 @@ namespace Kuros.Actors.Enemies.Attacks
 		{
 			if (!_isDashing || Enemy == null) return;
 
-			// 最短冲刺时间计时
-			if (!_canAttemptKickAttack)
-			{
 				_dashTimeElapsed += (float)delta;
-				if (_dashTimeElapsed >= MinDashTimeBeforeAttack)
-				{
-					_canAttemptKickAttack = true;
-				}
+
+			// 最短冲刺时间计时
+			if (!_canAttemptKickAttack && _dashTimeElapsed >= MinDashTimeBeforeAttack)
+			{
+				_canAttemptKickAttack = true;
+			}
+
+			// 冲刺持续时间到达，停止移动（Active 阶段由 ActiveDuration 计时结束）
+			if (_dashTimeElapsed >= DashDuration)
+			{
+				_dashFinalized = true;
+				_isDashing = false;
+				Enemy.Velocity = Vector2.Zero;
+				return;
 			}
 
 			// 命中检测：不中断冲刺，重叠期间可持续触发（启用动画事件触发时跳过此处）
@@ -459,14 +462,10 @@ namespace Kuros.Actors.Enemies.Attacks
 
 			if (forceKick)
 			{
-				if (TryExecuteKickAttack())
-				{
-					ForceEnterRecoveryPhase();
-					return;
-				}
+				TryExecuteKickAttack();
+				ForceEnterRecoveryPhase();
 			}
-
-			ForceEnterRecoveryPhase();
+			// 非强制命中：仅停止移动，Active 阶段由 ActiveDuration 计时自然结束
 		}
 
 		protected override void OnAnimationHit()
