@@ -12,7 +12,13 @@ using Kuros.UI;
 using Kuros.Utils;
 
 public partial class SamplePlayer : GameActor, IPlayerStatsSource
-{
+{	
+	[ExportCategory("Debug")]
+	[Export] public bool EnableStateDebugOverlay = false;
+	[Export] public Vector2 DebugOverlayOffset = new(-90f, -90f);
+	[Export(PropertyHint.Range, "8,128,1")] public int DebugOverlayFontSize = 14;
+	[Export] public Color DebugOverlayColor = new(1f, 0.95f, 0.2f, 1f);
+	
 	[ExportCategory("Combat")]
 	[Export] public Area2D AttackArea { get; private set; } = null!;
 	[Export] public Area2D? HitArea { get; private set; }
@@ -41,7 +47,7 @@ public partial class SamplePlayer : GameActor, IPlayerStatsSource
 	
 	[ExportCategory("UI")]
 	[Export] public Label StatsLabel { get; private set; } = null!; // Drag & Drop in Editor
-	
+
 	[ExportCategory("Equipment")]
 	/// <summary>
 	/// 左手附件點的節點路徑（可在編輯器中設置）
@@ -80,6 +86,7 @@ public partial class SamplePlayer : GameActor, IPlayerStatsSource
 	private int _score = 0;
 	private int _gold = 0; // 金币数量
 	private string _pendingAttackSourceState = string.Empty;
+	private string _debugOverlayText = string.Empty;
 	public string LastMovementStateName { get; private set; } = "Idle";
 	
 	// IPlayerStatsSource interface implementation
@@ -137,12 +144,29 @@ public partial class SamplePlayer : GameActor, IPlayerStatsSource
 		CallDeferred(MethodName.ApplyUnarmedSkillIfEmpty);
 		
 		UpdateStatsUI();
+		UpdateDebugOverlayText();
+		QueueRedraw();
 	}
 
 	public override void _Process(double delta)
 	{
 		base._Process(delta);
 		UpdateSyncedAttackAreaAttackBoneMotion();
+		if (!EnableStateDebugOverlay) return;
+
+		UpdateDebugOverlayText();
+		QueueRedraw();
+	}
+
+	public override void _Draw()
+	{
+		base._Draw();
+		if (!EnableStateDebugOverlay) return;
+
+		var font = ThemeDB.FallbackFont;
+		if (font == null) return;
+
+		DrawString(font, DebugOverlayOffset, _debugOverlayText, HorizontalAlignment.Left, -1f, DebugOverlayFontSize, DebugOverlayColor);
 	}
 
 	public override void _ExitTree()
@@ -1390,6 +1414,12 @@ public partial class SamplePlayer : GameActor, IPlayerStatsSource
 		return false;
 	}
 	
+	private void UpdateDebugOverlayText()
+	{
+		string stateName = StateMachine?.CurrentState?.Name ?? "None";
+		_debugOverlayText = $"{Name} | State: {stateName} | HP: {CurrentHealth}/{MaxHealth}";
+	}
+
 	private void UpdateStatsUI()
 	{
 		NotifyStatsListeners();

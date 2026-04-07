@@ -5,7 +5,7 @@
 
 [resource]
 script = ExtResource("2_hxcpv")
-SkillId = "WeaponSlashSkill_BarrierGate"
+SkillId = "Weapon_Slash_BarrierGate"
 DisplayName = "开刃升降杆技能名"
 AnimationName = "Weapon_Slash_BarrierGate"
 DamageMultiplier = 0.0

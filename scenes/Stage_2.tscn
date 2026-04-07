@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=3 uid="uid://qd5abd4opeob"]
+[gd_scene load_steps=25 format=3 uid="uid://qd5abd4opeob"]
 
 [ext_resource type="PackedScene" uid="uid://dd8xmpgwy0t2o" path="res://scenes/environments/scene2.tscn" id="1_7jsho"]
 [ext_resource type="Script" uid="uid://x1ic1ym4ykq8" path="res://scripts/scenes/BattleSceneManager.cs" id="1_ctuyy"]
@@ -13,9 +13,6 @@
 [ext_resource type="PackedScene" uid="uid://wqcdwpyo1nji" path="res://scenes/actors/enemies/Enemy_B1_thin.tscn" id="10_sfgmy"]
 [ext_resource type="PackedScene" uid="uid://bhjc0grsl76ep" path="res://scenes/weapons/Weapon_Brawl_riotBracer.tscn" id="11_3yw8j"]
 [ext_resource type="PackedScene" uid="uid://cdnitqquebaw6" path="res://scenes/weapons/Weapon_Stab_drill.tscn" id="11_vvtmr"]
-[ext_resource type="PackedScene" uid="uid://djio6ojcqw8yf" path="res://scenes/actors/enemies/Enemy_Normal_guard2.tscn" id="12_2l4aj"]
-[ext_resource type="Script" uid="uid://dpbc2vm461epg" path="res://scripts/tools/WeaponConfigToolkit.cs" id="14_cwau0"]
-[ext_resource type="Texture2D" uid="uid://dccrl4lpl0t2h" path="res://icon.svg" id="15_cwau0"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_s0pgc"]
 size = Vector2(16974, 774)
@@ -77,13 +74,15 @@ drag_horizontal_enabled = true
 drag_vertical_enabled = true
 script = ExtResource("4_vvtmr")
 ShakeOnPlayerDamaged = true
-PlayerDamagedShakeStrength = 4.0
+ShakeRecoverySpeed = 20.0
+PlayerDamagedShakeStrength = 12.0
 ShakeOnPlayerAttackHit = true
-PlayerAttackHitShakeStrength = 6.0
+PlayerAttackKillShakeStrength = 20.0
 HitStopOnPlayerDamaged = true
-PlayerDamagedHitStopDuration = 0.04999999999999999
+PlayerDamagedHitStopDuration = 0.18
 HitStopOnPlayerAttackHit = true
-PlayerAttackHitHitStopDuration = 0.04999999999999999
+PlayerAttackHitHitStopDuration = 0.1
+PlayerAttackKillHitStopDuration = 0.3
 HitStopDelay = 0.1
 
 [node name="FrontWall" type="Node2D" parent="World"]
@@ -145,9 +144,6 @@ shape = SubResource("RectangleShape2D_k0qph")
 [node name="Node2D" type="Node2D" parent="World"]
 script = ExtResource("7_k0qph")
 
-[node name="Enemy_B1_thin" parent="World" instance=ExtResource("10_sfgmy")]
-position = Vector2(8357, -234)
-
 [node name="WeaponStabDrill" parent="World" instance=ExtResource("11_vvtmr")]
 y_sort_enabled = true
 position = Vector2(4462, 64)
@@ -160,7 +156,6 @@ position = Vector2(3323, 64)
 
 [node name="EnemySpawneManager" type="Node2D" parent="World" node_paths=PackedStringArray("TriggerArea")]
 top_level = true
-y_sort_enabled = true
 position = Vector2(-997, 337)
 scale = Vector2(1.2, 1.2)
 script = ExtResource("8_5klp8")
@@ -176,8 +171,6 @@ SpawnAreaExtents = Vector2(300, 300)
 SpawnBackEffectOffset = Vector2(0, -300)
 SpawnFrontEffectOffset = Vector2(0, -300)
 EnemyAppearDelay = 1.0
-BackEffectZOffset = 1
-FrontEffectZOffset = 3
 AutoLowerFrontEffectAfterEnemySpawn = true
 DebugLineWidth = 2.5
 
@@ -190,34 +183,16 @@ shape = SubResource("RectangleShape2D_2l4aj")
 [node name="EnemySpawneManager2" type="Node2D" parent="World" node_paths=PackedStringArray("TriggerArea")]
 position = Vector2(3115, 0)
 script = ExtResource("8_5klp8")
-EnemyScene = ExtResource("12_2l4aj")
-SpawnCount = 3
+EnemyScene = ExtResource("10_sfgmy")
 SpawnInterval = 2.0
 SpawnParentPath = NodePath("..")
 TriggerArea = NodePath("Area2D")
-TriggerCollisionLayer = 1
-TriggerCollisionMask = 1
 EnemySpawnOffset = Vector2(0, 100)
 EnemyAppearDelay = 1.0
-EnableYAxisAutoLayering = true
-YAxisZScale = 11.4
-YAxisZMin = 0
-YAxisZMax = 0
+AutoLowerFrontEffectAfterEnemySpawn = true
 
 [node name="Area2D" type="Area2D" parent="World/EnemySpawneManager2"]
 collision_mask = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="World/EnemySpawneManager2/Area2D"]
 shape = SubResource("RectangleShape2D_f0l3g")
-
-[node name="Node" type="Node" parent="World"]
-script = ExtResource("14_cwau0")
-ItemId = "Weapon_Brawl_RiotBracer"
-ItemDisplayName = "镇暴护腕"
-ItemDescription = "镇暴护腕描述"
-WeaponScenePath = "uid://bhjc0grsl76ep"
-ItemIcon = ExtResource("15_cwau0")
-SkillId = "WeaponSkill_Brawl_RiotBracer"
-SkillDisplayName = "镇暴护腕技能名"
-SkillAnimationName = ""
-SkillActivationAction = "Weapon_Brawl_RiotBracer"

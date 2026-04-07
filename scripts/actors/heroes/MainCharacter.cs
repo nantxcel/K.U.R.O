@@ -38,6 +38,7 @@ namespace Kuros.Actors.Heroes
 
 	// Spine 相关（使用 Node 引用，通过 Call 调用 GDScript 方法）
 	private Node? _spineController;
+	private CanvasItem? _spineBoneNode;
 	private string _currentAnimation = string.Empty;
 
 	public override void _Ready()
@@ -75,6 +76,7 @@ namespace Kuros.Actors.Heroes
 
 		// 状态机会在进入 Idle 状态时播放待机动画
 		// 这里不需要手动播放，让状态机管理
+		UpdateSpineBoneNodeVisibility();
 	}
 
 	/// <summary>
@@ -85,32 +87,32 @@ namespace Kuros.Actors.Heroes
 		// 检查 InventoryComponent
 		if (InventoryComponent == null)
 		{
-			GD.PushWarning($"[{Name}] InventoryComponent 未找到！请确保场景中有 'Inventory' 子节点（PlayerInventoryComponent）。");
+			//GD.PushWarning($"[{Name}] InventoryComponent 未找到！请确保场景中有 'Inventory' 子节点（PlayerInventoryComponent）。");
 		}
 		else
 		{
-			GD.Print($"[{Name}] InventoryComponent 初始化成功: {InventoryComponent.Name}");
+			//GD.Print($"[{Name}] InventoryComponent 初始化成功: {InventoryComponent.Name}");
 		}
 
 		// 检查 WeaponSkillController
 		if (WeaponSkillController == null)
 		{
-			GD.PushWarning($"[{Name}] WeaponSkillController 未找到！");
+			//GD.PushWarning($"[{Name}] WeaponSkillController 未找到！");
 		}
 		else
 		{
-			GD.Print($"[{Name}] WeaponSkillController 初始化成功: {WeaponSkillController.Name}");
+			//GD.Print($"[{Name}] WeaponSkillController 初始化成功: {WeaponSkillController.Name}");
 		}
 
 		// 检查 PlayerItemInteractionComponent
 		var itemInteraction = GetNodeOrNull<PlayerItemInteractionComponent>("ItemInteraction");
 		if (itemInteraction == null)
 		{
-			GD.PushWarning($"[{Name}] PlayerItemInteractionComponent 未找到！请确保场景中有 'ItemInteraction' 子节点。");
+			//GD.PushWarning($"[{Name}] PlayerItemInteractionComponent 未找到！请确保场景中有 'ItemInteraction' 子节点。");
 		}
 		else
 		{
-			GD.Print($"[{Name}] PlayerItemInteractionComponent 初始化成功: {itemInteraction.Name}");
+			//GD.Print($"[{Name}] PlayerItemInteractionComponent 初始化成功: {itemInteraction.Name}");
 		}
 	}
 
@@ -141,7 +143,7 @@ namespace Kuros.Actors.Heroes
 
 		if (spineNode == null)
 		{
-			GD.PushWarning($"[{Name}] 未找到 SpineSprite 节点！请确保场景中有 SpineSprite 子节点，并且挂载了 SpineController.gd 脚本。");
+			//GD.PushWarning($"[{Name}] 未找到 SpineSprite 节点！请确保场景中有 SpineSprite 子节点，并且挂载了 SpineController.gd 脚本。");
 			return;
 		}
 
@@ -151,11 +153,11 @@ namespace Kuros.Actors.Heroes
 		// 验证节点是否有 play 方法（即是否挂载了 SpineController.gd）
 		if (_spineController != null && _spineController.HasMethod("play"))
 		{
-			GD.Print($"[{Name}] SpineController 初始化成功");
+			//GD.Print($"[{Name}] SpineController 初始化成功");
 		}
 		else
 		{
-			GD.PushWarning($"[{Name}] SpineSprite 节点未挂载 SpineController.gd 脚本！请在 SpineSprite 节点上附加 scripts/controllers/SpineController.gd 脚本。");
+			//GD.PushWarning($"[{Name}] SpineSprite 节点未挂载 SpineController.gd 脚本！请在 SpineSprite 节点上附加 scripts/controllers/SpineController.gd 脚本。");
 			_spineController = null;
 		}
 	}
@@ -167,6 +169,64 @@ namespace Kuros.Actors.Heroes
 		// 调用基类方法，让 SamplePlayer 处理快捷栏切换等输入
 		// 然后 SamplePlayer 会调用 base._UnhandledInput，让状态机处理攻击等输入
 		base._UnhandledInput(@event);
+	}
+
+	public override void _Process(double delta)
+	{
+		base._Process(delta);
+		UpdateSpineBoneNodeVisibility();
+	}
+
+	private void UpdateSpineBoneNodeVisibility(string? stateOrAnimationName = null)
+	{
+		ResolveSpineBoneNode();
+		if (_spineBoneNode == null || !IsInstanceValid(_spineBoneNode))
+		{
+			return;
+		}
+
+		string currentName = string.IsNullOrWhiteSpace(stateOrAnimationName)
+			? StateMachine?.CurrentState?.Name ?? string.Empty
+			: stateOrAnimationName;
+
+		bool shouldShow = ShouldShowSpineBoneNode(currentName);
+		if (_spineBoneNode.Visible == shouldShow)
+		{
+			return;
+		}
+
+		_spineBoneNode.Visible = shouldShow;
+	}
+
+	private bool ShouldShowSpineBoneNode(string? stateOrAnimationName)
+	{
+		if (string.IsNullOrWhiteSpace(stateOrAnimationName))
+		{
+			return false;
+		}
+
+		return stateOrAnimationName.Equals("Idle", StringComparison.OrdinalIgnoreCase)
+			|| stateOrAnimationName.Equals("Walk", StringComparison.OrdinalIgnoreCase)
+			|| stateOrAnimationName.Equals("Run", StringComparison.OrdinalIgnoreCase)
+			|| stateOrAnimationName.Equals("Stun", StringComparison.OrdinalIgnoreCase)
+			|| stateOrAnimationName.Equals("Hit", StringComparison.OrdinalIgnoreCase)
+			|| stateOrAnimationName.Equals("Frozen", StringComparison.OrdinalIgnoreCase)
+			|| stateOrAnimationName.Equals(IdleAnimationName, StringComparison.OrdinalIgnoreCase)
+			|| stateOrAnimationName.Equals(WalkAnimationName, StringComparison.OrdinalIgnoreCase)
+			|| stateOrAnimationName.Equals(RunAnimationName, StringComparison.OrdinalIgnoreCase)
+			|| stateOrAnimationName.Equals("stun", StringComparison.OrdinalIgnoreCase);
+	}
+
+	private void ResolveSpineBoneNode()
+	{
+		if (_spineBoneNode != null && IsInstanceValid(_spineBoneNode))
+		{
+			return;
+		}
+
+		_spineBoneNode = GetNodeOrNull<CanvasItem>("SpineSprite/SpineBoneNode")
+			?? GetNodeOrNull<CanvasItem>("SpineBoneNode")
+			?? FindChild("SpineBoneNode", recursive: true, owned: false) as CanvasItem;
 	}
 
 		/// <summary>
@@ -193,6 +253,7 @@ namespace Kuros.Actors.Heroes
 			}
 
 			_currentAnimation = animName;
+			UpdateSpineBoneNodeVisibility(animName);
 
 			try
 			{
@@ -202,7 +263,7 @@ namespace Kuros.Actors.Heroes
 			}
 			catch (Exception ex)
 			{
-				GD.PushWarning($"[{Name}] 播放动画失败: {animName}, 错误: {ex.Message}");
+				//GD.PushWarning($"[{Name}] 播放动画失败: {animName}, 错误: {ex.Message}");
 			}
 		}
 
@@ -220,7 +281,7 @@ namespace Kuros.Actors.Heroes
 		{
 			if (ResolveAttackAreaForHitDetection() == null)
 			{
-				GD.PushWarning($"[{Name}] AttackArea 未设置，无法执行攻击检测");
+				// GD.PushWarning($"[{Name}] AttackArea 未设置，无法执行攻击检测");
 				return;
 			}
 

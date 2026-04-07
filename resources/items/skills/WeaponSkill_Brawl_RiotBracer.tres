@@ -5,7 +5,7 @@
 
 [resource]
 script = ExtResource("2_2o5f0")
-SkillId = "WeaponSkill_Brawl_RiotBracer"
+SkillId = "Weapon_Brawl_RiotBracer"
 DisplayName = "镇暴护腕技能名"
 AnimationName = "Weapon_Brawl_MechGlove"
 ActivationAction = "Weapon_Brawl_MechGlove"

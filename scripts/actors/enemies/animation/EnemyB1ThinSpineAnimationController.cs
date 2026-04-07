@@ -14,8 +14,9 @@ namespace Kuros.Actors.Enemies.Animation
         [Export] public string WalkAnimation = "walk";
         [Export] public string AttackAnimation = "attack";
         [Export] public string SkillAnimation = "skill";
-        [Export] public string HitAnimation = "hit";
+        [Export] public string EnemySpawnAnimation = "skill2";
         [Export] public string DashBackAnimation = "skill3"; 
+        [Export] public string HitAnimation = "hit";
         [Export] public string StunAnimation = "stun";
         [Export] public string DieAnimation = "death";
         private EnemyB1ThinAttackController? _attackController;
@@ -81,9 +82,6 @@ namespace Kuros.Actors.Enemies.Animation
                 case "Hit":
                     PlayOnceIfNeeded("Hit", HitAnimation, HitMixDuration);
                     break;
-                case "DashBack":
-                    PlayOnceIfNeeded("DashBack", DashBackAnimation, WalkMixDuration);
-                    break;
                 case "Dying":
                     PlayOnceIfNeeded("Die", DieAnimation, DieMixDuration, enqueueIdle: false);
                     break;
@@ -95,6 +93,12 @@ namespace Kuros.Actors.Enemies.Animation
                     break;
                 case "Attack":
                     HandleAttackAnimations();
+                    break;
+                case "EnemySpawn":
+                    PlayOnceIfNeeded("EnemySpawn", EnemySpawnAnimation, WalkMixDuration);
+                    break;
+                case "DashBack":
+                    PlayOnceIfNeeded("DashBack", DashBackAnimation, WalkMixDuration);
                     break;
                 default:
                     PlayIdle();

@@ -1,7 +1,7 @@
 [gd_scene load_steps=29 format=3 uid="uid://wrebd662va23"]
 
 [ext_resource type="Script" uid="uid://dklt5k3rq7qjb" path="res://scripts/actors/enemies/EnemyB2Fat02.cs" id="1_gvrrx"]
-[ext_resource type="Resource" uid="uid://dj2v23mbucftf" path="res://resources/loot/EnemyB1FatDrops.tres" id="2_ooggc"]
+[ext_resource type="Resource" uid="uid://dj2v23mbucftf" path="res://resources/loot/EnemyB1NormalDrops.tres" id="2_ooggc"]
 [ext_resource type="Script" uid="uid://d6ppl6a6djpr" path="res://scripts/core/effects/EffectController.cs" id="3_6yc1u"]
 [ext_resource type="Shader" uid="uid://cpuiqtlgf6b67" path="res://shaders/materials/shadow.gdshader" id="4_xrpf5"]
 [ext_resource type="Texture2D" uid="uid://wkm4jcgntidv" path="res://assets/environments/影子.png" id="5_bb8mk"]
@@ -48,9 +48,7 @@ radius = 60.0
 height = 240.0
 
 [node name="Enemy_B2_fat02" type="CharacterBody2D" node_paths=PackedStringArray("DetectionArea", "AttackArea", "StateMachine", "EffectController")]
-z_index = 2
 z_as_relative = false
-y_sort_enabled = true
 collision_layer = 2
 collision_mask = 7
 motion_mode = 1
@@ -139,7 +137,6 @@ script = ExtResource("8_aqxxu")
 
 [node name="Attack" type="Node" parent="StateMachine"]
 script = ExtResource("9_rbnx7")
-EnableAttackDebugCounter = true
 
 [node name="AttackController" type="Node" parent="StateMachine/Attack"]
 script = ExtResource("9_ooggc")
@@ -199,6 +196,8 @@ script = ExtResource("18_qelwu")
 FreezeDuration = 1.0
 
 [node name="SpineSprite" type="SpineSprite" parent="."]
+z_index = 2
+y_sort_enabled = true
 scale = Vector2(0.33, 0.33)
 skeleton_data_res = ExtResource("19_gvrrx")
 preview_skin = "Default"
