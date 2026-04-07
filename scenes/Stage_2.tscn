@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=3 uid="uid://qd5abd4opeob"]
+[gd_scene load_steps=26 format=3 uid="uid://qd5abd4opeob"]
 
 [ext_resource type="PackedScene" uid="uid://dd8xmpgwy0t2o" path="res://scenes/environments/scene2.tscn" id="1_7jsho"]
 [ext_resource type="Script" uid="uid://x1ic1ym4ykq8" path="res://scripts/scenes/BattleSceneManager.cs" id="1_ctuyy"]
@@ -13,6 +13,7 @@
 [ext_resource type="PackedScene" uid="uid://wqcdwpyo1nji" path="res://scenes/actors/enemies/Enemy_B1_thin.tscn" id="10_sfgmy"]
 [ext_resource type="PackedScene" uid="uid://bhjc0grsl76ep" path="res://scenes/weapons/Weapon_Brawl_riotBracer.tscn" id="11_3yw8j"]
 [ext_resource type="PackedScene" uid="uid://cdnitqquebaw6" path="res://scenes/weapons/Weapon_Stab_drill.tscn" id="11_vvtmr"]
+[ext_resource type="PackedScene" uid="uid://byi2utn347fwu" path="res://scenes/actors/enemies/Enemy_Normal_guard1.tscn" id="14_x3vg8"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_s0pgc"]
 size = Vector2(16974, 774)
@@ -143,6 +144,9 @@ shape = SubResource("RectangleShape2D_k0qph")
 
 [node name="Node2D" type="Node2D" parent="World"]
 script = ExtResource("7_k0qph")
+
+[node name="Enemy_Normal_guard1" parent="World" instance=ExtResource("14_x3vg8")]
+position = Vector2(5950, 380)
 
 [node name="WeaponStabDrill" parent="World" instance=ExtResource("11_vvtmr")]
 y_sort_enabled = true

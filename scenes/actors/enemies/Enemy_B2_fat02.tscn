@@ -48,7 +48,8 @@ radius = 60.0
 height = 240.0
 
 [node name="Enemy_B2_fat02" type="CharacterBody2D" node_paths=PackedStringArray("DetectionArea", "AttackArea", "StateMachine", "EffectController")]
-z_as_relative = false
+z_index = 2
+y_sort_enabled = true
 collision_layer = 2
 collision_mask = 7
 motion_mode = 1
@@ -196,12 +197,10 @@ script = ExtResource("18_qelwu")
 FreezeDuration = 1.0
 
 [node name="SpineSprite" type="SpineSprite" parent="."]
-z_index = 2
-y_sort_enabled = true
 scale = Vector2(0.33, 0.33)
 skeleton_data_res = ExtResource("19_gvrrx")
 preview_skin = "Default"
-preview_animation = "skill"
+preview_animation = "-- Empty --"
 preview_frame = true
 preview_time = 1.04
 script = ExtResource("20_ooggc")

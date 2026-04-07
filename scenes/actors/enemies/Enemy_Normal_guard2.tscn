@@ -194,8 +194,6 @@ script = ExtResource("16_5x78p")
 script = ExtResource("17_2j78c")
 
 [node name="SpineSprite" type="SpineSprite" parent="."]
-z_index = 2
-y_sort_enabled = true
 scale = Vector2(0.33, 0.33)
 skeleton_data_res = ExtResource("18_wixbd")
 preview_skin = "Default"
