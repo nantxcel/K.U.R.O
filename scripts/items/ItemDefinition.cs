@@ -60,6 +60,8 @@ namespace Kuros.Items
             get => _weaponSkillResources;
             set => _weaponSkillResources = value ?? new();
         }
+        [Export] public string BuildClass { get; set; } = string.Empty;
+        [Export(PropertyHint.Range, "0,99,1")] public int LevelCount { get; set; } = 1;
 
         [ExportGroup("Durability")]
         [Export] public ItemDurabilityConfig? DurabilityConfig { get; set; }

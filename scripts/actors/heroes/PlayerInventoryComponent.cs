@@ -22,6 +22,7 @@ namespace Kuros.Actors.Heroes
         public InventoryContainer Backpack { get; private set; } = null!;
         public InventoryContainer? QuickBar { get; set; }
         [Export] public ItemDefinition? UnarmedWeaponDefinition { get; set; }
+        [Export] public bool ReserveQuickBarSlot0ForDefaultWeapon { get; set; } = false;
         private const string DefaultUnarmedWeaponPath = "res://resources/items/Weapon_Unarmed_Default.tres";
 
         // 跟踪已获得的物品ID（用于判断是否是第一次获得）
@@ -43,7 +44,7 @@ namespace Kuros.Actors.Heroes
         public bool HasSelectedItem => GetSelectedBackpackStack() != null;
         
         /// <summary>
-        /// 當前左手選中的快捷欄槽位索引（1-4，對應快捷欄2-5）
+        /// 當前選中的快捷欄槽位索引（0-4，對應快捷欄1-5）
         /// -1 表示未選中任何槽位
         /// </summary>
         public int SelectedQuickBarSlot
@@ -60,7 +61,8 @@ namespace Kuros.Actors.Heroes
                 QuickBarSlotChanged?.Invoke(_selectedQuickBarSlot);
             }
         }
-        private int _selectedQuickBarSlot = 1;
+        // 默认选择快捷栏第1格（索引0），确保首次拾取优先进入第1格。
+        private int _selectedQuickBarSlot = 0;
         
         /// <summary>
         /// 檢查左手選中的快捷欄槽位是否有物品
@@ -181,11 +183,14 @@ namespace Kuros.Actors.Heroes
             int remaining = amount;
             bool isFirstTime = IsFirstTimeObtaining(item);
 
-            // 优先放入快捷栏（索引1-4，因为索引0是默认小木剑，需要跳过）
+            // 优先放入快捷栏（默认包含索引0；若保留默认武器槽则从索引1开始）
             if (QuickBar != null && remaining > 0)
             {
+                int quickBarStart = ReserveQuickBarSlot0ForDefaultWeapon ? 1 : 0;
+                const int quickBarEndExclusive = 5;
+
                 // 步驟1：優先嘗試放入當前選中的快捷欄槽位
-                if (SelectedQuickBarSlot >= 1 && SelectedQuickBarSlot <= 4)
+                if (SelectedQuickBarSlot >= quickBarStart && SelectedQuickBarSlot < quickBarEndExclusive)
                 {
                     var selectedStack = QuickBar.GetStack(SelectedQuickBarSlot);
                     // 檢查選中槽位是否為空、空白道具或可合併的相同物品
@@ -202,7 +207,7 @@ namespace Kuros.Actors.Heroes
                 }
                 
                 // 步驟2：如果還有剩餘，嘗試合併到已有相同物品的槽位
-                for (int i = 1; i < 5 && remaining > 0; i++)
+                for (int i = quickBarStart; i < quickBarEndExclusive && remaining > 0; i++)
                 {
                     if (i == SelectedQuickBarSlot) continue; // 跳過已處理的選中槽位
                     
@@ -221,7 +226,7 @@ namespace Kuros.Actors.Heroes
                 // 步驟3：如果还有剩余，找到最左側的空槽位或空白道具槽位添加
                 if (remaining > 0)
                 {
-                    for (int i = 1; i < 5 && remaining > 0; i++)
+                    for (int i = quickBarStart; i < quickBarEndExclusive && remaining > 0; i++)
                     {
                         if (i == SelectedQuickBarSlot) continue; // 跳過已處理的選中槽位
                         
@@ -595,7 +600,7 @@ namespace Kuros.Actors.Heroes
         /// </summary>
         public InventoryItemStack? GetSelectedQuickBarStack()
         {
-            if (QuickBar == null || SelectedQuickBarSlot < 1 || SelectedQuickBarSlot > 4)
+            if (QuickBar == null || SelectedQuickBarSlot < 0 || SelectedQuickBarSlot > 4)
             {
                 return null;
             }
@@ -608,7 +613,7 @@ namespace Kuros.Actors.Heroes
         public bool TryExtractFromSelectedQuickBarSlot(int amount, out InventoryItemStack? extracted)
         {
             extracted = null;
-            if (QuickBar == null || SelectedQuickBarSlot < 1 || SelectedQuickBarSlot > 4)
+            if (QuickBar == null || SelectedQuickBarSlot < 0 || SelectedQuickBarSlot > 4)
             {
                 return false;
             }
@@ -625,7 +630,7 @@ namespace Kuros.Actors.Heroes
             {
                 return false;
             }
-            if (SelectedQuickBarSlot < 1 || SelectedQuickBarSlot > 4)
+            if (SelectedQuickBarSlot < 0 || SelectedQuickBarSlot > 4)
             {
                 return false;
             }

@@ -50,6 +50,7 @@ namespace Kuros.Actors.Enemies.States
                 return;
             }
 
+            // 如果玩家在攻击范围外但在检测范围内，并且设置了 ExitToWalkWhenOutOfAttackRange，则切换到 Walk 状态
             if (ExitToWalkWhenOutOfAttackRange && playerDetected && !playerInAttackRange)
             {
                 ChangeState("Walk");
@@ -148,12 +149,12 @@ namespace Kuros.Actors.Enemies.States
             }
 
             if (playerInAttackRange)
-                {
-                    ChangeState("Attack");
-                }
-                else
-                {
-                    ChangeState("Walk");
+            {
+                ChangeState("Attack");
+            }
+            else
+            {
+                ChangeState("Walk");
             }
         }
     }

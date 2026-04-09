@@ -277,7 +277,6 @@ namespace Kuros.Actors.Enemies.Attacks
 
 			// 使用时间控制冲刺持续长度
             ActiveDuration = Mathf.Max(DashDuration, 0.05f);
-			RecoveryDuration = 1.0f;
         }
 
 		private bool TryExecuteMoveAttack()
@@ -432,15 +431,14 @@ namespace Kuros.Actors.Enemies.Attacks
 			if (_postAttackCooldown > 0f) return;
 
 			bool overlaps = _detectionArea.OverlapsBody(Enemy.PlayerTarget);
-			if (overlaps && !_playerInsideDetection)
+			if (overlaps)
 			{
 				_playerInsideDetection = true;
 				TryRequestAttackFromDetection("Poll");
+				return;
 			}
-			else if (!overlaps && _playerInsideDetection)
-			{
-				_playerInsideDetection = false;
-			}
+
+			_playerInsideDetection = false;
 		}
 
 		private void TryRequestAttackFromDetection(string reason)

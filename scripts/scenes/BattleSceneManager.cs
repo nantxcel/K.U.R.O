@@ -275,8 +275,7 @@ namespace Kuros.Scenes
 				// 尝试在常见路径中查找
 				string[] possiblePaths = {
 					$"res://data/{weaponName}.tres",
-					$"res://resources/items/{weaponName}.tres",
-					$"res://data/DefaultSwordItem.tres" // 默认武器
+					$"res://resources/items/{weaponName}.tres"
 				};
 
 				foreach (var path in possiblePaths)

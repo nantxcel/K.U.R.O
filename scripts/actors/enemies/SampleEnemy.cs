@@ -24,13 +24,13 @@ public partial class SampleEnemy : GameActor
 	private bool _scoreGranted;
 	private string _debugOverlayText = string.Empty;
 	
-	public SampleEnemy()
-	{
-		Speed = 150.0f;
-		AttackDamage = 10.0f;
-		AttackCooldown = 1.5f;
-		MaxHealth = 50;
-	}
+	// public SampleEnemy()
+	// {
+	// 	Speed = 150.0f;
+	// 	AttackDamage = 10.0f;
+	// 	AttackCooldown = 1.5f;
+	// 	MaxHealth = 50;
+	// }
 	
 	public override void _Ready()
 	{
@@ -96,6 +96,25 @@ public partial class SampleEnemy : GameActor
 		RefreshPlayerReference();
 		if (_player == null || AttackArea == null) return false;
 		return _player.IsHitByArea(AttackArea);
+	}
+
+	/// <summary>
+	/// 检查玩家是否正在攻击（处于 Attack 状态）。
+	/// </summary>
+	public bool IsPlayerAttacking()
+	{
+		RefreshPlayerReference();
+		return _player?.StateMachine?.CurrentState?.Name == "Attack";
+	}
+
+	/// <summary>
+	/// 检查本敌人是否在玩家的攻击范围内（玩家攻击区域覆盖到本敌人）。
+	/// </summary>
+	public bool IsEnemyInPlayerAttackRange()
+	{
+		RefreshPlayerReference();
+		if (_player == null) return false;
+		return IsHitByArea(_player.AttackArea);
 	}
 
 	public Vector2 GetDirectionToPlayer()

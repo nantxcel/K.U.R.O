@@ -2,15 +2,16 @@
 
 [ext_resource type="Script" uid="uid://dtgdjgrqgype7" path="res://scripts/items/world/WorldItemEntity.cs" id="1_inoct"]
 [ext_resource type="Texture2D" uid="uid://cp3tj4mexoi30" path="res://assets/weapons/伞.png" id="1_kyvej"]
-[ext_resource type="Resource" uid="uid://c01sltuo7404y" path="res://resources/items/Weapon_Stab_umbrella.tres" id="2_inoct"]
+[ext_resource type="Resource" uid="uid://c01sltuo7404y" path="res://resources/items/Weapon_Stab_Umbrella.tres" id="2_inoct"]
 
 [sub_resource type="RectangleShape2D" id="BodyShape_rr6vl"]
-size = Vector2(767, 74)
+size = Vector2(972, 208)
 
 [sub_resource type="RectangleShape2D" id="TriggerShape_yahcm"]
-size = Vector2(1272, 144)
+size = Vector2(1536, 144)
 
 [node name="WeaponStabUmbrella" type="CharacterBody2D"]
+z_index = 1
 scale = Vector2(0.5, 0.5)
 collision_layer = 0
 collision_mask = 0
@@ -21,7 +22,10 @@ ItemDefinition = ExtResource("2_inoct")
 scale = Vector2(0.5, 0.5)
 texture = ExtResource("1_kyvej")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionArea2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CollisionArea2D"]
+position = Vector2(-1, 0)
 scale = Vector2(0.5, 0.5)
 shape = SubResource("BodyShape_rr6vl")
 
@@ -30,6 +34,6 @@ scale = Vector2(0.5, 0.5)
 collision_layer = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AttackArea"]
-position = Vector2(174, 4)
+position = Vector2(108, 4)
 scale = Vector2(0.5, 0.5)
 shape = SubResource("TriggerShape_yahcm")

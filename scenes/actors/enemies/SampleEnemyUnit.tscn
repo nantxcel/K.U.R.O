@@ -1,19 +1,19 @@
 [gd_scene load_steps=13 format=3]
 
-[ext_resource type="Script" path="res://scripts/actors/enemies/SampleEnemy.cs" id="1"]
-[ext_resource type="Script" path="res://scripts/systems/fsm/StateMachine.cs" id="2"]
-[ext_resource type="Script" path="res://scripts/actors/enemies/states/EnemyIdleState.cs" id="3"]
-[ext_resource type="Script" path="res://scripts/actors/enemies/states/EnemyWalkState.cs" id="4"]
-[ext_resource type="Script" path="res://scripts/actors/enemies/states/EnemyAttackState.cs" id="5"]
-[ext_resource type="Script" path="res://scripts/actors/enemies/states/EnemyHitState.cs" id="6"]
-[ext_resource type="Script" path="res://scripts/actors/enemies/states/EnemyFrozenState.cs" id="7"]
-[ext_resource type="Script" path="res://scripts/actors/enemies/states/EnemyCooldownFrozenState.cs" id="14"]
-[ext_resource type="Script" path="res://scripts/actors/enemies/states/EnemyDyingState.cs" id="15"]
-[ext_resource type="Script" path="res://scripts/actors/enemies/states/EnemyDeadState.cs" id="16"]
-[ext_resource type="Script" path="res://scripts/actors/enemies/movement/EnemyChaseMovement.cs" id="9"]
-[ext_resource type="Script" path="res://scripts/core/effects/EffectController.cs" id="11"]
-[ext_resource type="Script" path="res://scripts/actors/enemies/attacks/EnemyMultiStrikeAttack.cs" id="13"]
-[ext_resource type="Resource" path="res://resources/loot/SampleEnemyDrops.tres" id="17_drop_table"]
+[ext_resource type="Script" uid="uid://hhpl8w4ty1ky" path="res://scripts/actors/enemies/SampleEnemy.cs" id="1"]
+[ext_resource type="Script" uid="uid://cenpuhlcgesin" path="res://scripts/systems/fsm/StateMachine.cs" id="2"]
+[ext_resource type="Script" uid="uid://7sdhlullren0" path="res://scripts/actors/enemies/states/EnemyIdleState.cs" id="3"]
+[ext_resource type="Script" uid="uid://c6mvoo4sy0r7g" path="res://scripts/actors/enemies/states/EnemyWalkState.cs" id="4"]
+[ext_resource type="Script" uid="uid://bo6uhkbqyxe6o" path="res://scripts/actors/enemies/states/EnemyAttackState.cs" id="5"]
+[ext_resource type="Script" uid="uid://cwnxfhj8ysc2f" path="res://scripts/actors/enemies/states/EnemyHitState.cs" id="6"]
+[ext_resource type="Script" uid="uid://cihawgv4js52w" path="res://scripts/actors/enemies/states/EnemyFrozenState.cs" id="7"]
+[ext_resource type="Script" uid="uid://fpfidsmcwy6w" path="res://scripts/actors/enemies/states/EnemyCooldownFrozenState.cs" id="14"]
+[ext_resource type="Script" uid="uid://cbmvuppulotha" path="res://scripts/actors/enemies/states/EnemyDyingState.cs" id="15"]
+[ext_resource type="Script" uid="uid://bta6sixb7kee4" path="res://scripts/actors/enemies/states/EnemyDeadState.cs" id="16"]
+[ext_resource type="Script" uid="uid://d2k021vbcmnkl" path="res://scripts/actors/enemies/movement/EnemyChaseMovement.cs" id="9"]
+[ext_resource type="Script" uid="uid://d6ppl6a6djpr" path="res://scripts/core/effects/EffectController.cs" id="11"]
+[ext_resource type="Script" uid="uid://8c6vvjl6hwlo" path="res://scripts/actors/enemies/attacks/EnemyMultiStrikeAttack.cs" id="13"]
+[ext_resource type="Resource" uid="uid://xsa2wlasoj6i" path="res://resources/loot/Enemy_Normal_NormalDrops.tres" id="17_drop_table"]
 
 [sub_resource type="PlaceholderTexture2D" id="1"]
 size = Vector2(32, 48)
@@ -31,6 +31,7 @@ size = Vector2(50.64583, 26.785715)
 [node name="Enemy" type="CharacterBody2D" node_paths=PackedStringArray("AttackArea")]
 position = Vector2(0, 0)
 collision_layer = 2
+collision_mask = 3
 motion_mode = 1
 script = ExtResource("1")
 AttackArea = NodePath("Sprite2D/AttackArea")

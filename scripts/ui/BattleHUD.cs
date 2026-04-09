@@ -34,6 +34,7 @@ namespace Kuros.UI
 
 		[ExportCategory("Default Items")]
 		[Export] public ItemDefinition? DefaultSwordItem { get; set; } // 默认小木剑物品定义
+		[Export] public bool SpawnDefaultSwordInQuickBar { get; set; } = false;
 		private const string DefaultSwordItemPath = "res://data/DefaultSwordItem.tres";
 
 		// 当前显示的数据
@@ -204,25 +205,28 @@ namespace Kuros.UI
 		_quickBarContainer.SlotChanged += OnQuickBarSlotChanged;
 		_quickBarContainer.InventoryChanged += OnQuickBarChanged;
 
-			// 在快捷栏1（索引0）放置默认小木剑占位符
-			ItemDefinition? swordItem = DefaultSwordItem;
-			
-			// 如果未设置，尝试加载默认资源
-			if (swordItem == null)
+			if (SpawnDefaultSwordInQuickBar)
 			{
-				swordItem = GD.Load<ItemDefinition>(DefaultSwordItemPath);
-			}
-			
-			if (swordItem != null)
-			{
-				_quickBarContainer.TryAddItemToSlot(swordItem, 1, 0);
-				
-				// 立即更新快捷栏1的显示
-				CallDeferred(MethodName.UpdateQuickBarSlot, 0);
-			}
-			else
-			{
-				GD.PrintErr("InitializeInventory: DefaultSwordItem is null and could not load from resource file. Please set DefaultSwordItem in the inspector or create the resource file.");
+				// 可选：在快捷栏1（索引0）放置默认小木剑占位符
+				ItemDefinition? swordItem = DefaultSwordItem;
+
+				// 如果未设置，尝试加载默认资源
+				if (swordItem == null)
+				{
+					swordItem = GD.Load<ItemDefinition>(DefaultSwordItemPath);
+				}
+
+				if (swordItem != null)
+				{
+					_quickBarContainer.TryAddItemToSlot(swordItem, 1, 0);
+
+					// 立即更新快捷栏1的显示
+					CallDeferred(MethodName.UpdateQuickBarSlot, 0);
+				}
+				else
+				{
+					GD.PrintErr("InitializeInventory: DefaultSwordItem is null and could not load from resource file. Please set DefaultSwordItem in the inspector or create the resource file.");
+				}
 			}
 			
 			// 初始化空白道具：填充快捷栏和物品栏的空槽位
@@ -338,13 +342,13 @@ namespace Kuros.UI
 		/// <summary>
 		/// 更新左右手选择的快捷栏高亮（武器栏框选中/未选中贴图）
 		/// </summary>
-		/// <param name="leftHandSlotIndex">左手选择的槽位索引（1-4，-1表示未选择）</param>
-		/// <param name="rightHandSlotIndex">右手选择的槽位索引（0，固定为小木剑）</param>
-		public void UpdateHandSlotHighlight(int leftHandSlotIndex, int rightHandSlotIndex = 0)
+		/// <param name="leftHandSlotIndex">左手选择的槽位索引（0-4，-1表示未选择）</param>
+		/// <param name="rightHandSlotIndex">右手选择的槽位索引（-1表示不高亮右手）</param>
+		public void UpdateHandSlotHighlight(int leftHandSlotIndex, int rightHandSlotIndex = -1)
 		{
 			for (int i = 0; i < 5; i++)
 			{
-				bool selected = (i == rightHandSlotIndex && rightHandSlotIndex >= 0) || (i == leftHandSlotIndex && leftHandSlotIndex >= 1 && leftHandSlotIndex < 5);
+				bool selected = (i == rightHandSlotIndex && rightHandSlotIndex >= 0) || (i == leftHandSlotIndex && leftHandSlotIndex >= 0 && leftHandSlotIndex < 5);
 				UpdateSlotPanelStyle(i, selected);
 			}
 		}
@@ -361,10 +365,11 @@ namespace Kuros.UI
 				return;
 			}
 			
-			// 填充快捷栏空槽位（跳过索引0，因为是小木剑）
+			// 填充快捷栏空槽位。若启用默认小木剑则跳过索引0。
 			if (_quickBarContainer != null)
 			{
-				for (int i = 1; i < 5; i++)
+				int startIndex = SpawnDefaultSwordInQuickBar ? 1 : 0;
+				for (int i = startIndex; i < 5; i++)
 				{
 					var stack = _quickBarContainer.GetStack(i);
 					if (stack == null || stack.IsEmpty)
@@ -404,9 +409,11 @@ namespace Kuros.UI
 				// 注意：使用 CallDeferred 确保在快捷栏连接完成后再初始化
 				player.CallDeferred(SamplePlayer.MethodName.InitializeLeftHandSelection);
 				
-				// 延迟更新高亮，确保初始化完成后再显示
-				int clampedIndex = Mathf.Clamp(player.LeftHandSlotIndex, 1, 4);
-				CallDeferred(MethodName.UpdateHandSlotHighlight, clampedIndex, 0);
+				// 延迟更新高亮，保留未选择状态（-1），避免把第一格误高亮。
+				int highlightIndex = (player.LeftHandSlotIndex >= 0 && player.LeftHandSlotIndex < 5)
+					? player.LeftHandSlotIndex
+					: -1;
+				CallDeferred(MethodName.UpdateHandSlotHighlight, highlightIndex, -1);
 			}
 			else
 			{

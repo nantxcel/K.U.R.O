@@ -1,10 +1,10 @@
-[gd_resource type="Resource" load_steps=7 format=3 uid="uid://weapon_a0_lengyue"]
+[gd_resource type="Resource" script_class="ItemDefinition" load_steps=7 format=3 uid="uid://bu24wkpq1sby2"]
 
-[ext_resource type="Script" path="res://scripts/items/ItemDefinition.cs" id="1_item_definition"]
-[ext_resource type="Script" path="res://scripts/items/attributes/ItemAttributeEntry.cs" id="2_attribute_entry"]
-[ext_resource type="Texture2D" path="res://icon.svg" id="3_icon"]
-[ext_resource type="Resource" path="res://resources/items/skills/WeaponLengyuePassiveSkill.tres" id="4_lengyue_skill"]
-[ext_resource type="PackedScene" path="res://scenes/items/ExampleWorldItem.tscn" id="5_world_item"]
+[ext_resource type="Script" uid="uid://dfgtff7mly02w" path="res://scripts/items/ItemDefinition.cs" id="1_item_definition"]
+[ext_resource type="Script" uid="uid://b4tcdtjy6u7ee" path="res://scripts/items/attributes/ItemAttributeEntry.cs" id="2_attribute_entry"]
+[ext_resource type="Script" uid="uid://bv0es4osw3x0r" path="res://scripts/items/effects/ItemEffectEntry.cs" id="2_u16nr"]
+[ext_resource type="Texture2D" uid="uid://dccrl4lpl0t2h" path="res://icon.svg" id="3_icon"]
+[ext_resource type="Resource" uid="uid://bm1hkhssjf3ov" path="res://resources/items/skills/WeaponLengyuePassiveSkill.tres" id="4_lengyue_skill"]
 
 [sub_resource type="Resource" id="Attribute_AttackPower"]
 script = ExtResource("2_attribute_entry")
@@ -20,10 +20,5 @@ Description = "蕴含冷冽月光的武器，除了 7 点攻击力，还会定�
 Icon = ExtResource("3_icon")
 Category = "Weapon"
 MaxStackSize = 1
-Tags = PackedStringArray("tag_weapon")
-AttributeEntries = Array[Resource]([SubResource("Attribute_AttackPower")])
-EffectEntries = Array[Resource]([])
-DurabilityConfig = null
+AttributeEntries = Array[ExtResource("2_attribute_entry")]([SubResource("Attribute_AttackPower")])
 WeaponSkillResources = Array[Resource]([ExtResource("4_lengyue_skill")])
-WorldScenePath = ExtResource("5_world_item")
-

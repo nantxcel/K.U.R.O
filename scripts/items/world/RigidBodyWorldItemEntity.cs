@@ -460,8 +460,14 @@ namespace Kuros.Items.World
 				if (battleHUD != null)
 				{
 					battleHUD.CallDeferred("UpdateQuickBarDisplay");
-					int leftHandSlot = player.LeftHandSlotIndex >= 1 && player.LeftHandSlotIndex < 5 ? player.LeftHandSlotIndex : -1;
-					battleHUD.CallDeferred("UpdateHandSlotHighlight", leftHandSlot, 0);
+					int leftHandSlot = player.LeftHandSlotIndex >= 0 && player.LeftHandSlotIndex < 5
+						? player.LeftHandSlotIndex
+						: (player.InventoryComponent?.SelectedQuickBarSlot ?? -1);
+					if (leftHandSlot < 0 || leftHandSlot >= 5)
+					{
+						leftHandSlot = -1;
+					}
+					battleHUD.CallDeferred("UpdateHandSlotHighlight", leftHandSlot, -1);
 				}
 			}
 		}
