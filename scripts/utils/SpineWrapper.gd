@@ -3,6 +3,9 @@ extends Node
 # 这是一个 GDScript 桥接脚本，用于帮助 C# 操作 Spine 节点
 # 因为 C# 绑定可能缺失，我们在 GDScript 中进行操作
 
+var _flash_tokens: Dictionary = {}
+var _flash_restore_colors: Dictionary = {}
+
 func find_spine_node(root: Node) -> Node:
 	if root.has_node("SpineCharacter"):
 		return root.get_node("SpineCharacter")
@@ -20,18 +23,42 @@ func flip_facing(root: Node, face_right: bool, default_face_left: bool) -> void:
 		if default_face_left: sign_val *= -1.0
 		sprite.scale.x = abs(sprite.scale.x) * sign_val
 
-func flash_damage(root: Node, color: Color) -> void:
+func flash_damage(root: Node, color: Color, restore_color = null, duration: float = 0.1) -> void:
 	var sprite = find_spine_node(root)
-	if sprite:
-		var original_modulate = sprite.modulate
-		sprite.modulate = color
-		
-		var tween = create_tween()
-		tween.tween_interval(0.1)
-		tween.tween_callback(func(): 
-			if is_instance_valid(sprite):
-				sprite.modulate = original_modulate
-		)
+	if not sprite:
+		return
+
+	var key = sprite.get_instance_id()
+	var token = int(_flash_tokens.get(key, 0)) + 1
+	_flash_tokens[key] = token
+
+	var base_restore_color: Color
+	if restore_color is Color:
+		base_restore_color = restore_color
+	elif _flash_restore_colors.has(key):
+		base_restore_color = _flash_restore_colors[key]
+	else:
+		base_restore_color = sprite.modulate
+
+	_flash_restore_colors[key] = base_restore_color
+
+	var flash_color = color
+	flash_color.a = base_restore_color.a
+	sprite.modulate = flash_color
+	
+	var tween = create_tween()
+	tween.tween_interval(maxf(duration, 0.0))
+	tween.tween_callback(func(): 
+		if not is_instance_valid(sprite):
+			_flash_tokens.erase(key)
+			_flash_restore_colors.erase(key)
+			return
+		if int(_flash_tokens.get(key, 0)) != token:
+			return
+		sprite.modulate = _flash_restore_colors.get(key, base_restore_color)
+		_flash_tokens.erase(key)
+		_flash_restore_colors.erase(key)
+	)
 
 # 动画控制相关
 func play_animation(root: Node, anim_name: String, loop: bool, mix_duration: float = 0.1, time_scale: float = 1.0) -> bool:
@@ -81,6 +108,10 @@ func add_animation(root: Node, anim_name: String, loop: bool, delay: float, mix_
 			entry.set_mix_duration(mix_duration)
 		if entry.has_method("set_time_scale"):
 			entry.set_time_scale(time_scale)
+		# 让前一个动画（mixingFrom）在整个过渡期间仍能派发事件（如 hit）
+		# eventThreshold=1.0 表示 mix < 1.0 时都允许派发，覆盖整个 mix 阶段
+		if entry.has_method("set_event_threshold"):
+			entry.set_event_threshold(1.0)
 	return true
 
 func set_empty_animation(root: Node, track_index: int, mix_duration: float) -> bool:

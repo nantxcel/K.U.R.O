@@ -27,10 +27,9 @@ namespace Kuros.Actors.Enemies.Attacks
 		[Export(PropertyHint.Range, "0,2000,1")] public float OnePunchKnockbackDistance = 180f;
 		[Export(PropertyHint.Range, "0.01,2,0.01")] public float OnePunchKnockbackDuration = 0.18f;
 		[Export(PropertyHint.Range, "0,6000,1")] public float OnePunchKnockbackSpeed = 0f;
-		[Export] public StringName CooldownStateName = "CooldownFrozen";
 
 		private const float MinDashDistance = 32f;
-		private const float PostCooldownDuration = 1.0f;
+		private const float PostCooldownDuration = 0.5f;
 
         private Area2D? _detectionArea;
 		private Area2D? _onePunchArea;
@@ -239,7 +238,7 @@ namespace Kuros.Actors.Enemies.Attacks
 				// 只有当敌人处于冷却相关状态时，才由此处控制移动
 				// 否则让状态机自己处理，避免覆盖其他状态的速度设置
 				var currentStateName = Enemy?.StateMachine?.CurrentState?.Name;
-				if (currentStateName == CooldownStateName || currentStateName == "Attack")
+				if (currentStateName == "Attack")
 				{
 					if (Enemy != null)
 					{
@@ -309,7 +308,6 @@ namespace Kuros.Actors.Enemies.Attacks
 
 			float dashTime = Mathf.Max(targetDistance / Mathf.Max(DashSpeed, 1f), 0.05f);
             ActiveDuration = dashTime;
-			RecoveryDuration = 1.0f;
         }
 
 		private bool TryExecuteOnePunch()
@@ -415,10 +413,7 @@ namespace Kuros.Actors.Enemies.Attacks
 
 			if (starting)
 			{
-				if (!CooldownStateName.IsEmpty && Enemy.StateMachine != null)
-				{
-					Enemy.StateMachine.ChangeState(CooldownStateName);
-				}
+				Enemy.Velocity = Vector2.Zero;
 			}
 
 			_pendingCooldownExit = true;
@@ -428,11 +423,7 @@ namespace Kuros.Actors.Enemies.Attacks
 		{
 			if (Enemy?.StateMachine == null) return;
 
-			if (Enemy.StateMachine.CurrentState?.Name == CooldownStateName)
-			{
-				Enemy.StateMachine.ChangeState("Walk");
-			}
-			else if (Enemy.StateMachine.CurrentState?.Name == "Attack")
+			if (Enemy.StateMachine.CurrentState?.Name == "Attack")
 			{
 				Enemy.StateMachine.ChangeState("Walk");
 			}
@@ -464,15 +455,14 @@ namespace Kuros.Actors.Enemies.Attacks
 			if (_postAttackCooldown > 0f) return;
 
 			bool overlaps = _detectionArea.OverlapsBody(Enemy.PlayerTarget);
-			if (overlaps && !_playerInsideDetection)
+			if (overlaps)
 			{
 				_playerInsideDetection = true;
 				TryRequestAttackFromDetection("Poll");
+				return;
 			}
-			else if (!overlaps && _playerInsideDetection)
-			{
-				_playerInsideDetection = false;
-			}
+
+			_playerInsideDetection = false;
 		}
 
 		private void TryRequestAttackFromDetection(string reason)

@@ -5,6 +5,7 @@ namespace Kuros.Actors.Heroes.States
 {
     public partial class PlayerHitState : PlayerState
     {
+        [Export] public string SpineHitAnimationName = "hit";
         public float HitAnimationSpeed = 1.0f;
         private float _originalSpeedScale = 1.0f;
         private float _stunTimer = 0.0f;
@@ -12,13 +13,26 @@ namespace Kuros.Actors.Heroes.States
         public override void Enter()
         {
             Actor.Velocity = Vector2.Zero;
+
+            if (Player is MainCharacter mainChar)
+            {
+                // MainCharacter uses Spine animation instead of AnimationPlayer.
+                string spineAnim = string.IsNullOrWhiteSpace(SpineHitAnimationName)
+                    ? "hit"
+                    : SpineHitAnimationName;
+                PlayAnimation(spineAnim, false, HitAnimationSpeed);
+            }
             
             if (Actor.AnimPlayer != null)
             {
                 // Save original speed scale before modifying
                 _originalSpeedScale = Actor.AnimPlayer.SpeedScale;
-                
-                Actor.AnimPlayer.Play("animations/hit");
+
+                string hitAnimation = ResolveHitAnimationName();
+                if (!string.IsNullOrEmpty(hitAnimation))
+                {
+                    Actor.AnimPlayer.Play(hitAnimation);
+                }
                 // Set animation playback speed only for hit animation
                 Actor.AnimPlayer.SpeedScale = HitAnimationSpeed;
             }
@@ -52,6 +66,32 @@ namespace Kuros.Actors.Heroes.States
             // but for now we just apply friction/stop
              Actor.Velocity = Actor.Velocity.MoveToward(Vector2.Zero, Actor.Speed * (float)delta);
              Actor.MoveAndSlide();
+        }
+
+        private string ResolveHitAnimationName()
+        {
+            if (Actor.AnimPlayer == null)
+            {
+                return string.Empty;
+            }
+
+            string[] candidates =
+            {
+                "animations/hit",
+                "animations/Hit",
+                "hit",
+                "Hit"
+            };
+
+            foreach (string candidate in candidates)
+            {
+                if (Actor.AnimPlayer.HasAnimation(candidate))
+                {
+                    return candidate;
+                }
+            }
+
+            return string.Empty;
         }
     }
 }

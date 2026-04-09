@@ -1,5 +1,7 @@
 using Godot;
+using System;
 using System.Collections.Generic;
+using Kuros.Actors.Heroes;
 using Kuros.Managers;
 
 namespace Kuros.UI
@@ -28,7 +30,7 @@ namespace Kuros.UI
             ProcessMode = ProcessModeEnum.Always;
             
             CacheNodeReferences();
-            InitializePlaceholderSkills();
+            RefreshSkillData();
             UpdateSkillDisplay();
             HideWindow();
         }
@@ -57,64 +59,172 @@ namespace Kuros.UI
             ConnectButtonSignal(CloseButton, nameof(HideWindow));
         }
 
+        private void RefreshSkillData()
+        {
+            _allSkills.Clear();
+            InitializePlaceholderSkills();
+        }
+
         /// <summary>
-        /// 初始化占位技能数据
+        /// 初始化技能数据：显示当前已拥有（已生效）的构筑效果
         /// </summary>
         private void InitializePlaceholderSkills()
         {
-            // 占位主技能
-            _allSkills.Add(new SkillDetailData
+            var buildController = FindPlayerBuildController();
+            if (buildController == null)
             {
-                Id = "skill_placeholder_1",
-                Name = "主技能1",
-                Description = "这是一个主技能的详细描述。主技能需要主动释放，具有冷却时间。",
-                Icon = null,
-                Cooldown = 5.0f,
-                IsActive = true,
-                Damage = "100",
-                Range = "5米",
-                ManaCost = "20"
+                _allSkills.Add(new SkillDetailData
+                {
+                    Id = "build_empty_no_controller",
+                    Name = "构筑效果",
+                    Description = "未找到玩家构筑控制器，暂时无法读取构筑数据。",
+                    Icon = null,
+                    IsActive = false,
+                    Damage = "N/A",
+                    Range = "N/A",
+                    ManaCost = "N/A",
+                    IsUnlocked = false,
+                    BuildLevel = 0,
+                    RequiredPoints = 0,
+                    CurrentPoints = 0
+                });
+                return;
+            }
+
+            buildController.RefreshBuildState();
+            int currentPoints = buildController.CurrentBuildCount;
+
+            var entries = new List<BuildLevelEffectEntry>();
+            foreach (var entry in buildController.LevelEntries)
+            {
+                if (entry != null)
+                {
+                    entries.Add(entry);
+                }
+            }
+
+            entries.Sort((a, b) =>
+            {
+                int byPoints = a.RequiredPoints.CompareTo(b.RequiredPoints);
+                if (byPoints != 0) return byPoints;
+                return a.Level.CompareTo(b.Level);
             });
 
-            _allSkills.Add(new SkillDetailData
+            foreach (var entry in entries)
             {
-                Id = "skill_placeholder_2",
-                Name = "主技能2",
-                Description = "这是另一个主技能的详细描述。",
-                Icon = null,
-                Cooldown = 10.0f,
-                IsActive = true,
-                Damage = "200",
-                Range = "10米",
-                ManaCost = "40"
-            });
+                bool isUnlocked = currentPoints >= entry.RequiredPoints;
+                if (!isUnlocked)
+                {
+                    continue;
+                }
 
-            // 占位被动技能
-            _allSkills.Add(new SkillDetailData
-            {
-                Id = "passive_placeholder_1",
-                Name = "被动技能1",
-                Description = "这是一个被动技能的详细描述。被动技能会自动生效，无需主动释放。",
-                Icon = null,
-                Cooldown = 0.0f,
-                IsActive = false,
-                Damage = "N/A",
-                Range = "N/A",
-                ManaCost = "N/A"
-            });
+                // string statusText = $"已拥有（需求点数: {entry.RequiredPoints}, 当前点数: {currentPoints}）";
 
-            _allSkills.Add(new SkillDetailData
+                _allSkills.Add(new SkillDetailData
+                {
+                    Id = string.IsNullOrWhiteSpace(entry.BuildId) ? $"build_level_{entry.Level}" : entry.BuildId,
+                    Name = string.IsNullOrWhiteSpace(entry.BuildName) ? $"构筑等级 {entry.Level}" : entry.BuildName,
+                    Description = string.IsNullOrWhiteSpace(entry.Description)
+                        ? ""
+                        : entry.Description,
+                    Icon = LoadBuildIcon(entry.IconPath),
+                    Cooldown = 0.0f,
+                    IsActive = false,
+                    Damage = "N/A",
+                    Range = "N/A",
+                    ManaCost = "N/A",
+                    IsUnlocked = isUnlocked,
+                    BuildLevel = entry.Level,
+                    RequiredPoints = entry.RequiredPoints,
+                    CurrentPoints = currentPoints
+                });
+            }
+
+            if (_allSkills.Count == 0)
             {
-                Id = "passive_placeholder_2",
-                Name = "被动技能2",
-                Description = "这是另一个被动技能的详细描述。",
-                Icon = null,
-                Cooldown = 0.0f,
-                IsActive = false,
-                Damage = "N/A",
-                Range = "N/A",
-                ManaCost = "N/A"
-            });
+                _allSkills.Add(new SkillDetailData
+                {
+                    Id = "build_empty_none_unlocked",
+                    Name = "构筑效果",
+                    Description = "当前尚未拥有已生效的构筑效果。",
+                    Icon = null,
+                    IsActive = false,
+                    Damage = "N/A",
+                    Range = "N/A",
+                    ManaCost = "N/A",
+                    IsUnlocked = false,
+                    BuildLevel = 0,
+                    RequiredPoints = 0,
+                    CurrentPoints = currentPoints
+                });
+            }
+        }
+
+        private PlayerBuildController? FindPlayerBuildController()
+        {
+            var tree = GetTree();
+            if (tree == null)
+            {
+                return null;
+            }
+
+            var root = tree.CurrentScene ?? tree.Root;
+            if (root == null)
+            {
+                return null;
+            }
+
+            return FindBuildControllerInTree(root);
+        }
+
+        private static PlayerBuildController? FindBuildControllerInTree(Node node)
+        {
+            if (node is PlayerBuildController controller)
+            {
+                return controller;
+            }
+
+            foreach (Node child in node.GetChildren())
+            {
+                var found = FindBuildControllerInTree(child);
+                if (found != null)
+                {
+                    return found;
+                }
+            }
+
+            return null;
+        }
+
+        private static Texture2D? LoadBuildIcon(string iconPath)
+        {
+            if (string.IsNullOrWhiteSpace(iconPath))
+            {
+                return null;
+            }
+
+            var normalizedPath = iconPath.Trim();
+            var texture = ResourceLoader.Load<Texture2D>(normalizedPath);
+            if (texture != null)
+            {
+                return texture;
+            }
+
+            if (normalizedPath.StartsWith("uid://", StringComparison.OrdinalIgnoreCase))
+            {
+                long uid = ResourceUid.TextToId(normalizedPath);
+                if (uid != ResourceUid.InvalidId)
+                {
+                    string resolvedPath = ResourceUid.GetIdPath(uid);
+                    if (!string.IsNullOrWhiteSpace(resolvedPath))
+                    {
+                        return ResourceLoader.Load<Texture2D>(resolvedPath);
+                    }
+                }
+            }
+
+            GD.PushWarning($"SkillDetailWindow: 无法加载构筑图标: {normalizedPath}");
+            return null;
         }
 
         /// <summary>
@@ -188,9 +298,19 @@ namespace Kuros.UI
             nameVbox.AddChild(nameLabel);
 
             var typeLabel = new Label();
-            typeLabel.Text = skill.IsActive ? "主技能" : "被动技能";
+            typeLabel.Text = skill.IsActive
+                ? "主技能"
+                : skill.BuildLevel > 0
+                    ? $"构筑效果 Lv.{skill.BuildLevel} {(skill.IsUnlocked ? "已生效" : "未生效")}"
+                    : "被动技能";
             typeLabel.AddThemeFontSizeOverride("font_size", 18);
-            typeLabel.AddThemeColorOverride("font_color", skill.IsActive ? new Color(0.3f, 0.7f, 1.0f) : new Color(1.0f, 0.7f, 0.3f));
+            typeLabel.AddThemeColorOverride(
+                "font_color",
+                skill.IsActive
+                    ? new Color(0.3f, 0.7f, 1.0f)
+                    : skill.BuildLevel > 0
+                        ? (skill.IsUnlocked ? new Color(0.3f, 1.0f, 0.6f) : new Color(1.0f, 0.55f, 0.3f))
+                        : new Color(1.0f, 0.7f, 0.3f));
             nameVbox.AddChild(typeLabel);
 
             // 技能描述
@@ -242,6 +362,9 @@ namespace Kuros.UI
         public void ShowWindow()
         {
             if (_isOpen) return;
+
+            RefreshSkillData();
+            UpdateSkillDisplay();
 
             Visible = true;
             ProcessMode = ProcessModeEnum.Always;
@@ -451,6 +574,10 @@ namespace Kuros.UI
             public string Damage { get; set; } = "0";
             public string Range { get; set; } = "0";
             public string ManaCost { get; set; } = "0";
+            public bool IsUnlocked { get; set; } = false;
+            public int BuildLevel { get; set; } = 0;
+            public int RequiredPoints { get; set; } = 0;
+            public int CurrentPoints { get; set; } = 0;
         }
     }
 }

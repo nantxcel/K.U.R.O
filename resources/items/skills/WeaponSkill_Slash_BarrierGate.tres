@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="WeaponSkillDefinition" load_steps=3 format=3 uid="uid://0rwr32wy7yud"]
+
+[ext_resource type="Script" uid="uid://bv0es4osw3x0r" path="res://scripts/items/effects/ItemEffectEntry.cs" id="1_joilt"]
+[ext_resource type="Script" uid="uid://bp6pwgoj44cuq" path="res://scripts/items/weapons/WeaponSkillDefinition.cs" id="2_hxcpv"]
+
+[resource]
+script = ExtResource("2_hxcpv")
+SkillId = "Weapon_Slash_BarrierGate"
+DisplayName = "开刃升降杆技能"
+AnimationName = "Weapon_Slash_BarrierGate"
+CooldownSeconds = 0.6
+Description = "攻击到敌人时使该敌人移动速度减少100%，持续1秒"
+ActivationAction = "weapon_skill_block"

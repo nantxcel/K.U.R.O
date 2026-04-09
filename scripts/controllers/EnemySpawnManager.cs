@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Godot;
 using Godot.Collections;
 using Kuros.Core;
@@ -20,12 +21,21 @@ namespace Kuros.Controllers
             BackEffectFinished
         }
 
+        public enum EnemySelectionMode
+        {
+            Sequential,
+            Random
+        }
+
         [Signal] public delegate void SpawnStartedEventHandler();
         [Signal] public delegate void EnemySpawnedEventHandler(Node enemy, int index);
         [Signal] public delegate void SpawnCompletedEventHandler();
 
         [ExportCategory("Enemy")]
         [Export] public PackedScene EnemyScene { get; set; } = null!;
+        [Export] public Array<PackedScene> EnemyScenes { get; set; } = new();
+        [Export] public EnemySelectionMode MultiEnemySelectionMode { get; set; } = EnemySelectionMode.Sequential;
+        [Export] public bool SpawnCountPerEnemyType { get; set; } = false;
         [Export(PropertyHint.Range, "1,100,1")] public int SpawnCount { get; set; } = 1;
         [Export(PropertyHint.Range, "0,10,0.05")] public float SpawnInterval { get; set; } = 0.15f;
         [Export] public NodePath SpawnParentPath { get; set; } = new NodePath();
@@ -45,6 +55,7 @@ namespace Kuros.Controllers
         [Export] public bool UseExplicitSpawnOffsets { get; set; } = false;
         [Export] public Array<Vector2> SpawnOffsets { get; set; } = new();
         [Export] public Vector2 SpawnAreaExtents { get; set; } = new Vector2(96, 48);
+        [Export] public Vector2 EnemySpawnOffset { get; set; } = Vector2.Zero;
         [Export] public bool AlignEnemyFacingToManager { get; set; } = true;
         [Export] public bool FaceRightOnSpawn { get; set; } = false;
 
@@ -58,20 +69,18 @@ namespace Kuros.Controllers
         [Export(PropertyHint.Range, "0,300,1")] public int BackEffectAppearFrame { get; set; } = 8;
         [Export(PropertyHint.Range, "0,10,0.05")] public float BackEffectGateTimeout { get; set; } = 3f;
         [Export] public bool FallbackToDelayWhenGateUnavailable { get; set; } = true;
-        [Export(PropertyHint.Range, "-1000,1000,1")] public int BackEffectZOffset { get; set; } = -1;
-        [Export(PropertyHint.Range, "-1000,1000,1")] public int FrontEffectZOffset { get; set; } = 1;
-        [Export] public bool AutoLowerFrontEffectAfterEnemySpawn { get; set; } = true;
+        [Export] public bool AutoLowerFrontEffectAfterEnemySpawn { get; set; } = false;
         [Export(PropertyHint.Range, "0,5,0.05")] public float FrontEffectLowerDelay { get; set; } = 0f;
         [Export(PropertyHint.Range, "-1000,1000,1")] public int FrontEffectPostSpawnZOffset { get; set; } = -1;
 
-        [ExportCategory("Y-Sort")]
-        [Export] public bool EnableYAxisAutoLayering { get; set; } = false;
-        [Export(PropertyHint.Range, "0.1,20,0.1")] public float YAxisZScale { get; set; } = 1f;
-        [Export(PropertyHint.Range, "-10000,10000,1")] public int YAxisZBase { get; set; } = 0;
-        [Export] public bool ClampYAxisZRange { get; set; } = true;
-        [Export(PropertyHint.Range, "-10000,10000,1")] public int YAxisZMin { get; set; } = -200;
-        [Export(PropertyHint.Range, "-10000,10000,1")] public int YAxisZMax { get; set; } = 400;
-        [Export(PropertyHint.Range, "-1000,1000,1")] public int EnemyZOffset { get; set; } = 0;
+        // [ExportCategory("Y-Sort")]
+        // [Export] public bool EnableYAxisAutoLayering { get; set; } = false;
+        // [Export(PropertyHint.Range, "0.1,20,0.1")] public float YAxisZScale { get; set; } = 1f;
+        // [Export(PropertyHint.Range, "-10000,10000,1")] public int YAxisZBase { get; set; } = 0;
+        // [Export] public bool ClampYAxisZRange { get; set; } = true;
+        // [Export(PropertyHint.Range, "-10000,10000,1")] public int YAxisZMin { get; set; } = -200;
+        // [Export(PropertyHint.Range, "-10000,10000,1")] public int YAxisZMax { get; set; } = 400;
+        // [Export(PropertyHint.Range, "-1000,1000,1")] public int EnemyZOffset { get; set; } = 0;
 
         [ExportCategory("Debug")]
         [Export] public bool ShowDebugOverlay { get; set; } = true;
@@ -167,7 +176,7 @@ namespace Kuros.Controllers
 
             if (LogSpawnEffectPositions)
             {
-                GD.Print($"[{Name}] StartSpawnSequence path={GetPath()}, count={SpawnCount}, interval={SpawnInterval}, enemyDelay={EnemyAppearDelay}, gateMode={EnemyAppearGateMode}, gateFrame={BackEffectAppearFrame}, gateTimeout={BackEffectGateTimeout}, backOffset={SpawnBackEffectOffset}, frontOffset={SpawnFrontEffectOffset}, ySort={EnableYAxisAutoLayering}, yScale={YAxisZScale:0.##}, yBase={YAxisZBase}");
+                GD.Print($"[{Name}] StartSpawnSequence path={GetPath()}, count={SpawnCount}, interval={SpawnInterval}, enemyDelay={EnemyAppearDelay}, gateMode={EnemyAppearGateMode}, gateFrame={BackEffectAppearFrame}, gateTimeout={BackEffectGateTimeout}, backOffset={SpawnBackEffectOffset}, frontOffset={SpawnFrontEffectOffset}");
             }
 
             _ = SpawnSequenceAsync();
@@ -189,11 +198,22 @@ namespace Kuros.Controllers
             _hasTriggered = true;
             EmitSignal(SignalName.SpawnStarted);
 
-            int spawnTotal = Mathf.Max(1, SpawnCount);
+            List<PackedScene> spawnQueue = BuildSpawnQueue();
+            if (spawnQueue.Count == 0)
+            {
+                GD.PushWarning($"{Name}: 未设置可生成的敌人场景，无法开始生成。");
+                _isSpawning = false;
+                EmitSignal(SignalName.SpawnCompleted);
+                return;
+            }
+
+            int spawnTotal = spawnQueue.Count;
             for (int i = 0; i < spawnTotal; i++)
             {
-                Vector2 spawnPosition = ResolveSpawnPosition(i);
-                SpawnEffectRefs effectRefs = PlaySpawnEffects(spawnPosition);
+                PackedScene enemyScene = spawnQueue[i];
+                Vector2 spawnAnchorPosition = ResolveSpawnPosition(i);
+                Vector2 enemySpawnPosition = spawnAnchorPosition + EnemySpawnOffset;
+                SpawnEffectRefs effectRefs = PlaySpawnEffects(spawnAnchorPosition);
 
                 await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
 
@@ -206,12 +226,12 @@ namespace Kuros.Controllers
                     GD.Print($"[{Name}] Spawn index={i + 1}/{spawnTotal}, gateMode={EnemyAppearGateMode}, actualWait={waitedMs}ms");
                 }
 
-                var enemy = SpawnEnemy(spawnPosition, i);
+                var enemy = SpawnEnemy(enemyScene, enemySpawnPosition, i);
                 if (enemy != null)
                 {
                     if (LogSpawnEffectPositions)
                     {
-                        GD.Print($"[{Name}] Enemy spawned index={i + 1}/{spawnTotal}, pos={spawnPosition}, root={DescribeCanvasItem(enemy as CanvasItem)}");
+                        GD.Print($"[{Name}] Enemy spawned index={i + 1}/{spawnTotal}, anchor={spawnAnchorPosition}, enemyPos={enemySpawnPosition}, enemyOffset={EnemySpawnOffset}, root={DescribeCanvasItem(enemy as CanvasItem)}");
                     }
 
                     if (AutoLowerFrontEffectAfterEnemySpawn)
@@ -233,18 +253,18 @@ namespace Kuros.Controllers
             EmitSignal(SignalName.SpawnCompleted);
         }
 
-        private Node? SpawnEnemy(Vector2 spawnPosition, int spawnIndex)
+        private Node? SpawnEnemy(PackedScene enemyScene, Vector2 spawnPosition, int spawnIndex)
         {
-            if (EnemyScene == null)
+            if (enemyScene == null)
             {
                 GD.PushWarning($"{Name}: EnemyScene 未设置，无法生成敌人。");
                 return null;
             }
 
-            var instance = EnemyScene.Instantiate();
+            var instance = enemyScene.Instantiate();
             if (instance == null)
             {
-                GD.PushWarning($"{Name}: 敌人场景实例化失败。");
+                GD.PushWarning($"{Name}: 敌人场景实例化失败。scene={enemyScene.ResourcePath}");
                 return null;
             }
 
@@ -254,13 +274,14 @@ namespace Kuros.Controllers
             if (instance is Node2D node2D)
             {
                 node2D.GlobalPosition = spawnPosition;
-                int baseZ = node2D.ZIndex;
-                ApplyNodeZIndex(node2D, spawnPosition, baseZ, EnemyZOffset);
+                // 保留 enemy 自身场景里的 ZIndex / ZAsRelative / YSort 设置，不在生成器里接管。
+                // int baseZ = node2D.ZIndex;
+                // ApplyNodeZIndex(node2D, spawnPosition, baseZ, EnemyZOffset);
                 node2D.Visible = true;
 
                 // Some enemy sub-controllers may toggle visibility/modulate in their own _Ready,
-                // so we re-apply visibility and z over a few frames for multi-spawn stability.
-                StabilizeSpawnedEnemyVisualAsync(node2D, spawnPosition, baseZ);
+                // so we only re-apply visibility here and do not override z ordering.
+                StabilizeSpawnedEnemyVisualAsync(node2D);
             }
 
             EnsureSpawnedEnemyVisible(instance);
@@ -278,7 +299,82 @@ namespace Kuros.Controllers
             return instance;
         }
 
-        private async void StabilizeSpawnedEnemyVisualAsync(Node2D enemyNode2D, Vector2 spawnPosition, int baseZ)
+        private List<PackedScene> BuildSpawnQueue()
+        {
+            List<PackedScene> configuredScenes = GetConfiguredEnemyScenes();
+            List<PackedScene> queue = new();
+
+            if (configuredScenes.Count == 0)
+            {
+                return queue;
+            }
+
+            int clampedSpawnCount = Mathf.Max(1, SpawnCount);
+
+            if (SpawnCountPerEnemyType && configuredScenes.Count > 1)
+            {
+                foreach (PackedScene scene in configuredScenes)
+                {
+                    for (int i = 0; i < clampedSpawnCount; i++)
+                    {
+                        queue.Add(scene);
+                    }
+                }
+
+                if (MultiEnemySelectionMode == EnemySelectionMode.Random)
+                {
+                    ShuffleSpawnQueue(queue);
+                }
+
+                return queue;
+            }
+
+            for (int i = 0; i < clampedSpawnCount; i++)
+            {
+                if (MultiEnemySelectionMode == EnemySelectionMode.Random && configuredScenes.Count > 1)
+                {
+                    int randomIndex = _rng.RandiRange(0, configuredScenes.Count - 1);
+                    queue.Add(configuredScenes[randomIndex]);
+                }
+                else
+                {
+                    queue.Add(configuredScenes[i % configuredScenes.Count]);
+                }
+            }
+
+            return queue;
+        }
+
+        private List<PackedScene> GetConfiguredEnemyScenes()
+        {
+            List<PackedScene> scenes = new();
+
+            foreach (PackedScene scene in EnemyScenes)
+            {
+                if (scene != null)
+                {
+                    scenes.Add(scene);
+                }
+            }
+
+            if (scenes.Count == 0 && EnemyScene != null)
+            {
+                scenes.Add(EnemyScene);
+            }
+
+            return scenes;
+        }
+
+        private void ShuffleSpawnQueue(List<PackedScene> queue)
+        {
+            for (int i = queue.Count - 1; i > 0; i--)
+            {
+                int swapIndex = _rng.RandiRange(0, i);
+                (queue[i], queue[swapIndex]) = (queue[swapIndex], queue[i]);
+            }
+        }
+
+        private async void StabilizeSpawnedEnemyVisualAsync(Node2D enemyNode2D)
         {
             if (!GodotObject.IsInstanceValid(enemyNode2D))
             {
@@ -294,7 +390,7 @@ namespace Kuros.Controllers
                     return;
                 }
 
-                ApplyNodeZIndex(enemyNode2D, spawnPosition, baseZ, EnemyZOffset);
+                // 保留 enemy 自身场景里的排序设置，不再在这里刷新 ZIndex。
                 EnsureSpawnedEnemyVisible(enemyNode2D);
             }
 
@@ -491,8 +587,8 @@ namespace Kuros.Controllers
                 GD.Print($"[{Name}] SpawnFX base={spawnPosition}, backOffset={SpawnBackEffectOffset}, backPos={backEffectPos}, frontOffset={SpawnFrontEffectOffset}, frontPos={frontEffectPos}");
             }
 
-            var backEffectInstance = SpawnEffect(SpawnBackEffectScene, backEffectPos, BackEffectZOffset);
-            var frontEffectInstance = SpawnEffect(SpawnFrontEffectScene, frontEffectPos, FrontEffectZOffset);
+            var backEffectInstance = SpawnEffect(SpawnBackEffectScene, backEffectPos);
+            var frontEffectInstance = SpawnEffect(SpawnFrontEffectScene, frontEffectPos);
 
             effectRefs.BackEffect = backEffectInstance?.Root;
             effectRefs.BackAnimatedSprite = backEffectInstance?.AnimatedSprite;
@@ -501,7 +597,7 @@ namespace Kuros.Controllers
             return effectRefs;
         }
 
-        private SpawnEffectInstance? SpawnEffect(PackedScene? effectScene, Vector2 spawnPosition, int zOffset)
+        private SpawnEffectInstance? SpawnEffect(PackedScene? effectScene, Vector2 spawnPosition)
         {
             if (effectScene == null)
             {
@@ -525,8 +621,7 @@ namespace Kuros.Controllers
             if (instance is Node2D node2D)
             {
                 node2D.GlobalPosition = spawnPosition;
-                int baseZ = node2D.ZIndex;
-                ApplyNodeZIndex(node2D, spawnPosition, baseZ, zOffset);
+                // 保留出生特效自身场景里的排序设置，不在生成器里强制修改 Z。
                 node2D.Visible = true;
             }
 
@@ -758,32 +853,6 @@ namespace Kuros.Controllers
             public Node2D? Root;
             public AnimatedSprite2D? AnimatedSprite;
             public bool Finished;
-        }
-
-        private void ApplyNodeZIndex(Node2D node2D, Vector2 worldPosition, int baseZ, int extraOffset)
-        {
-            int resolvedZ = ResolveZIndex(worldPosition.Y, baseZ) + extraOffset;
-            node2D.ZAsRelative = false;
-            node2D.ZIndex = resolvedZ;
-        }
-
-        private int ResolveZIndex(float worldY, int fallbackZ)
-        {
-            if (!EnableYAxisAutoLayering)
-            {
-                return fallbackZ;
-            }
-
-            float scale = Mathf.Max(0.1f, YAxisZScale);
-            int z = YAxisZBase + Mathf.RoundToInt(worldY * scale);
-            if (ClampYAxisZRange)
-            {
-                int min = Mathf.Min(YAxisZMin, YAxisZMax);
-                int max = Mathf.Max(YAxisZMin, YAxisZMax);
-                z = Mathf.Clamp(z, min, max);
-            }
-
-            return z;
         }
 
         private bool ShouldDrawDebugOverlay()

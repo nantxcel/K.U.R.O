@@ -376,6 +376,9 @@
 		}
 	}
 ],
+"events": {
+	"hit": {}
+},
 "animations": {
 	"attack": {
 		"slots": {
@@ -1189,6 +1192,9 @@
 				]
 			}
 		},
+		"events": [
+			{ "time": 0.3767, "name": "hit" }
+		],
 		"drawOrder": [
 			{
 				"time": 0.3667,

@@ -1,5 +1,7 @@
 using Godot;
 using System;
+using System.Collections.Generic;
+using Kuros.Core;
 using Kuros.Utils;
 
 namespace Kuros.Managers
@@ -31,12 +33,51 @@ namespace Kuros.Managers
         public float FollowSpeed { get; set; } = DEFAULT_FOLLOW_SPEED; // 跟随速度（平滑度）
         
         [Export] public new Vector2 Offset { get; set; } = Vector2.Zero; // 摄像机偏移量
+
+        [ExportCategory("镜头抖动")]
+        [Export] public bool ShakeOnPlayerDamaged { get; set; } = false;
+        [Export(PropertyHint.Range, "1,200,1")] public float ShakeRecoverySpeed { get; set; } = 16.0f; // 抖动恢复速度
+        [Export(PropertyHint.Range, "1,100,1")] public float PlayerDamagedShakeStrength { get; set; } = 8.0f;
+        [Export] public bool ShakeOnPlayerAttackHit { get; set; } = false;
+        [Export(PropertyHint.Range, "1,100,1")] public float PlayerAttackHitShakeStrength { get; set; } = 8.0f;
+        [Export(PropertyHint.Range, "1,100,1")] public float PlayerAttackKillShakeStrength { get; set; } = 12.0f;
+
+        [ExportCategory("顿帧")]
+        [Export] public bool HitStopOnPlayerDamaged { get; set; } = false;
+        [Export(PropertyHint.Range, "0.005,0.5,0.005")] public float PlayerDamagedHitStopDuration { get; set; } = 0.04f;
+        [Export] public bool HitStopOnPlayerAttackHit { get; set; } = false;
+        [Export(PropertyHint.Range, "0.005,0.5,0.005")] public float PlayerAttackHitHitStopDuration { get; set; } = 0.02f;
+        [Export(PropertyHint.Range, "0.005,0.5,0.005")] public float PlayerAttackKillHitStopDuration { get; set; } = 0.06f;
+        [Export(PropertyHint.Range, "0,500,1")] public float HitStopMinIntervalMs { get; set; } = 50f;
+        [Export] public string PlayerGroupName { get; set; } = "player";
+        [Export] public string EnemyGroupName { get; set; } = "enemies";
+        [Export(PropertyHint.Range, "0,0.5,0.005")] public float HitStopDelay { get; set; } = 0.0f; // 顿帧触发延迟
         #endregion
 
         #region Private Fields
         private Viewport? _viewport;
         private Vector2 _cachedViewportSize = Vector2.Zero;
         private bool _boundsValidated = false;
+        private float _shakeStrength = 0f;
+        private GameActor? _trackedActor;
+        private bool _isHitStopping = false;
+        private float _pendingHitStopDuration = 0f;
+        private ulong _lastHitStopTriggerTimeMs = 0;
+        private readonly Dictionary<ulong, FrozenNodeState> _frozenNodes = new();
+        #endregion
+
+        #region Frozen State Model
+        private sealed class FrozenNodeState
+        {
+            public Node Node = null!;
+            public bool WasProcessing;
+            public bool WasPhysicsProcessing;
+            public bool WasInputProcessing;
+            public bool WasUnhandledInputProcessing;
+            public float? AnimationSpeedScale;
+            public bool IsSpineTimeScaleManaged;
+            public float SpineTimeScale;
+        }
         #endregion
 
         #region Lifecycle
@@ -53,6 +94,20 @@ namespace Kuros.Managers
             {
                 SnapToTarget();
             }
+
+            // 订阅目标的受伤事件（初次初始化）
+            SubscribeDamageTaken(Target);
+
+            // 订阅全局命中事件（player 攻击敌人时抖动）
+            GameActor.AnyDamageTaken -= OnAnyDamageTaken;
+            GameActor.AnyDamageTaken += OnAnyDamageTaken;
+        }
+
+        public override void _ExitTree()
+        {
+            UnsubscribeDamageTaken();
+            GameActor.AnyDamageTaken -= OnAnyDamageTaken;
+            base._ExitTree();
         }
 
         public override void _Process(double delta)
@@ -74,6 +129,20 @@ namespace Kuros.Managers
             
             // 平滑移动到目标位置
             GlobalPosition = GlobalPosition.Lerp(desiredPosition, (float)delta * FollowSpeed);
+
+            // 应用镜头抖动
+            if (_shakeStrength > 0f)
+            {
+                base.Offset = new Vector2(
+                    (float)GD.RandRange(-_shakeStrength, _shakeStrength),
+                    (float)GD.RandRange(-_shakeStrength, _shakeStrength)
+                );
+                _shakeStrength = Mathf.MoveToward(_shakeStrength, 0f, ShakeRecoverySpeed * (float)delta);
+            }
+            else
+            {
+                base.Offset = Vector2.Zero;
+            }
         }
         #endregion
 
@@ -118,6 +187,14 @@ namespace Kuros.Managers
             {
                 Target = playerNode;
                 GameLogger.Info(nameof(CameraFollow), "通过路径 '../Player' 找到跟随目标");
+                return;
+            }
+
+            // 最后尝试父节点本身（Camera2D 作为玩家子节点的常见场景）
+            if (GetParent() is Node2D parentNode)
+            {
+                Target = parentNode;
+                GameLogger.Info(nameof(CameraFollow), $"使用父节点 '{parentNode.Name}' 作为跟随目标");
                 return;
             }
 
@@ -313,9 +390,20 @@ namespace Kuros.Managers
         /// 设置跟随目标
         /// </summary>
         /// <param name="target">目标节点</param>
+        /// <summary>
+        /// 触发镜头抖动
+        /// </summary>
+        /// <param name="strength">抖动强度（像素）</param>
+        public void Shake(float strength)
+        {
+            _shakeStrength = Mathf.Max(_shakeStrength, strength);
+        }
+
         public void SetTarget(Node2D? target)
         {
+            UnsubscribeDamageTaken();
             Target = target;
+            SubscribeDamageTaken(target);
             if (target != null)
             {
                 SnapToTarget();
@@ -343,6 +431,266 @@ namespace Kuros.Managers
                    Mathf.IsEqualApprox(currentPos.X, maxX) ||
                    Mathf.IsEqualApprox(currentPos.Y, minY) || 
                    Mathf.IsEqualApprox(currentPos.Y, maxY);
+        }
+
+        private void SubscribeDamageTaken(Node2D? target)
+        {
+            _trackedActor = target as GameActor;
+            if (_trackedActor == null)
+            {
+                return;
+            }
+
+            if (!ShakeOnPlayerDamaged && !HitStopOnPlayerDamaged)
+            {
+                return;
+            }
+
+            _trackedActor.DamageTaken -= OnTrackedActorDamageTaken;
+            _trackedActor.DamageTaken += OnTrackedActorDamageTaken;
+        }
+
+        private void UnsubscribeDamageTaken()
+        {
+            if (_trackedActor != null)
+            {
+                _trackedActor.DamageTaken -= OnTrackedActorDamageTaken;
+                _trackedActor = null;
+            }
+        }
+
+        private void OnTrackedActorDamageTaken(int damage)
+        {
+            if (ShakeOnPlayerDamaged)
+            {
+                Shake(PlayerDamagedShakeStrength);
+            }
+            if (HitStopOnPlayerDamaged)
+            {
+                TriggerHitStop(PlayerDamagedHitStopDuration);
+            }
+        }
+
+        private void OnAnyDamageTaken(GameActor victim, GameActor? attacker, int damage)
+        {
+            // 仅当 attacker 是被跟随的目标（玩家），且 victim 属于敌人组时触发
+            if (attacker == null || attacker != _trackedActor || !IsEnemyVictim(victim))
+            {
+                return;
+            }
+
+            bool killedEnemy = victim.CurrentHealth <= 0 || victim.IsDeathSequenceActive || victim.IsDead;
+
+            if (ShakeOnPlayerAttackHit)
+            {
+                TriggerPlayerAttackShake(killedEnemy);
+            }
+
+            if (HitStopOnPlayerAttackHit)
+            {
+                TriggerPlayerAttackHitStop(killedEnemy);
+            }
+        }
+
+        private void TriggerPlayerAttackShake(bool killedEnemy)
+        {
+            float strength = killedEnemy
+                ? PlayerAttackKillShakeStrength
+                : PlayerAttackHitShakeStrength;
+
+            if (strength <= 0f)
+            {
+                return;
+            }
+
+            Shake(strength);
+        }
+
+        private bool IsEnemyVictim(GameActor victim)
+        {
+            if (!GodotObject.IsInstanceValid(victim))
+            {
+                return false;
+            }
+
+            return string.IsNullOrWhiteSpace(EnemyGroupName) || victim.IsInGroup(EnemyGroupName);
+        }
+
+        private void TriggerPlayerAttackHitStop(bool killedEnemy)
+        {
+            float duration = killedEnemy
+                ? PlayerAttackKillHitStopDuration
+                : PlayerAttackHitHitStopDuration;
+
+            if (duration <= 0f)
+            {
+                return;
+            }
+
+            TriggerHitStop(duration, bypassMinInterval: killedEnemy);
+        }
+
+        private async void TriggerHitStop(float duration, bool bypassMinInterval = false)
+        {
+            if (duration <= 0f) return;
+
+            // 如果已经在顿帧中，直接延长更长的持续时间
+            if (_isHitStopping)
+            {
+                _pendingHitStopDuration = Mathf.Max(_pendingHitStopDuration, duration);
+                return;
+            }
+
+            ulong nowMs = Time.GetTicksMsec();
+            ulong minIntervalMs = (ulong)Mathf.Max(0f, HitStopMinIntervalMs);
+            if (!bypassMinInterval && _lastHitStopTriggerTimeMs > 0 && nowMs - _lastHitStopTriggerTimeMs < minIntervalMs)
+            {
+                return;
+            }
+            _lastHitStopTriggerTimeMs = nowMs;
+
+            _isHitStopping = true;
+            _pendingHitStopDuration = duration;
+
+            try
+            {
+                if (HitStopDelay > 0f)
+                {
+                    var delayTimer = GetTree().CreateTimer(HitStopDelay, true, false, true);
+                    await ToSignal(delayTimer, SceneTreeTimer.SignalName.Timeout);
+                }
+
+                while (_pendingHitStopDuration > 0f)
+                {
+                    float currentDuration = _pendingHitStopDuration;
+                    _pendingHitStopDuration = 0f;
+
+                    ApplyLocalHitStop();
+                    var timer = GetTree().CreateTimer(currentDuration, true, false, true);
+                    await ToSignal(timer, SceneTreeTimer.SignalName.Timeout);
+                    RestoreLocalHitStop();
+                }
+            }
+            finally
+            {
+                RestoreLocalHitStop();
+                _isHitStopping = false;
+                _pendingHitStopDuration = 0f;
+            }
+        }
+
+        private void ApplyLocalHitStop()
+        {
+            _frozenNodes.Clear();
+            FreezeGroupNodes(PlayerGroupName);
+            FreezeGroupNodes(EnemyGroupName);
+        }
+
+        private void FreezeGroupNodes(string groupName)
+        {
+            if (string.IsNullOrWhiteSpace(groupName))
+            {
+                return;
+            }
+
+            foreach (var groupNode in GetTree().GetNodesInGroup(groupName))
+            {
+                if (groupNode is Node node)
+                {
+                    FreezeNodeRecursive(node);
+                }
+            }
+        }
+
+        private void FreezeNodeRecursive(Node node)
+        {
+            if (node == this)
+            {
+                return;
+            }
+
+            // 相机与 UI 不受局部顿帧影响
+            if (node is Camera2D || node is CanvasLayer || node is Control)
+            {
+                return;
+            }
+
+            ulong id = node.GetInstanceId();
+            if (!_frozenNodes.ContainsKey(id))
+            {
+                var state = new FrozenNodeState
+                {
+                    Node = node,
+                    WasProcessing = node.IsProcessing(),
+                    WasPhysicsProcessing = node.IsPhysicsProcessing(),
+                    WasInputProcessing = node.IsProcessingInput(),
+                    WasUnhandledInputProcessing = node.IsProcessingUnhandledInput()
+                };
+
+                if (node is AnimationPlayer animationPlayer)
+                {
+                    state.AnimationSpeedScale = animationPlayer.SpeedScale;
+                    animationPlayer.SpeedScale = 0f;
+                }
+
+                if (node.HasMethod("set_time_scale"))
+                {
+                    state.IsSpineTimeScaleManaged = true;
+                    if (node.HasMethod("get_time_scale"))
+                    {
+                        var currentTimeScale = node.Call("get_time_scale");
+                        state.SpineTimeScale = currentTimeScale.VariantType == Variant.Type.Float
+                            ? (float)currentTimeScale.AsDouble()
+                            : 1f;
+                    }
+                    else
+                    {
+                        state.SpineTimeScale = 1f;
+                    }
+                    node.Call("set_time_scale", 0.0f);
+                }
+
+                node.SetProcess(false);
+                node.SetPhysicsProcess(false);
+                node.SetProcessInput(false);
+                node.SetProcessUnhandledInput(false);
+                _frozenNodes[id] = state;
+            }
+
+            foreach (Node child in node.GetChildren())
+            {
+                FreezeNodeRecursive(child);
+            }
+        }
+
+        private void RestoreLocalHitStop()
+        {
+            foreach (var item in _frozenNodes)
+            {
+                var state = item.Value;
+                var node = state.Node;
+                if (!GodotObject.IsInstanceValid(node))
+                {
+                    continue;
+                }
+
+                node.SetProcess(state.WasProcessing);
+                node.SetPhysicsProcess(state.WasPhysicsProcessing);
+                node.SetProcessInput(state.WasInputProcessing);
+                node.SetProcessUnhandledInput(state.WasUnhandledInputProcessing);
+
+                if (state.AnimationSpeedScale.HasValue && node is AnimationPlayer animationPlayer)
+                {
+                    animationPlayer.SpeedScale = state.AnimationSpeedScale.Value;
+                }
+
+                if (state.IsSpineTimeScaleManaged && node.HasMethod("set_time_scale"))
+                {
+                    node.Call("set_time_scale", state.SpineTimeScale);
+                }
+            }
+
+            _frozenNodes.Clear();
         }
         #endregion
     }

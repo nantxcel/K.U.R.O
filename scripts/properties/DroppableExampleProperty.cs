@@ -106,8 +106,8 @@ public partial class DroppableExampleProperty : DroppablePickupProperty
                             GD.Print("DroppableExampleProperty: Found BattleHUD, requesting quickbar refresh");
                             battleHUD.CallDeferred("UpdateQuickBarDisplay");
                             // 更新手部槽位高亮
-                            int leftHandSlot = player.LeftHandSlotIndex >= 1 && player.LeftHandSlotIndex < 5 ? player.LeftHandSlotIndex : -1;
-                            battleHUD.CallDeferred("UpdateHandSlotHighlight", leftHandSlot, 0);
+                            int leftHandSlot = player.LeftHandSlotIndex >= 0 && player.LeftHandSlotIndex < 5 ? player.LeftHandSlotIndex : -1;
+                            battleHUD.CallDeferred("UpdateHandSlotHighlight", leftHandSlot, -1);
                         }
                         else
                         {
@@ -241,7 +241,7 @@ public partial class DroppableExampleProperty : DroppablePickupProperty
         }
         
         // 关键修复：从当前选中槽位获取物品，而不是使用Item属性
-        if (player.LeftHandSlotIndex >= 1 && player.LeftHandSlotIndex < 5 && player.InventoryComponent?.QuickBar != null)
+        if (player.LeftHandSlotIndex >= 0 && player.LeftHandSlotIndex < 5 && player.InventoryComponent?.QuickBar != null)
         {
             var selectedStack = player.InventoryComponent.QuickBar.GetStack(player.LeftHandSlotIndex);
             if (selectedStack != null && !selectedStack.IsEmpty && selectedStack.Item.ItemId != "empty_item")
@@ -258,7 +258,7 @@ public partial class DroppableExampleProperty : DroppablePickupProperty
             GD.Print($"DroppableExampleProperty.OnPutDown: No valid item to remove from selected slot {player.LeftHandSlotIndex}");
             
             // 如果选中的是空白道具，创建不透明度为0的实例
-            if (player.LeftHandSlotIndex >= 1 && player.LeftHandSlotIndex < 5 && player.InventoryComponent?.QuickBar != null)
+            if (player.LeftHandSlotIndex >= 0 && player.LeftHandSlotIndex < 5 && player.InventoryComponent?.QuickBar != null)
             {
                 var stack = player.InventoryComponent.QuickBar.GetStack(player.LeftHandSlotIndex);
                 if (stack != null && !stack.IsEmpty && stack.Item.ItemId == "empty_item")
@@ -399,8 +399,8 @@ public partial class DroppableExampleProperty : DroppablePickupProperty
             // 更新所有快捷栏槽位的显示
             battleHUD.CallDeferred("UpdateQuickBarDisplay");
             // 保持当前的左手选择状态（如果还有的话）
-            int leftHandSlot = player.LeftHandSlotIndex >= 1 && player.LeftHandSlotIndex < 5 ? player.LeftHandSlotIndex : -1;
-            battleHUD.CallDeferred("UpdateHandSlotHighlight", leftHandSlot, 0);
+            int leftHandSlot = player.LeftHandSlotIndex >= 0 && player.LeftHandSlotIndex < 5 ? player.LeftHandSlotIndex : -1;
+            battleHUD.CallDeferred("UpdateHandSlotHighlight", leftHandSlot, -1);
         }
         else
         {

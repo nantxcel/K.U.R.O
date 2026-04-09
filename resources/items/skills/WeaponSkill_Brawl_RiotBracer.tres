@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="WeaponSkillDefinition" load_steps=3 format=3 uid="uid://d4ku81cbnqgui"]
+
+[ext_resource type="Script" uid="uid://bv0es4osw3x0r" path="res://scripts/items/effects/ItemEffectEntry.cs" id="1_vwwsf"]
+[ext_resource type="Script" uid="uid://bp6pwgoj44cuq" path="res://scripts/items/weapons/WeaponSkillDefinition.cs" id="2_2o5f0"]
+
+[resource]
+script = ExtResource("2_2o5f0")
+SkillId = "Weapon_Brawl_MechGlove"
+DisplayName = "镇暴护腕攻击"
+AnimationName = "Weapon_Brawl_MechGlove"
+CooldownSeconds = 0.8
+Description = "攻击到敌人时击退该敌人0.5m"
+ActivationAction = "Weapon_Brawl_MechGlove"
