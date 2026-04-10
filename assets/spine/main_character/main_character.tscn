@@ -1,4 +1,4 @@
-[gd_scene load_steps=41 format=3 uid="uid://ufprfd4r8ijj"]
+[gd_scene load_steps=47 format=3 uid="uid://ufprfd4r8ijj"]
 
 [ext_resource type="SpineAtlasResource" uid="uid://c4cx1o154rxba" path="res://assets/spine/main_character/Enemy_A1_zhuA.atlas" id="1_kqj82"]
 [ext_resource type="Script" uid="uid://befx3l05f0eph" path="res://scripts/actors/heroes/MainCharacter.cs" id="1_om6pm"]
@@ -27,7 +27,7 @@
 [ext_resource type="Script" uid="uid://d6ppl6a6djpr" path="res://scripts/core/effects/EffectController.cs" id="21_utqjm"]
 [ext_resource type="Script" uid="uid://c060w6pctgir3" path="res://scripts/actors/heroes/attacks/AttackHitboxDebugDrawer.cs" id="22_hitbox_debug"]
 [ext_resource type="PackedScene" uid="uid://ch7507iroiljg" path="res://scenes/ui/hud/EscapeHUD.tscn" id="24_tdm7a"]
-[ext_resource type="Resource" path="res://resources/items/skills/WeaponSkill_Stab_Umbrella.tres" id="26_hitbox_preview_skill"]
+[ext_resource type="Resource" uid="uid://dc7u7akvpcjtn" path="res://resources/items/skills/WeaponSkill_Stab_Umbrella.tres" id="26_hitbox_preview_skill"]
 [ext_resource type="Script" uid="uid://bwok3hmgrj42p" path="res://scripts/systems/ai/GameStateProvider.cs" id="27_game_state_provider"]
 [ext_resource type="Script" uid="uid://c5utxtiab6ieq" path="res://scripts/systems/ai/OllamaGenerateClient.cs" id="28_ollama_client"]
 [ext_resource type="Script" uid="uid://b1aajvkx1qt0e" path="res://scripts/actors/heroes/PlayerBuildController.cs" id="28_rs5xn"]
@@ -38,6 +38,7 @@
 [ext_resource type="Script" uid="uid://c4vf2e3jvlhg7" path="res://scripts/systems/ai/AiOutputDebugPanel.cs" id="31_ai_output_debug_panel"]
 [ext_resource type="Resource" uid="uid://cg1ohbn3itor0" path="res://resources/builds/Build_Machine_level3.tres" id="32_a8ffv"]
 [ext_resource type="Script" uid="uid://dngshl7bfcxqd" path="res://scripts/systems/ai/AiDecisionExecutor.cs" id="33_ai_decision_executor"]
+[ext_resource type="Script" uid="uid://bn5bwn56rqmd3" path="res://scripts/actors/heroes/BuildLevelEffectEntry.cs" id="36_26vrv"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_0y2r2"]
 shader = ExtResource("2_4ht1x")
@@ -46,6 +47,10 @@ shader_parameter/alpha = 0.4
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_sprite_outline"]
 shader = ExtResource("2_sprite_outline")
+shader_parameter/outline_color = Color(0.02, 0.02, 0.02, 1)
+shader_parameter/outline_size = 2.0
+shader_parameter/alpha_threshold = 0.01
+shader_parameter/preserve_fill = true
 
 [sub_resource type="SpineSkeletonDataResource" id="SpineSkeletonDataResource_rs5xn"]
 atlas_res = ExtResource("1_kqj82")
@@ -85,7 +90,7 @@ AttackArea = NodePath("AttackArea")
 LeftHandAttachmentPath = NodePath("SpineSprite/SpineBoneNode")
 Speed = 500.0
 AttackDamage = 1.0
-MaxHealth = 12
+MaxHealth = 70
 StateMachine = NodePath("StateMachine")
 EffectController = NodePath("EffectController")
 
@@ -325,4 +330,4 @@ scale = Vector2(2.205, 2.205)
 
 [node name="BuildController" type="Node" parent="."]
 script = ExtResource("28_rs5xn")
-LevelEntries = [ExtResource("30_6tvdn"), ExtResource("31_a5ycu"), ExtResource("32_a8ffv")]
+LevelEntries = Array[ExtResource("36_26vrv")]([ExtResource("30_6tvdn"), ExtResource("31_a5ycu"), ExtResource("32_a8ffv")])
