@@ -28,6 +28,14 @@ namespace Kuros.Systems.AI
         [Export(PropertyHint.Range, "1,3000,1")] public float RunDistanceThreshold { get; set; } = 420f;
         [Export(PropertyHint.Range, "0.1,10,0.05")] public float DecisionHoldGraceSeconds { get; set; } = 0.1f;
         [Export(PropertyHint.Range, "0,10,0.05")] public float DecisionCarryForwardSeconds { get; set; } = 1.2f;
+        [ExportGroup("Escape")]
+        [Export(PropertyHint.Range, "0.01,0.5,0.01")] public float EscapeMashIntervalSeconds { get; set; } = 0.06f;
+        [ExportGroup("Tactical Layer")]
+        [Export] public bool EnableLocalTacticalLayer { get; set; } = true;
+        [Export(PropertyHint.Range, "0,1,0.01")] public float RetreatHpRatio { get; set; } = 0.35f;
+        [Export(PropertyHint.Range, "1,2000,1")] public float KiteDistanceMin { get; set; } = 120f;
+        [Export(PropertyHint.Range, "1,3000,1")] public float KiteDistanceMax { get; set; } = 220f;
+        [Export(PropertyHint.Range, "0,10,0.05")] public float RecentlyHitWindowSeconds { get; set; } = 0.65f;
 
         public string LastExecutionJson { get; private set; } = string.Empty;
         public string LastExecutionError { get; private set; } = string.Empty;
@@ -40,6 +48,10 @@ namespace Kuros.Systems.AI
         private AiDecision? _activeDecision;
         private ulong _activeDecisionExpiresAtMs;
         private ulong _activeDecisionCarryUntilMs;
+        private string _lastStructuredIntent = string.Empty;
+        private int _sameIntentStreak;
+        private ulong _nextEscapeMashAtMs;
+        private bool _escapeMashLeftNext = true;
 
         public override void _Ready()
         {
@@ -144,6 +156,8 @@ namespace Kuros.Systems.AI
                 PublishReject("Execution skipped: structured decision is invalid.");
                 return;
             }
+
+            UpdateIntentStreak(decision.Intent);
 
             _activeDecision = decision;
             ulong now = Time.GetTicksMsec();
@@ -335,6 +349,8 @@ namespace Kuros.Systems.AI
             _activeDecisionExpiresAtMs = 0;
             _activeDecisionCarryUntilMs = 0;
             _lastDecisionRequestedAtMs = 0;
+            _nextEscapeMashAtMs = 0;
+            _escapeMashLeftNext = true;
 
             if (emitSignal)
             {
@@ -377,6 +393,13 @@ namespace Kuros.Systems.AI
                 return;
             }
 
+            string currentState = _player.StateMachine?.CurrentState?.Name ?? string.Empty;
+            if (string.Equals(currentState, "Frozen", StringComparison.OrdinalIgnoreCase))
+            {
+                ApplyFreezeEscapeControl();
+                return;
+            }
+
             ulong now = Time.GetTicksMsec();
             if (_activeDecision == null)
             {
@@ -413,6 +436,34 @@ namespace Kuros.Systems.AI
             }
         }
 
+        private void ApplyFreezeEscapeControl()
+        {
+            if (_player == null)
+            {
+                return;
+            }
+
+            _player.SetAiDesiredMovement(Vector2.Zero, false);
+            ulong now = Time.GetTicksMsec();
+            if (_nextEscapeMashAtMs != 0 && now < _nextEscapeMashAtMs)
+            {
+                return;
+            }
+
+            if (_escapeMashLeftNext)
+            {
+                _player.QueueAiMoveLeft();
+            }
+            else
+            {
+                _player.QueueAiMoveRight();
+            }
+
+            _escapeMashLeftNext = !_escapeMashLeftNext;
+            ulong intervalMs = (ulong)Mathf.RoundToInt(Mathf.Max(0.01f, EscapeMashIntervalSeconds) * 1000f);
+            _nextEscapeMashAtMs = now + intervalMs;
+        }
+
         private void ApplyAttackControl(bool preferRun = false)
         {
             if (_player == null)
@@ -429,6 +480,39 @@ namespace Kuros.Systems.AI
 
             Vector2 toEnemy = nearestEnemy.GlobalPosition - _player.GlobalPosition;
             float distance = toEnemy.Length();
+
+            if (EnableLocalTacticalLayer)
+            {
+                float hpRatio = _player.MaxHealth > 0
+                    ? (float)_player.CurrentHealth / _player.MaxHealth
+                    : 1f;
+                bool recentlyHit = _player.GetSecondsSinceLastDamageTaken() <= Mathf.Max(0f, RecentlyHitWindowSeconds);
+                bool lowHpPressure = hpRatio <= RetreatHpRatio;
+
+                if (lowHpPressure && distance <= KiteDistanceMax)
+                {
+                    // Low HP while pressured: break contact instead of face-tanking.
+                    Vector2 retreatDir = (_player.GlobalPosition - nearestEnemy.GlobalPosition).Normalized();
+                    _player.SetAiDesiredMovement(retreatDir, true);
+                    return;
+                }
+
+                if (distance < KiteDistanceMin)
+                {
+                    if (recentlyHit || _sameIntentStreak >= 4)
+                    {
+                        // Under close pressure: strafe to create space (kite behavior).
+                        Vector2 lateral = ComputeLateralDirection(toEnemy, Time.GetTicksMsec());
+                        _player.SetAiDesiredMovement(lateral, false);
+                        return;
+                    }
+
+                    Vector2 shortRetreat = (_player.GlobalPosition - nearestEnemy.GlobalPosition).Normalized();
+                    _player.SetAiDesiredMovement(shortRetreat, false);
+                    return;
+                }
+            }
+
             if (distance > AttackApproachDistance)
             {
                 _player.SetAiDesiredMovement(toEnemy.Normalized(), preferRun || distance > RunDistanceThreshold);
@@ -543,6 +627,35 @@ namespace Kuros.Systems.AI
                 "switch_weapon" => true,
                 _ => false
             };
+        }
+
+        private void UpdateIntentStreak(string intent)
+        {
+            string normalized = string.IsNullOrWhiteSpace(intent)
+                ? string.Empty
+                : intent.Trim().ToLowerInvariant();
+
+            if (normalized == _lastStructuredIntent)
+            {
+                _sameIntentStreak++;
+            }
+            else
+            {
+                _sameIntentStreak = 1;
+                _lastStructuredIntent = normalized;
+            }
+        }
+
+        private static Vector2 ComputeLateralDirection(Vector2 toEnemy, ulong nowMs)
+        {
+            if (toEnemy.LengthSquared() < 0.0001f)
+            {
+                return Vector2.Zero;
+            }
+
+            Vector2 baseLateral = new Vector2(-toEnemy.Y, toEnemy.X).Normalized();
+            long phase = (long)(nowMs / 450UL);
+            return (phase % 2 == 0) ? baseLateral : -baseLateral;
         }
 
         private void PublishReject(string reason)

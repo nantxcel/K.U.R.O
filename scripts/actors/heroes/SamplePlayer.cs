@@ -47,6 +47,8 @@ public partial class SamplePlayer : GameActor, IPlayerStatsSource
 	private bool _aiRunPressed;
 	private bool _aiAttackQueued;
 	private bool _aiPickupQueued;
+	private bool _aiMoveLeftQueued;
+	private bool _aiMoveRightQueued;
 	public PlayerFrozenState? FrozenState { get; private set; }
 	public PlayerInventoryComponent? InventoryComponent { get; private set; }
 	public InventoryContainer? Backpack => InventoryComponent?.Backpack;
@@ -547,12 +549,24 @@ public partial class SamplePlayer : GameActor, IPlayerStatsSource
 		_aiPickupQueued = true;
 	}
 
+	public void QueueAiMoveLeft()
+	{
+		_aiMoveLeftQueued = true;
+	}
+
+	public void QueueAiMoveRight()
+	{
+		_aiMoveRightQueued = true;
+	}
+
 	public void ClearAiControlCommands()
 	{
 		_aiMovementInput = Vector2.Zero;
 		_aiRunPressed = false;
 		_aiAttackQueued = false;
 		_aiPickupQueued = false;
+		_aiMoveLeftQueued = false;
+		_aiMoveRightQueued = false;
 	}
 
 	public Vector2 GetControlledMovementInput()
@@ -587,6 +601,8 @@ public partial class SamplePlayer : GameActor, IPlayerStatsSource
 		{
 			"attack" => ConsumeAiFlag(ref _aiAttackQueued),
 			"take_up" => ConsumeAiFlag(ref _aiPickupQueued),
+			"move_left" => ConsumeAiFlag(ref _aiMoveLeftQueued),
+			"move_right" => ConsumeAiFlag(ref _aiMoveRightQueued),
 			_ => false
 		};
 	}
