@@ -16,7 +16,6 @@ mono_crash.*.json
 
 # Godot export / build output
 export/
-build/
 
 # User save data
 saves/
