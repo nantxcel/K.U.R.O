@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://dd8xmpgwy0t2o" path="res://scenes/environments/scene2.tscn" id="1_7jsho"]
 [ext_resource type="Script" uid="uid://x1ic1ym4ykq8" path="res://scripts/scenes/BattleSceneManager.cs" id="1_ctuyy"]
-[ext_resource type="Script" uid="uid://ch3pldopfd7tr" path="res://scripts/effects/AreaSpriteFadeTrigger.cs" id="2_fadewall"]
+[ext_resource type="Script" uid="uid://d3gc8jf51u7gn" path="res://scripts/effects/AreaSpriteFadeTrigger.cs" id="2_fadewall"]
 [ext_resource type="PackedScene" uid="uid://ufprfd4r8ijj" path="res://assets/spine/main_character/main_character.tscn" id="2_s0pgc"]
 [ext_resource type="Texture2D" uid="uid://pl67o3rwu44h" path="res://assets/environments/scene_2_hotel/酒店大门口墙前.png" id="3_s0pgc"]
 [ext_resource type="Texture2D" uid="uid://pan0auvatm1f" path="res://assets/environments/scene_2_hotel/电梯墙前.png" id="4_hq53u"]
@@ -35,7 +35,7 @@ size = Vector2(767, 1375)
 size = Vector2(855, 604.375)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_vvtmr"]
-size = Vector2(273, 427)
+size = Vector2(172.5, 1720)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_qokfb"]
 size = Vector2(367.03125, 573.125)
@@ -260,6 +260,3 @@ collision_mask = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="World/EnemySpawneManager4/Area2D"]
 shape = SubResource("RectangleShape2D_f0l3g")
-
-[node name="Enemy_Normal_guard1" parent="World" instance=ExtResource("13_x3vg8")]
-position = Vector2(-8565, 106)
