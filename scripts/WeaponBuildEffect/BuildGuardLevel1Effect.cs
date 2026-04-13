@@ -39,7 +39,7 @@ namespace Kuros.Builds
             // 订阅伤害拦截事件（伤害应用前）
             Actor.DamageIntercepted += OnDamageIntercepted;
             _subscribed = true;
-            GD.Print("[BuildGuardLevel1Effect] OnApply called, damage reduction effect activated");
+            //GD.Print("[BuildGuardLevel1Effect] OnApply called, damage reduction effect activated");
         }
 
         public override void OnRemoved()
@@ -50,7 +50,7 @@ namespace Kuros.Builds
             }
 
             _subscribed = false;
-            GD.Print("[BuildGuardLevel1Effect] OnRemoved called, damage reduction effect deactivated");
+            //GD.Print("[BuildGuardLevel1Effect] OnRemoved called, damage reduction effect deactivated");
             base.OnRemoved();
         }
 
@@ -85,7 +85,7 @@ namespace Kuros.Builds
             
             args.Damage = reducedDamage;
 
-            GD.Print($"[BuildGuardLevel1Effect] OnDamageIntercepted: original={originalDamage}, reduction={DamageReduction}, final={reducedDamage}");
+            //GD.Print($"[BuildGuardLevel1Effect] OnDamageIntercepted: original={originalDamage}, reduction={DamageReduction}, final={reducedDamage}");
             
             // 返回 false 表示伤害继续应用（不被完全阻挡）
             // 返回 true 可以完全阻挡伤害

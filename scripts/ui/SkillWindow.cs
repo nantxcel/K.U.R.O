@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Kuros.Actors.Heroes;
+using Kuros.Core.Effects;
 
 namespace Kuros.UI
 {
@@ -23,6 +24,7 @@ namespace Kuros.UI
         private InventoryWindow? _cachedInventoryWindow;
         private PlayerBuildController? _buildController;
         private readonly List<OwnedBuildViewData> _ownedBuilds = new();
+        private float _cooldownRefreshTimer = 0.1f;
 
         public override void _Ready()
         {
@@ -46,6 +48,21 @@ namespace Kuros.UI
         public override void _Process(double delta)
         {
             base._Process(delta);
+
+            if (!_isOpen || !Visible)
+            {
+                return;
+            }
+
+            if (_ownedBuilds.Exists(b => b.CooldownDuration > 0f))
+            {
+                _cooldownRefreshTimer -= (float)delta;
+                if (_cooldownRefreshTimer <= 0f)
+                {
+                    _cooldownRefreshTimer = 0.1f;
+                    RefreshBuildIcons();
+                }
+            }
         }
 
         public override void _UnhandledInput(InputEvent @event)
@@ -163,12 +180,26 @@ namespace Kuros.UI
                     continue;
                 }
 
-                _ownedBuilds.Add(new OwnedBuildViewData
+                var viewData = new OwnedBuildViewData
                 {
                     Name = string.IsNullOrWhiteSpace(entry.BuildName) ? $"{buildClass} Lv.{entry.Level}" : entry.BuildName,
                     IconPath = entry.IconPath ?? string.Empty,
-                    Icon = LoadBuildIcon(entry.IconPath ?? string.Empty)
-                });
+                    Icon = LoadBuildIcon(entry.IconPath ?? string.Empty),
+                    EffectId = entry.EffectId ?? string.Empty,
+                };
+
+                if (!string.IsNullOrWhiteSpace(viewData.EffectId) && buildController.TargetEffectController != null)
+                {
+                    var effect = buildController.TargetEffectController.GetEffect(viewData.EffectId);
+                    if (effect is ICooldownEffect cooldownEffect)
+                    {
+                        viewData.HasCooldown = cooldownEffect.IsOnCooldown;
+                        viewData.CooldownRemaining = cooldownEffect.CooldownRemaining;
+                        viewData.CooldownDuration = cooldownEffect.CooldownDuration;
+                    }
+                }
+
+                _ownedBuilds.Add(viewData);
             }
         }
 
@@ -283,6 +314,19 @@ namespace Kuros.UI
                 iconRect.ExpandMode = TextureRect.ExpandModeEnum.FitWidthProportional;
                 iconRect.Texture = _ownedBuilds[i].Icon;
                 centerContainer.AddChild(iconRect);
+
+                if (_ownedBuilds[i].HasCooldown && _ownedBuilds[i].CooldownDuration > 0f)
+                {
+                    var overlay = new CooldownRing();
+                    overlay.Progress = Mathf.Clamp(
+                        _ownedBuilds[i].CooldownRemaining / _ownedBuilds[i].CooldownDuration,
+                        0f,
+                        1f);
+                    overlay.SizeFlagsHorizontal = Control.SizeFlags.ExpandFill;
+                    overlay.SizeFlagsVertical = Control.SizeFlags.ExpandFill;
+                    overlay.CustomMinimumSize = new Vector2(96, 96);
+                    iconRect.AddChild(overlay);
+                }
             }
 
             return margin;
@@ -461,6 +505,81 @@ namespace Kuros.UI
             public string Name { get; set; } = string.Empty;
             public string IconPath { get; set; } = string.Empty;
             public Texture2D? Icon { get; set; }
+            public string EffectId { get; set; } = string.Empty;
+            public bool HasCooldown { get; set; }
+            public float CooldownRemaining { get; set; }
+            public float CooldownDuration { get; set; }
+        }
+
+        private partial class CooldownRing : Control
+        {
+            private float _progress;
+            public float Progress
+            {
+                get => _progress;
+                set
+                {
+                    _progress = Mathf.Clamp(value, 0f, 1f);
+                    QueueRedraw();
+                }
+            }
+
+            public override void _Ready()
+            {
+                base._Ready();
+                MouseFilter = MouseFilterEnum.Ignore;
+            }
+
+            public override void _Draw()
+            {
+                base._Draw();
+                Vector2 rectSize = Size;
+                Vector2 center = rectSize * 0.5f;
+                Vector2 halfSize = rectSize * 0.5f;
+
+                var overlayColor = new Color(0f, 0f, 0f, 0.45f);
+
+                if (Progress > 0f)
+                {
+                    int steps = 48;
+                    float startAngle = -Mathf.Pi / 2f;
+                    float endAngle = startAngle + Mathf.Pi * 2f * Progress;
+                    var points = new Vector2[steps + 2];
+                    points[0] = center;
+
+                    for (int i = 0; i <= steps; i++)
+                    {
+                        float t = (float)i / steps;
+                        float angle = Mathf.Lerp(startAngle, endAngle, t);
+                        Vector2 direction = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
+                        points[i + 1] = center + GetRectEdgePoint(direction, halfSize);
+                    }
+
+                    DrawPolygon(points, new Color[] { overlayColor });
+                }
+            }
+
+            private static Vector2 GetRectEdgePoint(Vector2 direction, Vector2 halfSize)
+            {
+                if (direction == Vector2.Zero)
+                {
+                    return Vector2.Zero;
+                }
+
+                float tx = direction.X != 0f ? halfSize.X / Mathf.Abs(direction.X) : float.MaxValue;
+                float ty = direction.Y != 0f ? halfSize.Y / Mathf.Abs(direction.Y) : float.MaxValue;
+                float t = Mathf.Min(tx, ty);
+                return direction * t;
+            }
+
+            public override void _Notification(int what)
+            {
+                base._Notification(what);
+                if (what == NotificationResized)
+                {
+                    QueueRedraw();
+                }
+            }
         }
 
         /// <summary>

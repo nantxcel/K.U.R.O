@@ -719,6 +719,8 @@ namespace Kuros.Actors.Heroes
                 nameof(BuildMachineLevel2Effect) => new BuildMachineLevel2Effect(),
                 nameof(BuildMachineLevel3Effect) => new BuildMachineLevel3Effect(),
                 nameof(BuildGuardLevel1Effect) => new BuildGuardLevel1Effect(),
+                nameof(BuildGuardLevel2Effect) => new BuildGuardLevel2Effect(),
+                nameof(BuildGuardLevel3Effect) => new BuildGuardLevel3Effect(),
                 _ => null
             };
         }

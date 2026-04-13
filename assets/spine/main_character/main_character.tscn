@@ -1,4 +1,4 @@
-[gd_scene load_steps=46 format=3 uid="uid://ufprfd4r8ijj"]
+[gd_scene load_steps=48 format=3 uid="uid://ufprfd4r8ijj"]
 
 [ext_resource type="SpineAtlasResource" uid="uid://kpsje26gxbhr" path="res://assets/spine/main_character/Enemy_A1_zhuA.atlas" id="1_kqj82"]
 [ext_resource type="Script" uid="uid://12wblt72y8xt" path="res://scripts/actors/heroes/MainCharacter.cs" id="1_om6pm"]
@@ -39,6 +39,8 @@
 [ext_resource type="Script" uid="uid://ddrw67q4fyjya" path="res://scripts/systems/ai/AiDecisionExecutor.cs" id="33_ai_decision_executor"]
 [ext_resource type="Script" uid="uid://ba5xnpfo03sgb" path="res://scripts/actors/heroes/BuildLevelEffectEntry.cs" id="35_hyeo7"]
 [ext_resource type="Resource" uid="uid://b14bb35ful4ke" path="res://resources/builds/Build_Guard_level1.tres" id="39_26vrv"]
+[ext_resource type="Resource" uid="uid://c42i4clr4tuwh" path="res://resources/builds/Build_Guard_level2.tres" id="40_8fw8m"]
+[ext_resource type="Resource" uid="uid://vgnowuoegwns" path="res://resources/builds/Build_Guard_level3.tres" id="41_o4xwm"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_0y2r2"]
 shader = ExtResource("2_4ht1x")
@@ -313,6 +315,7 @@ script = ExtResource("33_ai_decision_executor")
 
 [node name="GameStateDebugPanel" type="CanvasLayer" parent="."]
 layer = 100
+visible = false
 script = ExtResource("30_game_state_debug_panel")
 
 [node name="Panel" type="PanelContainer" parent="GameStateDebugPanel"]
@@ -340,6 +343,7 @@ scroll_following = true
 
 [node name="AiOutputDebugPanel" type="CanvasLayer" parent="."]
 layer = 101
+visible = false
 script = ExtResource("31_ai_output_debug_panel")
 
 [node name="Panel" type="PanelContainer" parent="AiOutputDebugPanel"]
@@ -381,4 +385,4 @@ scale = Vector2(2.205, 2.205)
 
 [node name="BuildController" type="Node" parent="."]
 script = ExtResource("28_rs5xn")
-LevelEntries = Array[ExtResource("35_hyeo7")]([ExtResource("30_6tvdn"), ExtResource("31_a5ycu"), ExtResource("32_a8ffv"), ExtResource("39_26vrv")])
+LevelEntries = Array[ExtResource("35_hyeo7")]([ExtResource("30_6tvdn"), ExtResource("31_a5ycu"), ExtResource("32_a8ffv"), ExtResource("39_26vrv"), ExtResource("40_8fw8m"), ExtResource("41_o4xwm")])
