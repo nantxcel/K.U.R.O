@@ -173,7 +173,7 @@ position = Vector2(-5435, -203)
 position = Vector2(-5952, -208)
 
 [node name="WeaponBrawlRiotBracer" parent="World" instance=ExtResource("11_3yw8j")]
-position = Vector2(-6585, -172)
+position = Vector2(-6552, -156)
 
 [node name="EnemySpawneManager" type="Node2D" parent="World" node_paths=PackedStringArray("TriggerArea")]
 top_level = true
