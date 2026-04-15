@@ -7,8 +7,19 @@ namespace Kuros.Companions
     /// Lightweight companion follow controller for P2.
     /// Keeps a floating offset relative to player and updates front/back render order dynamically.
     /// </summary>
-    public partial class P2CompanionController : CharacterBody2D
+    public partial class P2CompanionController : CharacterBody2D, ICompanionStateSource
     {
+        [ExportCategory("Companion State")]
+        [Export] public string CompanionRoleName { get; set; } = "support";
+        [Export(PropertyHint.Range, "1,9999,1")] public int ReportedMaxHp { get; set; } = 100;
+        [Export(PropertyHint.Range, "0,9999,1")] public int ReportedCurrentHp { get; set; } = 100;
+
+        public string CompanionName => Name;
+        public int CurrentHp => Mathf.Clamp(ReportedCurrentHp, 0, Mathf.Max(1, ReportedMaxHp));
+        public int MaxHp => Mathf.Max(1, ReportedMaxHp);
+        public bool IsCompanionAvailable => IsInsideTree() && Visible;
+        public string CompanionRole => CompanionRoleName;
+
         [ExportCategory("Follow")]
         [Export] public NodePath PlayerPath { get; set; } = new("../MainCharacter");
         [Export] public NodePath CompanionAnchorPath { get; set; } = new("CompanionAnchor");
