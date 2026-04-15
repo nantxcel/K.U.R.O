@@ -165,6 +165,9 @@ rotation = -1.6160004
 scale = Vector2(0.99999994, 0.99999994)
 bone_name = "Upper Body"
 
+[node name="CompanionAnchor" type="Node2D" parent="."]
+position = Vector2(-120, -500)
+
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 visible = false
 position = Vector2(0, -108.995995)

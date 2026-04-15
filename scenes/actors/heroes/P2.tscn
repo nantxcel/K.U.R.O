@@ -1,0 +1,22 @@
+[gd_scene load_steps=5 format=3 uid="uid://cgjrdwkemgrcy"]
+
+[ext_resource type="Texture2D" uid="uid://cenc4nc8osv28" path="res://assets/p2/p2.png" id="1_fj31g"]
+[ext_resource type="Script" path="res://scripts/companions/P2CompanionController.cs" id="2_p2follow"]
+[ext_resource type="PackedScene" path="res://scenes/ui/hud/P2HintBubble.tscn" id="3_p2hint_scene"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_fj31g"]
+radius = 220.0
+
+[node name="CharacterBody2D" type="CharacterBody2D"]
+scale = Vector2(0.3, 0.3)
+script = ExtResource("2_p2follow")
+PlayerPath = NodePath("../MainCharacter")
+CompanionAnchorPath = NodePath("CompanionAnchor")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_fj31g")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_fj31g")
+
+[node name="HintBubble" parent="." instance=ExtResource("3_p2hint_scene")]
