@@ -23,7 +23,7 @@ namespace Kuros.Actors.Heroes.States
         public override void Enter()
         {
             Player.NotifyMovementState(Name);
-            GD.Print($"[PlayerRunHoldingState] 进入持握奔跑状态");
+            //GD.Print($"[PlayerRunHoldingState] 进入持握奔跑状态");
             
             // 播放奔跑动画
             if (Player is MainCharacter mainChar)
@@ -56,7 +56,7 @@ namespace Kuros.Actors.Heroes.States
             var selectedStack = Player.InventoryComponent?.GetSelectedQuickBarStack();
             if (selectedStack == null || selectedStack.IsEmpty || !selectedStack.Item.IsThrowable)
             {
-                GD.Print($"[PlayerRunHoldingState] 物品不可投掷或已消失，返回 Run");
+                //GD.Print($"[PlayerRunHoldingState] 物品不可投掷或已消失，返回 Run");
                 ChangeState("Run");
                 return;
             }
@@ -64,7 +64,7 @@ namespace Kuros.Actors.Heroes.States
             // 检查投掷按键
             if (Input.IsActionJustPressed("throw"))
             {
-                GD.Print($"[PlayerRunHoldingState] 投掷按键被按下");
+                //GD.Print($"[PlayerRunHoldingState] 投掷按键被按下");
                 ChangeState("Throw");
                 return;
             }
@@ -73,7 +73,7 @@ namespace Kuros.Actors.Heroes.States
             Vector2 input = GetMovementInput();
             if (input == Vector2.Zero)
             {
-                GD.Print($"[PlayerRunHoldingState] 停止移动，转换到 IdleHolding");
+                //GD.Print($"[PlayerRunHoldingState] 停止移动，转换到 IdleHolding");
                 ChangeState("IdleHolding");
                 return;
             }
@@ -94,10 +94,10 @@ namespace Kuros.Actors.Heroes.States
                 return;
             }
             
-            // 奔跑移动逻辑（2x速度）
+            // 奔跑移动逻辑（x倍速度）
             Vector2 velocity = Actor.Velocity;
-            velocity.X = input.X * (Actor.Speed * 2.0f);
-            velocity.Y = input.Y * (Actor.Speed * 2.0f);
+            velocity.X = input.X * (Actor.Speed * 1.5f);
+            velocity.Y = input.Y * (Actor.Speed * 1.5f);
             
             Actor.Velocity = velocity;
             

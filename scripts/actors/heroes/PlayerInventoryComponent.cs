@@ -28,7 +28,13 @@ namespace Kuros.Actors.Heroes
         private const string DefaultUnarmedWeaponPath = "res://resources/items/Weapon_Unarmed_Default.tres";
 
         // 跟踪已获得的物品ID（用于判断是否是第一次获得）
-        private HashSet<string> _obtainedItemIds = new HashSet<string>();
+private readonly HashSet<string> _obtainedItemIds = new HashSet<string>();
+
+		/// <summary>
+		/// 飞行中的投掷武器所占用的快捷栏槽位索引集合。
+		/// AddItemSmart 不将新物品放入这些槽位，防止占用投掷武器的归还位置。
+		/// </summary>
+		public HashSet<int> ReservedQuickBarSlots { get; } = new();
 
         [ExportGroup("Special Slots")]
         [Export] public Godot.Collections.Array<SpecialInventorySlotConfig> SpecialSlotConfigs
@@ -216,10 +222,11 @@ namespace Kuros.Actors.Heroes
                 if (SelectedQuickBarSlot >= quickBarStart && SelectedQuickBarSlot < quickBarEndExclusive)
                 {
                     var selectedStack = QuickBar.GetStack(SelectedQuickBarSlot);
-                    // 檢查選中槽位是否為空、空白道具或可合併的相同物品
-                    if (selectedStack == null || selectedStack.IsEmpty || 
+                    // 檢查選中槽位是否為空、空白道具或可合併的相同物品，且未被投掷武器預占
+                    if (!ReservedQuickBarSlots.Contains(SelectedQuickBarSlot) &&
+                        (selectedStack == null || selectedStack.IsEmpty || 
                         selectedStack.Item.ItemId == "empty_item" ||
-                        (selectedStack.Item.ItemId == item.ItemId && !selectedStack.IsFull))
+                        (selectedStack.Item.ItemId == item.ItemId && !selectedStack.IsFull)))
                     {
                         int added = QuickBar.TryAddItemToSlot(item, remaining, SelectedQuickBarSlot);
                         if (added > 0)
@@ -252,6 +259,7 @@ namespace Kuros.Actors.Heroes
                     for (int i = quickBarStart; i < quickBarEndExclusive && remaining > 0; i++)
                     {
                         if (i == SelectedQuickBarSlot) continue; // 跳過已處理的選中槽位
+                        if (ReservedQuickBarSlots.Contains(i)) continue; // 跳過投掷武器預占槽位
                         
                         var existingStack = QuickBar.GetStack(i);
                         // 检查槽位是否为空或包含空白道具

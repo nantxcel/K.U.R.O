@@ -153,6 +153,14 @@ rotation = -1.6160004
 scale = Vector2(0.99999994, 0.99999994)
 bone_name = "Upper Body"
 
+[node name="SpineHoldingBoneNode" type="SpineBoneNode" parent="SpineSprite"]
+show_behind_parent = true
+z_index = 1
+position = Vector2(0.82191175, -473.95676)
+rotation = -1.6160004
+scale = Vector2(0.99999994, 0.99999994)
+bone_name = "Upper Body"
+
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 visible = false
 position = Vector2(0, -108.995995)
@@ -177,7 +185,6 @@ scale = Vector2(0.9999999, 0.9999999)
 shape = SubResource("RectangleShape2D_kqj82")
 
 [node name="GrabArea" type="Area2D" parent="."]
-visible = false
 collision_layer = 7
 collision_mask = 7
 
@@ -329,11 +336,11 @@ IconRotationDegrees = -120.0
 script = ExtResource("20_4ht1x")
 Inventory = NodePath("../Inventory")
 AttachmentParentPath = NodePath("../SpineSprite")
-SpineSlotNodePath = NodePath("../SpineSprite/SpineBoneNode")
+SpineSlotNodePath = NodePath("../SpineSprite/SpineHoldingBoneNode")
 ShowHoldingItemStates = Array[String](["IdleHolding", "RunHolding", "Throw"])
-BoneIconOffset = Vector2(857, 0)
+BoneIconOffset = Vector2(1024, 0)
 RotateBoneOffsetWithBone = true
-IconRotationDegrees = -90.0
+IconRotationDegrees = 90.0
 
 [node name="EffectController" type="Node" parent="."]
 script = ExtResource("21_utqjm")

@@ -1,0 +1,82 @@
+[gd_scene load_steps=11 format=3 uid="uid://bvvyo3wubh12j"]
+
+[ext_resource type="Script" uid="uid://dhfq2rrha0awm" path="res://scripts/items/world/RigidBodyWorldItemEntity.cs" id="1_eecfu"]
+[ext_resource type="Script" uid="uid://b4tcdtjy6u7ee" path="res://scripts/items/attributes/ItemAttributeEntry.cs" id="2_630y6"]
+[ext_resource type="Script" uid="uid://bv0es4osw3x0r" path="res://scripts/items/effects/ItemEffectEntry.cs" id="3_swc0d"]
+[ext_resource type="Texture2D" uid="uid://cbs8s6snkb78b" path="res://assets/weapons/引力手雷.png" id="4_q0htg"]
+[ext_resource type="Script" uid="uid://dfgtff7mly02w" path="res://scripts/items/ItemDefinition.cs" id="5_aeqdd"]
+[ext_resource type="Shader" uid="uid://cgt8onjsoqr12" path="res://shaders/materials/sprite_outline.gdshader" id="6_uxlca"]
+
+[sub_resource type="Resource" id="Resource_n53n5"]
+script = ExtResource("5_aeqdd")
+ItemId = "Weapon_Throw_GravityGrenade"
+DisplayName = "引力手雷"
+Description = "机械类投掷武器：引力手雷"
+Icon = ExtResource("4_q0htg")
+Tags = Array[String](["tag_weapon", "bulid_machine", "tag_throw"])
+MaxStackSize = 1
+BuildClass = "Machine"
+IsThrowable = true
+WorldScenePath = "uid://bvvyo3wubh12j"
+metadata/_custom_type_script = "uid://dfgtff7mly02w"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ly8n5"]
+shader = ExtResource("6_uxlca")
+shader_parameter/outline_color = Color(0.02, 0.02, 0.02, 1)
+shader_parameter/outline_size = 32.0
+shader_parameter/alpha_threshold = 0.5
+shader_parameter/edge_softness = 0.12
+shader_parameter/preserve_fill = true
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_w5uvq"]
+radius = 110.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_5ow4b"]
+radius = 100.0
+
+[node name="WeaponThrowGravityGrenade" type="Node2D"]
+z_index = 1
+script = ExtResource("1_eecfu")
+ItemDefinition = SubResource("Resource_n53n5")
+GrabAreaPath = NodePath("RigidBody2D/CollisionArea")
+HighlightSpritePath = NodePath("RigidBody2D/Outline")
+DefaultOutlineColor = Color(0, 0, 0, 0)
+ThrowDamage = 0.0
+MinDamageVelocity = 0.0
+KnockbackForce = 0.0
+StopOnHit = true
+IsThrowWeapon = true
+ThrowWeaponCooldown = 5.0
+LandingDestructionDelay = 5.0
+RigidBodyPath = NodePath("RigidBody2D")
+HitboxAreaPath = NodePath("RigidBody2D/AttackArea")
+
+[node name="RigidBody2D" type="RigidBody2D" parent="."]
+gravity_scale = 0.0
+can_sleep = false
+freeze = true
+freeze_mode = 1
+
+[node name="Outline" type="Sprite2D" parent="RigidBody2D"]
+material = SubResource("ShaderMaterial_ly8n5")
+scale = Vector2(0.33, 0.33)
+texture = ExtResource("4_q0htg")
+region_enabled = true
+region_rect = Rect2(-100, -100, 700, 700)
+
+[node name="Sprite2D" type="Sprite2D" parent="RigidBody2D/Outline"]
+texture = ExtResource("4_q0htg")
+region_enabled = true
+region_rect = Rect2(-100, -100, 700, 700)
+
+[node name="CollisionArea" type="Area2D" parent="RigidBody2D"]
+visible = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RigidBody2D/CollisionArea"]
+shape = SubResource("CircleShape2D_w5uvq")
+
+[node name="AttackArea" type="Area2D" parent="RigidBody2D"]
+visible = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RigidBody2D/AttackArea"]
+shape = SubResource("CircleShape2D_5ow4b")

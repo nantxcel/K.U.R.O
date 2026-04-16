@@ -87,7 +87,6 @@ metadata/_edit_lock_ = true
 
 [node name="MainCharacter" parent="World" instance=ExtResource("4_givaq")]
 position = Vector2(317, 454)
-scale = Vector2(0.15, 0.15)
 
 [node name="Camera2D" type="Camera2D" parent="World/MainCharacter"]
 position = Vector2(-18.75, -781.25)

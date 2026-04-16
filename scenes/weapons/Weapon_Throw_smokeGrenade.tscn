@@ -1,0 +1,91 @@
+[gd_scene load_steps=13 format=3 uid="uid://cipwjj7xx121y"]
+
+[ext_resource type="Script" uid="uid://dhfq2rrha0awm" path="res://scripts/items/world/RigidBodyWorldItemEntity.cs" id="1_26ux8"]
+[ext_resource type="Texture2D" uid="uid://n0ciynpx53jh" path="res://assets/weapons/镇暴烟雾弹.png" id="1_rp6mi"]
+[ext_resource type="Shader" uid="uid://cgt8onjsoqr12" path="res://shaders/materials/sprite_outline.gdshader" id="2_7shqp"]
+[ext_resource type="Script" uid="uid://b4tcdtjy6u7ee" path="res://scripts/items/attributes/ItemAttributeEntry.cs" id="2_idk0v"]
+[ext_resource type="Script" uid="uid://bv0es4osw3x0r" path="res://scripts/items/effects/ItemEffectEntry.cs" id="3_w57jh"]
+[ext_resource type="PackedScene" uid="uid://ckvi05o7l1mv4" path="res://shaders/smoke.tscn" id="4_26ux8"]
+[ext_resource type="Script" uid="uid://dfgtff7mly02w" path="res://scripts/items/ItemDefinition.cs" id="5_ct42j"]
+
+[sub_resource type="Resource" id="Resource_26ux8"]
+script = ExtResource("3_w57jh")
+Trigger = 3
+EffectScene = ExtResource("4_26ux8")
+metadata/_custom_type_script = "uid://bv0es4osw3x0r"
+
+[sub_resource type="Resource" id="Resource_ai6mm"]
+script = ExtResource("5_ct42j")
+ItemId = "Weapon_Throw_SmokeGrenade"
+DisplayName = "镇暴烟雾弹"
+Description = "安保类投掷武器：镇暴烟雾弹"
+Icon = ExtResource("1_rp6mi")
+Tags = Array[String](["tag_weapon", "build_guard", "tag_throw"])
+MaxStackSize = 1
+EffectEntries = Array[ExtResource("3_w57jh")]([SubResource("Resource_26ux8")])
+BuildClass = "Guard"
+IsThrowable = true
+WorldScenePath = "uid://cipwjj7xx121y"
+metadata/_custom_type_script = "uid://dfgtff7mly02w"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_0nltr"]
+shader = ExtResource("2_7shqp")
+shader_parameter/outline_color = Color(0.02, 0.02, 0.02, 1)
+shader_parameter/outline_size = 32.0
+shader_parameter/alpha_threshold = 0.5
+shader_parameter/edge_softness = 0.12
+shader_parameter/preserve_fill = true
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_rp6mi"]
+size = Vector2(264, 179)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_u1cg1"]
+size = Vector2(338, 300)
+
+[node name="WeaponThrowSmokeGrenade" type="Node2D"]
+z_index = 1
+script = ExtResource("1_26ux8")
+ItemDefinition = SubResource("Resource_ai6mm")
+GrabAreaPath = NodePath("RigidBody2D/CollisionArea")
+HighlightSpritePath = NodePath("RigidBody2D/Outline")
+DefaultOutlineColor = Color(0, 0, 0, 0)
+ThrowDamage = 0.0
+MinDamageVelocity = 0.0
+KnockbackForce = 0.0
+StopOnHit = true
+IsThrowWeapon = true
+LandingDestructionDelay = 10.0
+DestructionEffectScene = "uid://ckvi05o7l1mv4"
+RigidBodyPath = NodePath("RigidBody2D")
+HitboxAreaPath = NodePath("RigidBody2D/AttackArea")
+
+[node name="RigidBody2D" type="RigidBody2D" parent="."]
+gravity_scale = 0.0
+can_sleep = false
+freeze = true
+freeze_mode = 1
+
+[node name="Outline" type="Sprite2D" parent="RigidBody2D"]
+material = SubResource("ShaderMaterial_0nltr")
+scale = Vector2(0.33, 0.33)
+texture = ExtResource("1_rp6mi")
+region_enabled = true
+region_rect = Rect2(-50, -50, 750, 450)
+
+[node name="Sprite2D" type="Sprite2D" parent="RigidBody2D/Outline"]
+texture = ExtResource("1_rp6mi")
+region_enabled = true
+region_rect = Rect2(-50, -50, 750, 450)
+
+[node name="CollisionArea" type="Area2D" parent="RigidBody2D"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RigidBody2D/CollisionArea"]
+position = Vector2(-2, 0.5)
+shape = SubResource("RectangleShape2D_rp6mi")
+
+[node name="AttackArea" type="Area2D" parent="RigidBody2D"]
+visible = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RigidBody2D/AttackArea"]
+position = Vector2(2, 0)
+shape = SubResource("RectangleShape2D_u1cg1")

@@ -535,8 +535,8 @@ namespace Kuros.Actors.Heroes
                 shapeInfo = $"circle(r={circle.Radius})";
             }
 
-            GameLogger.Info(nameof(PlayerItemAttachment),
-                $"EquipAttackArea item={item.ItemId}, scene={scenePath}, areaTransform={sourceArea.Transform}, shapeTransform={collisionShape?.Transform}, shape={shapeType} {shapeInfo}");
+            // GameLogger.Info(nameof(PlayerItemAttachment),
+            //     $"EquipAttackArea item={item.ItemId}, scene={scenePath}, areaTransform={sourceArea.Transform}, shapeTransform={collisionShape?.Transform}, shape={shapeType} {shapeInfo}");
         }
 
         private void CaptureEquippedAttackAreaTemplate(Area2D area)
