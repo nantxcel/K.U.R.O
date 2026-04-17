@@ -29,7 +29,7 @@ namespace Kuros.Actors.Heroes.States
 
     public override void Enter()
     {
-        GD.Print($"[PlayerThrowState] 进入投掷状态");
+        //GD.Print($"[PlayerThrowState] 进入投掷状态");
 
         if (_interaction == null)
         {
@@ -93,13 +93,13 @@ namespace Kuros.Actors.Heroes.States
 
     private void PlayThrowAnimation()
     {
-        GD.Print($"[PlayerThrowState] 播放投掷动画: {ThrowAnimation}");
+        //GD.Print($"[PlayerThrowState] 播放投掷动画: {ThrowAnimation}");
 
         if (Player is MainCharacter mainChar)
         {
             mainChar.PlaySpineAnimation(ThrowAnimation, loop: false, timeScale: ThrowAnimationSpeed);
             _animRemaining = ThrowAnimationTotalTime / ThrowAnimationSpeed;
-            GD.Print($"[PlayerThrowState] Spine 动画已播放，预计时长: {_animRemaining}s");
+            //GD.Print($"[PlayerThrowState] Spine 动画已播放，预计时长: {_animRemaining}s");
         }
         else if (Actor.AnimPlayer != null)
         {
@@ -111,17 +111,17 @@ namespace Kuros.Actors.Heroes.States
 
                 var speed = Mathf.Max(Actor.AnimPlayer.SpeedScale, 0.0001f);
                 _animRemaining = (float)Actor.AnimPlayer.CurrentAnimationLength / speed;
-                GD.Print($"[PlayerThrowState] AnimationPlayer 动画已播放，时长: {_animRemaining}s");
+                //GD.Print($"[PlayerThrowState] AnimationPlayer 动画已播放，时长: {_animRemaining}s");
             }
             else
             {
-                GD.PrintErr($"[PlayerThrowState] 找不到动画: {ThrowAnimation}");
+                //GD.PrintErr($"[PlayerThrowState] 找不到动画: {ThrowAnimation}");
                 _animationFinished = true;
             }
         }
         else
         {
-            GD.PrintErr($"[PlayerThrowState] 无法找到动画播放方式");
+            //GD.PrintErr($"[PlayerThrowState] 无法找到动画播放方式");
             _animationFinished = true;
         }
     }

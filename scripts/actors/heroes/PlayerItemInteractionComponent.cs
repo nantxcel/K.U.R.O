@@ -217,9 +217,36 @@ namespace Kuros.Actors.Heroes
                 return TryHandleDrop(disposition, skipAnimation: true);
             }
 
+            // 投掷武器时：在物品从背包移除（InventoryChanged）之前预注册飞行状态
+            // 防止 RefreshBuildState 因背包变化而提前移除构筑效果
+            PlayerBuildController? buildController = null;
+            bool preRegisteredBuild = false;
+            if (disposition == DropDisposition.Throw && selectedStack.Item.IsThrowable)
+            {
+                buildController = _actor?.FindChild("BuildController", recursive: true, owned: false) as PlayerBuildController;
+                // GD.Print($"[PlayerItemInteractionComponent][InFlight] 预注册: IsThrowable={selectedStack.Item.IsThrowable}, buildController={(buildController != null ? buildController.Name : \"NULL\")}, item={selectedStack.Item.ItemId}");
+                if (buildController != null)
+                {
+                    buildController.RegisterThrowInFlight(selectedStack.Item);
+                    preRegisteredBuild = true;
+                    // GD.Print($"[PlayerItemInteractionComponent][InFlight] 预注册成功，即将提取物品");
+                }
+                else
+                {
+                    // GD.PrintErr($"[PlayerItemInteractionComponent][InFlight] 未找到 BuildController，预注册失败！actor={_actor?.Name ?? \"null\"}");
+                }
+            }
+            else
+            {
+                // GD.Print($"[PlayerItemInteractionComponent][InFlight] 跳过预注册: disposition={disposition}, IsThrowable={selectedStack.Item.IsThrowable}");
+            }
+
             // 從快捷欄提取物品
             if (!InventoryComponent.TryExtractFromSelectedQuickBarSlot(selectedStack.Quantity, out var extracted) || extracted == null || extracted.IsEmpty)
             {
+                // 提取失败：回滚预注册的飞行状态
+                if (preRegisteredBuild && buildController != null)
+                    buildController.UnregisterThrowInFlight(selectedStack.Item);
                 return false;
             }
 
@@ -231,6 +258,9 @@ namespace Kuros.Actors.Heroes
                 // Recovery path: spawn failed, try to return extracted items to quickbar
                 if (extracted == null || extracted.IsEmpty)
                 {
+                    // Spawn 失败且无法恢复：回滚预注册
+                    if (preRegisteredBuild && buildController != null)
+                        buildController.UnregisterThrowInFlight(selectedStack.Item);
                     return false;
                 }
 
@@ -296,6 +326,10 @@ namespace Kuros.Actors.Heroes
                     // Note: These items are lost - inventory is full
                     extracted.Remove(lostQuantity);
                 }
+
+                // Spawn 失败，物品已放回背包（InventoryChanged 会重新计算构筑点），回滚预注册
+                if (preRegisteredBuild && buildController != null)
+                    buildController.UnregisterThrowInFlight(selectedStack.Item);
 
                 return false;
             }

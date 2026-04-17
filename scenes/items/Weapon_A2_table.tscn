@@ -13,6 +13,7 @@ DisplayName = "kitchen table"
 Icon = ExtResource("6_1rea5")
 MaxStackSize = 1
 IsThrowable = true
+IsFurniture = true
 metadata/_custom_type_script = "uid://dfgtff7mly02w"
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_jyvv2"]
@@ -27,7 +28,6 @@ ItemDefinition = SubResource("Resource_tdtid")
 GrabAreaPath = NodePath("Weapon_A2_table/GrabArea")
 ThrowDamage = 2.0
 StopOnHit = true
-MaxDurability = 1
 RigidBodyPath = NodePath("Weapon_A2_table")
 HitboxAreaPath = NodePath("Weapon_A2_table/Hitbox")
 

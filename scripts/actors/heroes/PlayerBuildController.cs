@@ -52,6 +52,39 @@ namespace Kuros.Actors.Heroes
         private HashSet<string> _lastLoggedBuildClasses = new();
         private Dictionary<string, int> _buildCountByClass = new(StringComparer.OrdinalIgnoreCase);
         private Dictionary<string, int> _buildLevelByClass = new(StringComparer.OrdinalIgnoreCase);
+        // 投掷中的武器列表：武器被投出后暂存于此，确保构筑效果持续生效直到归还或销毁
+        private readonly List<ItemDefinition> _inFlightThrowItems = new();
+
+        /// <summary>
+        /// 注册一件投掷中的武器，使构筑效果在武器飞行/冷却期间保持生效。
+        /// 在武器投出时调用。
+        /// </summary>
+        public void RegisterThrowInFlight(ItemDefinition item)
+        {
+            if (item == null) return;
+            _inFlightThrowItems.Add(item);
+            // GD.Print($"[{Name}][InFlight] RegisterThrowInFlight: item={item.ItemId}, BuildClass={item.BuildClass}, IsThrowable={item.IsThrowable}, 飞行列表数量={_inFlightThrowItems.Count}");
+            RefreshBuildState();
+        }
+
+        /// <summary>
+        /// 注销一件投掷中的武器（归还背包或飞行中被销毁时调用）。
+        /// 归还背包时：物品已回到 QuickBar，不会造成点数减少。
+        /// 飞行命中销毁时：物品永久消失，构筑效果正常降低。
+        /// </summary>
+        public void UnregisterThrowInFlight(ItemDefinition item)
+        {
+            if (item == null) return;
+            // 只移除一次（支持同类型多件武器同时飞行的情况）
+            int idx = _inFlightThrowItems.IndexOf(item);
+            bool removed = idx >= 0;
+            if (removed)
+            {
+                _inFlightThrowItems.RemoveAt(idx);
+            }
+            // GD.Print($"[{Name}][InFlight] UnregisterThrowInFlight: item={item.ItemId}, 找到={removed}, 飞行列表剩余={_inFlightThrowItems.Count}");
+            RefreshBuildState();
+        }
 
         public override void _Ready()
         {
@@ -289,6 +322,7 @@ namespace Kuros.Actors.Heroes
 
         /// <summary>
         /// 按构筑类型分别统计点数。
+        /// 同时将飞行中（已投出但尚未归还/销毁）的武器计入，使构筑效果在投掷生命周期内保持生效。
         /// </summary>
         private void CountOwnedBuildWeaponsByClass()
         {
@@ -305,6 +339,16 @@ namespace Kuros.Actors.Heroes
                 var item = slot?.Stack?.Item;
                 if (item != null)
                 {
+                    AddItemPointsByClass(item);
+                }
+            }
+
+            // 将飞行中的投掷武器也计入构筑点数
+            foreach (var item in _inFlightThrowItems)
+            {
+                if (item != null)
+                {
+                    // GD.Print($"[{Name}][InFlight] 飞行武器计入: item={item.ItemId}, BuildClass={item.BuildClass}, IsTracked={IsTrackedBuildItem(item)}, ActiveClasses=[{string.Join(", ", _activeBuildClasses)}]");
                     AddItemPointsByClass(item);
                 }
             }
@@ -648,6 +692,15 @@ namespace Kuros.Actors.Heroes
             CollectBuildClassesFromContainer(Inventory.QuickBar, buildClasses);
             CollectBuildClassesFromContainer(Inventory.Backpack, buildClasses);
 
+            // 将飞行中的投掷武器的构筑类型也纳入活跃集合
+            // 否则物品从快捷栏提取后 _activeBuildClasses 变空，IsTrackedBuildItem 会对飞行武器返回 false
+            foreach (var inFlightItem in _inFlightThrowItems)
+            {
+                if (!string.IsNullOrWhiteSpace(inFlightItem?.BuildClass))
+                    buildClasses.Add(inFlightItem.BuildClass.Trim());
+            }
+
+            // GD.Print($"[{Name}][InFlight] ResolveActiveBuildClasses 结果: [{string.Join(", ", buildClasses)}], 飞行列表={_inFlightThrowItems.Count}件 [{string.Join(", ", _inFlightThrowItems.Select(i => i?.ItemId ?? \"null\"))}]");
             return buildClasses;
         }
 

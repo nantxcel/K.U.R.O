@@ -23,7 +23,7 @@ namespace Kuros.Actors.Heroes.States
 		public override void Enter()
 		{
 			Player.NotifyMovementState(Name);
-			GD.Print($"[PlayerIdleHoldingState] 进入持握状态");
+			//GD.Print($"[PlayerIdleHoldingState] 进入持握状态");
 			
 			// 播放持握动画
 			if (Player is MainCharacter mainChar)
@@ -57,7 +57,7 @@ namespace Kuros.Actors.Heroes.States
 			var selectedStack = Player.InventoryComponent?.GetSelectedQuickBarStack();
 			if (selectedStack == null || selectedStack.IsEmpty || !selectedStack.Item.IsThrowable)
 			{
-				GD.Print($"[PlayerIdleHoldingState] 物品不可投掷或已消失，返回 Idle");
+				//GD.Print($"[PlayerIdleHoldingState] 物品不可投掷或已消失，返回 Idle");
 				ChangeState("Idle");
 				return;
 			}
@@ -65,7 +65,7 @@ namespace Kuros.Actors.Heroes.States
 			// 检查投掷按键
 			if (Input.IsActionJustPressed("throw"))
 			{
-				GD.Print($"[PlayerIdleHoldingState] 投掷按键被按下");
+				//GD.Print($"[PlayerIdleHoldingState] 投掷按键被按下");
 				ChangeState("Throw");
 				return;
 			}
@@ -74,7 +74,7 @@ namespace Kuros.Actors.Heroes.States
 			Vector2 input = GetMovementInput();
 			if (input != Vector2.Zero)
 			{
-				GD.Print($"[PlayerIdleHoldingState] 检测到移动输入，转换到 RunHolding");
+				//GD.Print($"[PlayerIdleHoldingState] 检测到移动输入，转换到 RunHolding");
 				if (IsActionPressed("run"))
 				{
 					ChangeState("RunHolding");

@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://qd5abd4opeob"]
+[gd_scene load_steps=25 format=3 uid="uid://qd5abd4opeob"]
 
 [ext_resource type="PackedScene" uid="uid://dd8xmpgwy0t2o" path="res://scenes/environments/scene2.tscn" id="1_7jsho"]
 [ext_resource type="Script" uid="uid://x1ic1ym4ykq8" path="res://scripts/scenes/BattleSceneManager.cs" id="1_ctuyy"]
@@ -20,6 +20,7 @@
 [ext_resource type="PackedScene" uid="uid://byi2utn347fwu" path="res://scenes/actors/enemies/Enemy_Normal_guard1.tscn" id="13_x3vg8"]
 [ext_resource type="PackedScene" uid="uid://djio6ojcqw8yf" path="res://scenes/actors/enemies/Enemy_Normal_guard2.tscn" id="14_cwau0"]
 [ext_resource type="PackedScene" uid="uid://bvvyo3wubh12j" path="res://scenes/weapons/Weapon_Throw_gravityGrenade.tscn" id="14_t6vgq"]
+[ext_resource type="PackedScene" uid="uid://djpr7gcy077em" path="res://scenes/items/Furniture_B_CounterB.tscn" id="15_22xbq"]
 [ext_resource type="PackedScene" uid="uid://ctpw5uqly3yu5" path="res://scenes/weapons/Weapon_Brawl_mechGlove.tscn" id="19_t6vgq"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_2l4aj"]
@@ -108,6 +109,12 @@ position = Vector2(-7149, 606)
 
 [node name="WeaponThrowGravityGrenade" parent="World/DroopTest" instance=ExtResource("14_t6vgq")]
 position = Vector2(-7027, 983)
+
+[node name="WeaponThrowSmokeGrenade2" parent="World/DroopTest" instance=ExtResource("6_axd6b")]
+position = Vector2(-5721, 885)
+
+[node name="Furniture_B_CounterB" parent="World/DroopTest" instance=ExtResource("15_22xbq")]
+position = Vector2(-5783, 470)
 
 [node name="DropDebug" type="Node2D" parent="World"]
 script = ExtResource("7_k0qph")

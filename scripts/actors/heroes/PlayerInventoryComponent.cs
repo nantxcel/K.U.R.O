@@ -36,6 +36,18 @@ private readonly HashSet<string> _obtainedItemIds = new HashSet<string>();
 		/// </summary>
 		public HashSet<int> ReservedQuickBarSlots { get; } = new();
 
+		/// <summary>
+		/// 家具槽位（隐藏第6格）：只允许 IsFurniture=true 的物品放置，最多1个。
+		/// 当此槽有物品时，优先使用此槽的物品（禁止切换到快捷栏的其他槽位）。
+		/// </summary>
+		public InventoryItemStack? FurnitureSlotStack { get; private set; }
+
+		/// <summary>
+		/// 家具槽是否有物品
+		/// </summary>
+		public bool HasFurnitureItem => FurnitureSlotStack != null && !FurnitureSlotStack.IsEmpty
+			&& FurnitureSlotStack.Item.ItemId != "empty_item";
+
         [ExportGroup("Special Slots")]
         [Export] public Godot.Collections.Array<SpecialInventorySlotConfig> SpecialSlotConfigs
         {
@@ -99,6 +111,10 @@ private readonly HashSet<string> _obtainedItemIds = new HashSet<string>();
         public event Action<int>? ActiveBackpackSlotChanged;
         public event Action? QuickBarAssigned;
         public event Action<int>? QuickBarSlotChanged;
+        /// <summary>
+        /// 家具槽变化事件（放入或清除时触发）
+        /// </summary>
+        public event Action? FurnitureSlotChanged;
 
         public override void _Ready()
         {
@@ -192,6 +208,12 @@ private readonly HashSet<string> _obtainedItemIds = new HashSet<string>();
             {
                 GameLogger.Warn(nameof(PlayerInventoryComponent), $"AddItemSmart: amount ({amount}) is not positive for item '{item.DisplayName}' (ID: {item.ItemId}), nothing to add.");
                 return 0;
+            }
+
+            // 家具物品：路由到家具槽位（隐藏第6格）
+            if (item.IsFurniture)
+            {
+                return AddFurnitureItem(item, amount, showPopupIfFirstTime);
             }
 
             int requestedAmount = amount;
@@ -302,8 +324,59 @@ private readonly HashSet<string> _obtainedItemIds = new HashSet<string>();
         }
 
         /// <summary>
-        /// 显示获得物品弹窗
+        /// 将家具物品放入家具槽位（隐藏第6格）。
+        /// 家具槽只能容纳1件 IsFurniture=true 的物品。
         /// </summary>
+        private int AddFurnitureItem(ItemDefinition item, int amount, bool showPopupIfFirstTime)
+        {
+            if (HasFurnitureItem)
+            {
+                GameLogger.Info(nameof(PlayerInventoryComponent), $"AddFurnitureItem: 家具槽已被占用（{FurnitureSlotStack!.Item.DisplayName}），无法拾取 '{item.DisplayName}'。");
+                return 0;
+            }
+
+            bool isFirstTime = IsFirstTimeObtaining(item);
+            FurnitureSlotStack = new InventoryItemStack(item, 1);
+            int totalAdded = 1;
+
+            FurnitureSlotChanged?.Invoke();
+
+            if (totalAdded > 0 && isFirstTime)
+            {
+                MarkItemAsObtained(item);
+                if (showPopupIfFirstTime)
+                {
+                    ShowItemObtainedPopup(item);
+                }
+            }
+
+            return totalAdded;
+        }
+
+        /// <summary>
+        /// 从家具槽提取物品
+        /// </summary>
+        public bool TryExtractFromFurnitureSlot(int amount, out InventoryItemStack? extracted)
+        {
+            extracted = null;
+            if (!HasFurnitureItem)
+            {
+                return false;
+            }
+
+            extracted = new InventoryItemStack(FurnitureSlotStack!.Item, 1);
+            FurnitureSlotStack = null;
+            FurnitureSlotChanged?.Invoke();
+            return true;
+        }
+
+        /// <summary>
+        /// 清除家具槽（用于丢弃/投掷后清除）
+        /// </summary>
+        public void ClearFurnitureSlot()
+        {
+            FurnitureSlotStack = null;
+        }
         private void ShowItemObtainedPopup(ItemDefinition item)
         {
             if (item == null)
@@ -627,10 +700,16 @@ private readonly HashSet<string> _obtainedItemIds = new HashSet<string>();
         }
 
         /// <summary>
-        /// 獲取當前選中的快捷欄槽位的物品堆疊
+        /// 獲取當前選中的快捷欄槽位的物品堆疊。
+        /// 如果家具槽有物品，优先返回家具槽的物品。
         /// </summary>
         public InventoryItemStack? GetSelectedQuickBarStack()
         {
+            // 家具槽优先
+            if (HasFurnitureItem)
+            {
+                return FurnitureSlotStack;
+            }
             if (QuickBar == null || SelectedQuickBarSlot < 0 || SelectedQuickBarSlot > 4)
             {
                 return null;
@@ -639,11 +718,19 @@ private readonly HashSet<string> _obtainedItemIds = new HashSet<string>();
         }
 
         /// <summary>
-        /// 嘗試從選中的快捷欄槽位提取物品
+        /// 嘗試從選中的快捷欄槽位提取物品。
+        /// 如果家具槽有物品，优先从家具槽提取。
         /// </summary>
         public bool TryExtractFromSelectedQuickBarSlot(int amount, out InventoryItemStack? extracted)
         {
             extracted = null;
+
+            // 家具槽优先
+            if (HasFurnitureItem)
+            {
+                return TryExtractFromFurnitureSlot(amount, out extracted);
+            }
+
             if (QuickBar == null || SelectedQuickBarSlot < 0 || SelectedQuickBarSlot > 4)
             {
                 return false;
@@ -686,6 +773,9 @@ private readonly HashSet<string> _obtainedItemIds = new HashSet<string>();
             int total = 0;
             total += CountWeaponStacksInContainer(Backpack);
             total += CountWeaponStacksInContainer(QuickBar);
+            // 飞行中的投掷武器已从快捷栏提取（槽位变为 empty_item），但它们仍属于玩家。
+            // 将 ReservedQuickBarSlots 数量视为虚拟武器数，防止在武器归还期间多拾取一件武器。
+            total += ReservedQuickBarSlots.Count;
 
             foreach (var slot in _specialSlots.Values)
             {
