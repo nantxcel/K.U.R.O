@@ -9,7 +9,7 @@ namespace Kuros.Actors.Enemies.States
     public partial class EnemyFrozenState : EnemyState
     {
         [Export(PropertyHint.Range, "0.1,10,0.1")]
-        public float FrozenDuration = 2.0f;
+        public float FrozenDuration = 0.1f;
 
         private float _timer;
 

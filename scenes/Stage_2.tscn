@@ -1,4 +1,4 @@
-[gd_scene load_steps=35 format=3 uid="uid://qd5abd4opeob"]
+[gd_scene load_steps=34 format=3 uid="uid://qd5abd4opeob"]
 
 [ext_resource type="PackedScene" uid="uid://dd8xmpgwy0t2o" path="res://scenes/environments/scene2.tscn" id="1_7jsho"]
 [ext_resource type="Script" uid="uid://x1ic1ym4ykq8" path="res://scripts/scenes/BattleSceneManager.cs" id="1_ctuyy"]
@@ -30,7 +30,6 @@
 [ext_resource type="PackedScene" uid="uid://1mc4twnj45va" path="res://scenes/items/Furniture_B_tableRoundB.tscn" id="24_nosxg"]
 [ext_resource type="PackedScene" uid="uid://kwbg3wy7rik" path="res://scenes/items/Furniture_B_chairA.tscn" id="26_cd8hr"]
 [ext_resource type="PackedScene" uid="uid://dsfadn8x6iwkh" path="res://scenes/items/Furniture_B_plantA.tscn" id="29_edhkl"]
-[ext_resource type="PackedScene" uid="uid://ds87c8d0i4h8a" path="res://shaders/black_hole.tscn" id="31_pdblb"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_2l4aj"]
 size = Vector2(1112.5, 1843)
@@ -227,10 +226,10 @@ collision_mask = 4
 [node name="CollisionShape2D" type="CollisionShape2D" parent="World/EnemySpawneManager4/Area2D"]
 shape = SubResource("RectangleShape2D_f0l3g")
 
+[node name="Enemy_Normal_guard1" parent="World" instance=ExtResource("13_x3vg8")]
+position = Vector2(-7588, 243)
+MaxHealth = 1000
+
 [node name="NavigationRegion2D" type="NavigationRegion2D" parent="." groups=["navigation_polygon_source_geometry_group"]]
 position = Vector2(12, 49)
 navigation_polygon = SubResource("NavigationPolygon_bjupw")
-
-[node name="BlackHole" parent="." instance=ExtResource("31_pdblb")]
-position = Vector2(-6820, 207)
-scale = Vector2(2, 2)

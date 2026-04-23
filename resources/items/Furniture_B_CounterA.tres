@@ -36,7 +36,7 @@ metadata/_custom_type_script = "uid://bv0es4osw3x0r"
 
 [resource]
 script = ExtResource("5_tgrdm")
-ItemId = "Furniture_B_CounterB"
+ItemId = "Furniture_B_CounterA"
 DisplayName = "酒店吧台"
 Description = "一次性投掷道具：酒店吧台"
 Icon = ExtResource("4_at7xc")

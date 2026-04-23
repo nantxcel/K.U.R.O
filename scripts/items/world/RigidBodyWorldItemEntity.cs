@@ -23,6 +23,10 @@ namespace Kuros.Items.World
 		[Signal] public delegate void ItemTransferredEventHandler(RigidBodyWorldItemEntity entity, GameActor actor, ItemDefinition item, int amount);
 		[Signal] public delegate void ItemTransferFailedEventHandler(RigidBodyWorldItemEntity entity, GameActor actor);
 
+		// 防抖：待烘焙的场景树（避免多物品重复遍历场景树）
+		private static readonly HashSet<SceneTree> PendingRebakeScenes = new();
+		private static bool _rebakeTimerScheduled = false;
+
 		[ExportGroup("Item")]
 		[Export] public ItemDefinition? ItemDefinition { get; set; }
 		[Export(PropertyHint.File, "*.tres,*.res")] public string ItemDefinitionResourcePath { get; set; } = string.Empty;
@@ -194,11 +198,7 @@ namespace Kuros.Items.World
 			// 如果该物品包含导航源几何子节点，进入场景树后延迟烘焙，使障碍区域生效
 			if (HasNavigationSourceGeometryDescendant(this))
 			{
-				GetTree().CreateTimer(0.0).Timeout += () =>
-				{
-					var scene = GetTree()?.CurrentScene;
-					if (scene != null) RebakeAllNavigationRegions(scene);
-				};
+				ScheduleNavigationRebake();
 			}
 		}
 
@@ -209,11 +209,7 @@ namespace Kuros.Items.World
 			// 如果该物品有子节点属于导航源几何组，移除后触发延迟重新烘焙导航网格
 			if (HasNavigationSourceGeometryDescendant(this))
 			{
-				var scene = GetTree()?.CurrentScene;
-				if (scene != null)
-				{
-					GetTree()!.CreateTimer(0.0).Timeout += () => RebakeAllNavigationRegions(scene);
-				}
+				ScheduleNavigationRebake();
 			}
 
 			if (_grabArea != null)
@@ -1610,6 +1606,32 @@ namespace Kuros.Items.World
 				RebakeAllNavigationRegions(child);
 		}
 
+		/// <summary>
+		/// 防抖机制：将烘焙请求加入待处理列表，统一在下一帧执行（避免多物品重复遍历场景树）。
+		/// </summary>
+		private static void ScheduleNavigationRebake()
+		{
+			var tree = Engine.GetMainLoop() as SceneTree;
+			if (tree == null) return;
+
+			PendingRebakeScenes.Add(tree);
+
+			// 只在首次请求时创建定时器
+			if (_rebakeTimerScheduled) return;
+
+			_rebakeTimerScheduled = true;
+			tree.CreateTimer(0.0).Timeout += () =>
+			{
+				_rebakeTimerScheduled = false;
+				foreach (var sceneTree in PendingRebakeScenes)
+				{
+					var scene = sceneTree.CurrentScene;
+					if (scene != null) RebakeAllNavigationRegions(scene);
+				}
+				PendingRebakeScenes.Clear();
+			};
+		}
+
 		private void InitializeStack()
 		{
 			if (CurrentStack != null) return;
@@ -1732,6 +1754,7 @@ namespace Kuros.Items.World
 
 				try
 				{
+					// 通用方式实例化，兼容 Node2D 和 ActorEffect
 					var node = entry.EffectScene.Instantiate();
 
 					if (node is Node2D node2D)
@@ -1742,7 +1765,7 @@ namespace Kuros.Items.World
 					}
 					else if (node is Kuros.Core.Effects.ActorEffect actorEffect)
 					{
-						// 应用 PropertyOverrides（覆盖场景默认属性值）
+						// 使用 ItemEffectEntry 的方式来应用属性覆盖
 						entry.ApplyOverrides(actorEffect);
 
 						// 若效果支持落点定位，传入世界坐标

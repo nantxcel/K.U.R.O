@@ -17,6 +17,7 @@ size = Vector2(342, 198)
 [node name="SpikeAttackEffect" type="Node"]
 script = ExtResource("1_61h07")
 DamagePerTick = 1
+SpeedSlowPercent = 50.0
 EffectId = "f0f1b62e-cf75-4e12-b3ce-5758c772584f"
 Duration = 20.0
 
