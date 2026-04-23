@@ -54,7 +54,10 @@ namespace Kuros.Core.Effects
                 if (current == FrozenStateName)
                 {
                     string targetState = FallbackStateName;
-                    if (ResumePreviousState && !string.IsNullOrEmpty(_previousState) && _previousState != FrozenStateName)
+                    
+                    // 只恢复到安全的前置状态（不能恢复到 Attack，因为眩晕已打断了攻击流程）
+                    if (ResumePreviousState && !string.IsNullOrEmpty(_previousState) && 
+                        _previousState != FrozenStateName && _previousState != "Attack")
                     {
                         targetState = _previousState;
                     }
