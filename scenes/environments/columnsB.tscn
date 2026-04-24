@@ -23,6 +23,7 @@ freeze_mode = 1
 
 [node name="Shadow" type="Sprite2D" parent="."]
 material = SubResource("ShaderMaterial_4do5r")
+position = Vector2(0, -4)
 scale = Vector2(6.4412036, 5.087142)
 texture = ExtResource("2_873p6")
 
@@ -32,7 +33,6 @@ texture = ExtResource("1_mbnq6")
 offset = Vector2(0, -1200)
 
 [node name="StaticBody2D" type="StaticBody2D" parent="." groups=["navigation_polygon_source_geometry_group"]]
-visible = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
 position = Vector2(12, 40)

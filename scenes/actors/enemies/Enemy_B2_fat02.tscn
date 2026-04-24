@@ -71,7 +71,7 @@ DamageFlashColor = Color(18.892157, 18.892157, 18.892157, 1)
 [node name="Shadow" type="Sprite2D" parent="."]
 show_behind_parent = true
 material = SubResource("ShaderMaterial_b5vhy")
-scale = Vector2(24, 4.5)
+scale = Vector2(20, 10)
 texture = ExtResource("5_bb8mk")
 
 [node name="OutlineLayer" type="Node2D" parent="."]

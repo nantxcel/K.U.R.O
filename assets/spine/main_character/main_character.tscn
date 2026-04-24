@@ -61,7 +61,7 @@ height = 709.09094
 size = Vector2(762.42444, 548.4848)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_0y2r2"]
-radius = 750.0
+radius = 660.0
 
 [node name="MainCharacter" type="CharacterBody2D" node_paths=PackedStringArray("AttackArea", "AttackArea", "StateMachine", "EffectController")]
 z_index = 2
@@ -80,7 +80,7 @@ DebugOverlayFontSize = 128
 AttackArea = NodePath("AttackArea")
 LeftHandAttachmentPath = NodePath("SpineSprite/SpineBoneNode")
 Speed = 500.0
-AttackDamage = 100.0
+AttackDamage = 1.0
 MaxHealth = 12
 StateMachine = NodePath("StateMachine")
 EffectController = NodePath("EffectController")
@@ -88,7 +88,7 @@ DamageFlashColor = Color(18.892157, 18.892157, 18.892157, 1)
 
 [node name="Shadow" type="Sprite2D" parent="."]
 material = SubResource("ShaderMaterial_0y2r2")
-scale = Vector2(15, 2)
+scale = Vector2(12, 5)
 texture = ExtResource("3_tdm7a")
 
 [node name="OutlineLayer" type="Node2D" parent="."]
@@ -163,7 +163,6 @@ scale = Vector2(0.99999994, 0.99999994)
 bone_name = "Upper Body"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-visible = false
 position = Vector2(0, -108.995995)
 rotation = 1.5707964
 scale = Vector2(0.9999999, 0.9999999)
@@ -177,7 +176,6 @@ position = Vector2(6.0606065, -515.15155)
 shape = SubResource("CapsuleShape2D_0y2r2")
 
 [node name="AttackArea" type="Area2D" parent="."]
-visible = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AttackArea"]
 position = Vector2(464.24234, -569.99994)
@@ -185,12 +183,11 @@ scale = Vector2(0.9999999, 0.9999999)
 shape = SubResource("RectangleShape2D_kqj82")
 
 [node name="GrabArea" type="Area2D" parent="."]
-visible = false
 collision_layer = 7
 collision_mask = 7
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="GrabArea"]
-position = Vector2(0, -656)
+position = Vector2(0, -650)
 shape = SubResource("CircleShape2D_0y2r2")
 
 [node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("InitialState")]
