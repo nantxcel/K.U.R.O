@@ -38,7 +38,7 @@ radius = 350.0
 height = 800.0
 
 [sub_resource type="RectangleShape2D" id="2"]
-size = Vector2(1600, 700)
+size = Vector2(1350, 700)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_otg7e"]
 size = Vector2(690.90894, 500)
@@ -61,7 +61,7 @@ DetectionArea = NodePath("Sprite2D/ControllerDetectionArea")
 AttackArea = NodePath("Sprite2D/AttackArea")
 AttackDamage = 0.0
 AttackCooldown = 1.0
-MaxHealth = 15
+MaxHealth = 20
 StateMachine = NodePath("StateMachine")
 EffectController = NodePath("EffectController")
 LootTable = ExtResource("18_drop_table")
@@ -162,11 +162,12 @@ rotation = 1.5707964
 shape = SubResource("CapsuleShape2D_otg7e")
 
 [node name="AttackArea" type="Area2D" parent="Sprite2D"]
+visible = false
 collision_layer = 0
 monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Sprite2D/AttackArea"]
-position = Vector2(900, 80)
+position = Vector2(780, 80)
 scale = Vector2(0.9999999, 0.9999999)
 shape = SubResource("2")
 
