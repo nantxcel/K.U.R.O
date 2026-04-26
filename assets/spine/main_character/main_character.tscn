@@ -73,7 +73,7 @@ motion_mode = 1
 script = ExtResource("1_om6pm")
 WalkAnimationSpeed = 2.0
 RunAnimationSpeed = 3.0
-AnimationMixDuration = 0.25
+AnimationMixDuration = 0.05
 AttackArea = NodePath("AttackArea")
 EnableStateDebugOverlay = true
 DebugOverlayOffset = Vector2(-1200, 200)
@@ -143,9 +143,9 @@ script = ExtResource("4_ixg0x")
 skeleton_data_res = ExtResource("4_o4xwm")
 bones_thickness = 10.09
 preview_skin = "Default"
-preview_animation = "Weapon_Brawl_RiotGlove"
+preview_animation = "Weapon_Stab_Drill"
 preview_frame = true
-preview_time = 0.0
+preview_time = 0.55
 script = ExtResource("4_ixg0x")
 
 [node name="SpineBoneNode" type="SpineBoneNode" parent="SpineSprite"]

@@ -27814,7 +27814,8 @@
 			}
 		],
 		"events": [
-			{ "time": 0.4667, "name": "hit" }
+			{ "time": 0.47, "name": "hit" }, 
+			{ "time": 0.65, "name": "hit" }
 		]
 	}
 }

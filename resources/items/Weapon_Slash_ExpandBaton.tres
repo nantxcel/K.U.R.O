@@ -19,6 +19,7 @@ DisplayName = "甩棍"
 Description = "守护类挥砍武器：甩棍"
 Icon = ExtResource("3_26r73")
 Category = "Weapon"
+Tags = Array[String](["tag_weapon", "build_guard", "tag_slash", "hit_1"])
 MaxStackSize = 1
 AttributeEntries = Array[ExtResource("1_8xicf")]([SubResource("Resource_n7thb")])
 WeaponSkillResources = Array[Resource]([ExtResource("4_8xicf")])
