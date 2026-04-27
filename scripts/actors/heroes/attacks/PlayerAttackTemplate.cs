@@ -66,7 +66,7 @@ namespace Kuros.Actors.Heroes.Attacks
         [Export(PropertyHint.Enum, "Target,Player,AttackArea,CustomNode")] public HitEffectAnchor HitEffectAnchorMode = HitEffectAnchor.Target;
         [Export] public NodePath HitEffectAnchorPath = new();
         [Export(PropertyHint.Range, "-1024,1024,1")] public int HitEffectZIndex = 100;
-        [Export] public bool HitEffectForceTopLevel = false;
+        [Export] public bool HitEffectForceTopLevel = false; 
         [Export] public Vector2 HitEffectLocalOffset = Vector2.Zero;
         [Export] public bool HitEffectMirrorFacing = true;
 
@@ -195,8 +195,10 @@ namespace Kuros.Actors.Heroes.Attacks
             _cooldownTimer = CooldownDuration;
             Player.AttackTimer = Mathf.Max(Player.AttackTimer, CooldownDuration);
 
-            OnAttackStarted();
+            // 先进入 Warmup 阶段，再启动攻击
+            // 这样可以确保当动画 hit 事件触发时，IsRunning 已经是 true
             SetPhase(AttackPhase.Warmup);
+            OnAttackStarted();
 
             if (ConsumeResourceOnStart)
             {
@@ -339,6 +341,7 @@ namespace Kuros.Actors.Heroes.Attacks
             _resolvedAnimationName = ResolveAnimationName(_activeWeaponSkill);
             EnsureSpineHitSupport();
             _spineAttackAnimationName = _resolvedAnimationName;
+            // 在播放动画前就启用 Spine 事件窗口，防止动画的第一个 hit 事件被错过
             _spineHitWindowActive = ShouldUseSpineHitEvents();
             _currentHitStep = 1;  // 重置段数计数器
             CurrentAttackHitStep = 1;  // 重置静态段数
@@ -353,12 +356,7 @@ namespace Kuros.Actors.Heroes.Attacks
             {
                 if (!string.IsNullOrEmpty(_resolvedAnimationName))
                 {
-                    GD.Print($"[{GetType().Name}] 播放攻击动画 (Spine): {_resolvedAnimationName}");
                     mainChar.PlaySpineAnimation(_resolvedAnimationName, false);
-                }
-                else
-                {
-                    GD.PushWarning($"[{GetType().Name}] AnimationName 为空，无法播放攻击动画");
                 }
             }
             // 否则使用 AnimationPlayer
@@ -368,10 +366,6 @@ namespace Kuros.Actors.Heroes.Attacks
                 {
                     Player.AnimPlayer.Play(_resolvedAnimationName);
                 }
-            }
-            else
-            {
-                GD.PushWarning($"[{GetType().Name}] 无法播放攻击动画: AnimationName={_resolvedAnimationName}, AnimPlayer={Player.AnimPlayer}");
             }
         }
 
@@ -464,10 +458,7 @@ namespace Kuros.Actors.Heroes.Attacks
                 skill.HitboxDebugDuration
             );
 
-            if (logOnce)
-            {
-                GD.Print($"[{GetType().Name}] Hitbox Debug => Shape={collisionShape.Shape.GetType().Name}, Position={collisionShape.GlobalPosition}, Rotation={collisionShape.GlobalRotationDegrees}");
-            }
+            
         }
 
         private void EnsureHitboxDebugDrawer()
@@ -549,31 +540,29 @@ namespace Kuros.Actors.Heroes.Attacks
                     break;
                 case AttackPhase.Warmup:
                     _phaseTimer = WarmupDuration;
-                    _hitWindowActive = false;
+                    // 在 Warmup 阶段也启用 _hitWindowActive，因为第一段 hit 可能在 Warmup 期间触发
+                    _hitWindowActive = HitEffectScene != null;
+                    _spineHitWindowActive = ShouldUseSpineHitEvents();
                     OnWarmupStarted();
                     break;
                 case AttackPhase.Active:
                     _phaseTimer = ActiveDuration;
+                    // 只要有特效场景，就保持 _hitWindowActive=true（不管是否使用 Spine 事件）
                     _hitWindowActive = HitEffectScene != null;
+                    _spineHitWindowActive = ShouldUseSpineHitEvents();
                     if (ShouldUseSpineHitEvents())
                     {
                         OnActivePhase();
                     }
                     else
                     {
-                        try
-                        {
-                            OnActivePhase();
-                        }
-                        finally
-                        {
-                            _hitWindowActive = false;
-                        }
+                        OnActivePhase();
                     }
                     break;
                 case AttackPhase.Recovery:
                     _phaseTimer = RecoveryDuration;
                     _hitWindowActive = false;
+                    _spineHitWindowActive = false;
                     OnRecoveryStarted();
                     break;
             }
@@ -606,15 +595,23 @@ namespace Kuros.Actors.Heroes.Attacks
 
             float originalDamage = Player.AttackDamage;
             
-            // 只有第一段应用 DamageOverride（包含基础伤害+武器伤害+增伤效果）
-            // 后续段只应用武器伤害，不应用玩家基础伤害和增伤效果
-            if (_currentHitStep == 1)
+            // 区分有武器和徒手的情况：
+            // - 徒手（_weaponBaseDamage == 0）：所有段都应用完整伤害 DamageOverride
+            // - 有武器（_weaponBaseDamage > 0）：第一段应用 DamageOverride，后续段仅应用武器伤害
+            if (_weaponBaseDamage <= 0)
             {
-                Player.AttackDamage = DamageOverride;  // 第一段：基础伤害 + 武器伤害 + 增伤效果
+                // 徒手攻击：所有段都应用完整伤害
+                Player.AttackDamage = DamageOverride;
+            }
+            else if (_currentHitStep == 1)
+            {
+                // 有武器的第一段：应用完整伤害（基础伤害 + 武器伤害 + 增伤效果）
+                Player.AttackDamage = DamageOverride;
             }
             else
             {
-                Player.AttackDamage = _weaponBaseDamage;  // 后续段：仅武器伤害
+                // 有武器的后续段：仅应用武器伤害，避免基础伤害和增伤效果被多段武器放大
+                Player.AttackDamage = _weaponBaseDamage;
             }
 
             Player.PerformAttackCheck();
@@ -651,7 +648,6 @@ namespace Kuros.Actors.Heroes.Attacks
             _spineHitCallable = Callable.From<int, string>(OnSpineHitReceived);
             _spineControllerNode.Connect("hit_received", _spineHitCallable);
             _spineHitSubscribed = true;
-            GD.Print($"[{GetType().Name}] 已连接 Spine hit_received 信号");
         }
 
         private void UnsubscribeSpineHitSignal()
@@ -690,7 +686,6 @@ namespace Kuros.Actors.Heroes.Attacks
                 return;
             }
 
-            GD.Print($"[{GetType().Name}] Spine hit_received 触发伤害判定: 动画={animationName}, 段数={hitStep}");
             _currentHitStep = hitStep;  // 记录当前段数
             CurrentAttackHitStep = hitStep;  // 更新静态属性供其他系统访问
             PerformDefaultHitDetection();
@@ -754,7 +749,6 @@ namespace Kuros.Actors.Heroes.Attacks
             var parent = GetValidHitEffectParent();
             if (parent == null)
             {
-                GD.PushWarning($"[{GetType().Name}] 无法生成击打特效，未找到父节点。");
                 return;
             }
 
@@ -774,7 +768,6 @@ namespace Kuros.Actors.Heroes.Attacks
             }
             else
             {
-                GD.PushWarning($"[{GetType().Name}] HitEffectScene 需要是 Node2D 场景。");
                 instance.QueueFree();
             }
         }
@@ -814,7 +807,7 @@ namespace Kuros.Actors.Heroes.Attacks
             Vector2 offset = HitEffectLocalOffset;
             if (HitEffectMirrorFacing && Player != null)
             {
-                float sign = Player.FacingRight ? 1f : -1f;
+                float sign = Player.FacingRight ? -1f : 1f;
                 offset.X *= sign;
             }
 
@@ -828,7 +821,7 @@ namespace Kuros.Actors.Heroes.Attacks
                 return;
             }
 
-            float sign = Player.FacingRight ? 1f : -1f;
+            float sign = Player.FacingRight ? -1f : 1f;
             Vector2 scale = effectNode.Scale;
             scale.X = Mathf.Abs(scale.X) * sign;
             effectNode.Scale = scale;
@@ -836,6 +829,12 @@ namespace Kuros.Actors.Heroes.Attacks
 
         private void TriggerHitEffect(Node2D effectNode)
         {
+            // 处理 AnimatedSprite2D
+            if (effectNode is AnimatedSprite2D animSprite)
+            {
+                animSprite.Play();
+            }
+            
             if (effectNode.HasMethod("restart"))
             {
                 effectNode.Call("restart");
