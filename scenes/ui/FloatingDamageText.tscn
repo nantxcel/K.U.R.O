@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://co20oqrt8a1rf"]
 
-[ext_resource type="Script" uid="uid://bt2qcdpb7msti" path="res://scripts/ui/FloatingDamageText.cs" id="1_hcpke"]
+[ext_resource type="Script" uid="uid://cubc5x4qmafji" path="res://scripts/ui/FloatingDamageText.cs" id="1_hcpke"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_hxn5q"]
 font_size = 128
@@ -16,6 +16,7 @@ DurationSeconds = 0.5
 FloatHeight = 200.0
 HorizontalDrift = 200.0
 DamageMergeWindowSeconds = 0.1
+BasePositionOffset = Vector2(0, -500)
 
 [node name="Label" type="Label" parent="."]
 layout_mode = 0

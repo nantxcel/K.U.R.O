@@ -16,13 +16,10 @@ namespace Kuros.Managers
 	{
 		[Export] public string FloatingTextScenePath = "res://scenes/ui/FloatingDamageText.tscn";
 		[Export] public bool EnableFloatingText = true;
-		[Export] public Vector2 OffsetFromTarget = Vector2.Zero;
-		
-		private PackedScene? _floatingTextScene;
-		private static FloatingDamageTextManager? _instance;
-		
-		// 维护每个受害者的最近飘字实例，用于伤害合并
-		private Dictionary<GameActor, FloatingDamageText> _recentDamageTexts = new();
+	
+	private static FloatingDamageTextManager? _instance;
+	private Dictionary<GameActor, FloatingDamageText> _recentDamageTexts = new Dictionary<GameActor, FloatingDamageText>();
+	private PackedScene? _floatingTextScene;
 
 		public static FloatingDamageTextManager Instance => _instance!;
 
@@ -75,12 +72,6 @@ namespace Kuros.Managers
 				damageDirection = (victim.GlobalPosition - attacker.GlobalPosition).Normalized();
 			}
 
-			// 计算显示位置（受害者头顶加随机偏移）
-			Vector2 textPosition = victim.GlobalPosition + new Vector2(0, -50);
-			float randomOffsetX = GD.Randf() * 60 - 30;
-			float randomOffsetY = GD.Randf() * 20 - 10;
-			textPosition += new Vector2(randomOffsetX, randomOffsetY);
-
 			// 判断是否暴击
 			bool isCritical = damage > victim.MaxHealth * 0.2f;
 
@@ -100,8 +91,8 @@ namespace Kuros.Managers
 				}
 			}
 
-			// 创建新飘字
-			var newText = CreateFloatingDamageText(damage, textPosition, damageDirection, isCritical);
+			// 创建新飘字（将目标位置传递给飘字脚本，由它自己计算显示位置）
+			var newText = CreateFloatingDamageText(damage, victim.GlobalPosition, damageDirection, isCritical);
 			if (newText != null)
 			{
 				_recentDamageTexts[victim] = newText;

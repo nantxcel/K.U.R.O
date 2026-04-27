@@ -81,6 +81,11 @@ namespace Kuros.Actors.Heroes.Attacks
         protected SamplePlayer Player { get; private set; } = null!;
         protected string TriggerSourceState { get; private set; } = string.Empty;
         protected Area2D? AttackArea { get; private set; }
+        
+        /// <summary>
+        /// 当前攻击的 Spine 动画段数（1-based），用于让其他系统（如效果）判断是否为第一段伤害
+        /// </summary>
+        public static int CurrentAttackHitStep { get; private set; } = 1;
 
         private AttackPhase _phase = AttackPhase.Idle;
         private float _phaseTimer = 0f;
@@ -98,6 +103,8 @@ namespace Kuros.Actors.Heroes.Attacks
         private string _resolvedAnimationName = string.Empty;
         private WeaponSkillDefinition? _activeWeaponSkill;
         private AttackHitboxDebugDrawer? _hitboxDebugDrawer;
+        private int _currentHitStep = 1;  // 记录当前 Spine 动画段数（1-based）
+        private float _weaponBaseDamage = 0f;  // 记录武器基础伤害（不含玩家基础伤害）
 
         public bool IsRunning => _phase != AttackPhase.Idle;
         public bool IsOnCooldown => _cooldownTimer > 0f;
@@ -333,6 +340,13 @@ namespace Kuros.Actors.Heroes.Attacks
             EnsureSpineHitSupport();
             _spineAttackAnimationName = _resolvedAnimationName;
             _spineHitWindowActive = ShouldUseSpineHitEvents();
+            _currentHitStep = 1;  // 重置段数计数器
+            CurrentAttackHitStep = 1;  // 重置静态段数
+            
+            // 计算武器基础伤害：DamageOverride - Player.AttackDamage
+            // 只有在第一段才应用玩家基础伤害和增伤效果
+            _weaponBaseDamage = DamageOverride - Player.AttackDamage;
+            if (_weaponBaseDamage < 0) _weaponBaseDamage = 0;
 
             // 如果是 MainCharacter，使用 Spine 动画
             if (Player is MainCharacter mainChar)
@@ -591,7 +605,17 @@ namespace Kuros.Actors.Heroes.Attacks
             if (Player == null) return;
 
             float originalDamage = Player.AttackDamage;
-            Player.AttackDamage = DamageOverride;
+            
+            // 只有第一段应用 DamageOverride（包含基础伤害+武器伤害+增伤效果）
+            // 后续段只应用武器伤害，不应用玩家基础伤害和增伤效果
+            if (_currentHitStep == 1)
+            {
+                Player.AttackDamage = DamageOverride;  // 第一段：基础伤害 + 武器伤害 + 增伤效果
+            }
+            else
+            {
+                Player.AttackDamage = _weaponBaseDamage;  // 后续段：仅武器伤害
+            }
 
             Player.PerformAttackCheck();
 
@@ -667,6 +691,8 @@ namespace Kuros.Actors.Heroes.Attacks
             }
 
             GD.Print($"[{GetType().Name}] Spine hit_received 触发伤害判定: 动画={animationName}, 段数={hitStep}");
+            _currentHitStep = hitStep;  // 记录当前段数
+            CurrentAttackHitStep = hitStep;  // 更新静态属性供其他系统访问
             PerformDefaultHitDetection();
         }
 

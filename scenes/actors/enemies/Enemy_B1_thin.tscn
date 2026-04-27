@@ -1,4 +1,4 @@
-[gd_scene load_steps=37 format=3 uid="uid://wqcdwpyo1nji"]
+[gd_scene load_steps=38 format=3 uid="uid://wqcdwpyo1nji"]
 
 [ext_resource type="Script" uid="uid://byhv4hxerfcr8" path="res://scripts/actors/enemies/EnemyB1Thin.cs" id="1_grl5w"]
 [ext_resource type="Script" uid="uid://cenpuhlcgesin" path="res://scripts/systems/fsm/StateMachine.cs" id="2"]
@@ -7,6 +7,7 @@
 [ext_resource type="Script" uid="uid://d4mh83kyh88kd" path="res://scripts/core/stats/CharacterStatProfile.cs" id="3_h8apo"]
 [ext_resource type="Script" uid="uid://b0k20upybq08f" path="res://scripts/actors/enemies/states/EnemyThinWalkState.cs" id="4"]
 [ext_resource type="Shader" uid="uid://cpuiqtlgf6b67" path="res://shaders/materials/shadow.gdshader" id="4_5i0uy"]
+[ext_resource type="Resource" uid="uid://cqcx8udrey0v4" path="res://resources/loot/Enemy_B_EliteDrops.tres" id="4_wdcme"]
 [ext_resource type="Script" uid="uid://bo6uhkbqyxe6o" path="res://scripts/actors/enemies/states/EnemyAttackState.cs" id="5"]
 [ext_resource type="Texture2D" uid="uid://wkm4jcgntidv" path="res://assets/environments/影子.png" id="5_8xfgw"]
 [ext_resource type="Script" uid="uid://cwnxfhj8ysc2f" path="res://scripts/actors/enemies/states/EnemyHitState.cs" id="6"]
@@ -71,14 +72,15 @@ EnableStateDebugOverlay = true
 DebugOverlayOffset = Vector2(-1200, 200)
 DebugOverlayFontSize = 128
 DetectionArea = NodePath("Sprite2D/ControllerDetectionArea")
+AttackRangeCheckDistance = 600.0
 AttackArea = NodePath("Sprite2D/AttackArea")
 Speed = 400.0
 AttackDamage = 0.0
 AttackCooldown = 1.0
-MaxHealth = 60
 StateMachine = NodePath("StateMachine")
 EffectController = NodePath("EffectController")
 StatProfile = SubResource("Resource_ie6to")
+LootTable = ExtResource("4_wdcme")
 DamageFlashColor = Color(18.892157, 18.751299, 18.892157, 1)
 
 [node name="Shadow" type="Sprite2D" parent="."]
@@ -206,6 +208,7 @@ script = ExtResource("5")
 
 [node name="AttackController" type="Node" parent="StateMachine/Attack"]
 script = ExtResource("23_1hw8y")
+MeleeCountBeforeCharge = 4
 PlayerDetectionAreaPath = NodePath("../../../Sprite2D/ControllerDetectionArea")
 
 [node name="KickAttack" type="Node" parent="StateMachine/Attack/AttackController"]
@@ -266,7 +269,7 @@ AnimationName = "animations/Skill3"
 
 [node name="EnemySpawn" type="Node" parent="StateMachine"]
 script = ExtResource("20_ie6to")
-LowHealthThresholds = PackedFloat32Array(1, 0.5)
+LowHealthThresholds = PackedFloat32Array(0.75, 0.25)
 
 [node name="EffectController" type="Node" parent="."]
 script = ExtResource("12")

@@ -2,6 +2,7 @@ using Godot;
 using System;
 using Kuros.Core;
 using Kuros.Utils;
+using Kuros.Actors.Enemies.States;
 
 public partial class SampleEnemy : GameActor
 {
@@ -181,6 +182,15 @@ public partial class SampleEnemy : GameActor
 	private void UpdateDebugOverlayText()
 	{
 		string stateName = StateMachine?.CurrentState?.Name ?? "None";
-		_debugOverlayText = $"{Name} | State: {stateName} | HP: {CurrentHealth}/{MaxHealth}";
+		string frozenInfo = "";
+		
+		// 如果在Frozen状态，显示倒计时
+		if (stateName == "Frozen" && StateMachine?.CurrentState is EnemyFrozenState frozenState)
+		{
+			float remainingTime = frozenState.GetRemainingTime();
+			frozenInfo = $" | Frozen: {remainingTime:F2}s";
+		}
+		
+		_debugOverlayText = $"{Name} | State: {stateName} | HP: {CurrentHealth}/{MaxHealth}{frozenInfo}";
 	}
 }

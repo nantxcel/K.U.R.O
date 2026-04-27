@@ -11,11 +11,19 @@ namespace Kuros.UI
 		[Export] public float DurationSeconds = 1.5f;
 		[Export] public float FloatHeight = 80f;
 		[Export] public float HorizontalDrift = 40f; // 水平漂移距离
-		[Export] public Color DamageColor = Colors.Red;
-		[Export] public Color CriticalColor = Colors.Yellow;
+		[Export] public Color DamageColor = Colors.Yellow;
+		[Export] public Color CriticalColor = Colors.Red;
 		[Export] public Color HealColor = Colors.Green;
 		[Export] public int BaseFontSize = 32;
 		[Export] public float DamageMergeWindowSeconds = 0.3f; // 伤害合并时间窗口（秒内的伤害会合并）
+		
+		[ExportCategory("显示位置")]
+		[Export] public Vector2 BasePositionOffset = new Vector2(0, -50);  // 相对于目标位置的基础偏移
+		[Export] public Vector2 AdditionalOffset = Vector2.Zero;           // 额外的位置调整
+		
+		[ExportCategory("随机偏移")]
+		[Export] public float RandomOffsetXRange = 60f;  // X轴随机偏移范围（总范围）
+		[Export] public float RandomOffsetYRange = 20f;  // Y轴随机偏移范围（总范围）
 
 		private Label? _label;
 		private Vector2 _startPosition;
@@ -73,13 +81,24 @@ namespace Kuros.UI
 		/// 初始化飘字（新伤害）
 		/// </summary>
 		/// <param name="damage">伤害值</param>
-		/// <param name="position">显示位置</param>
+		/// <param name="targetPosition">目标全局位置（受害者位置）</param>
 		/// <param name="damageDirection">伤害来源方向（飘字会向相反方向推开）</param>
 		/// <param name="isCritical">是否暴击</param>
-		public void Initialize(int damage, Vector2 position, Vector2 damageDirection, bool isCritical = false)
+		public void Initialize(int damage, Vector2 targetPosition, Vector2 damageDirection, bool isCritical = false)
 		{
-			GlobalPosition = position;
-			_startPosition = position;
+			// 计算最终显示位置：受害者位置 + 基础偏移 + 随机偏移 + 额外偏移
+			Vector2 displayPosition = targetPosition + BasePositionOffset;
+			
+			// 添加随机偏移
+			float randomOffsetX = (GD.Randf() * RandomOffsetXRange) - (RandomOffsetXRange / 2f);
+			float randomOffsetY = (GD.Randf() * RandomOffsetYRange) - (RandomOffsetYRange / 2f);
+			displayPosition += new Vector2(randomOffsetX, randomOffsetY);
+			
+			// 应用额外偏移
+			displayPosition += AdditionalOffset;
+			
+			GlobalPosition = displayPosition;
+			_startPosition = displayPosition;
 			_totalDamage = damage;
 			_isCritical = isCritical;
 			_elapsedTime = 0f;

@@ -4,8 +4,8 @@
 [ext_resource type="Resource" uid="uid://bfijfbb5m32i6" path="res://resources/items/Weapon_Slash_ExpandBaton.tres" id="2_hnhuv"]
 [ext_resource type="Shader" uid="uid://cpuiqtlgf6b67" path="res://shaders/materials/shadow.gdshader" id="3_o1fls"]
 [ext_resource type="Texture2D" uid="uid://wkm4jcgntidv" path="res://assets/environments/影子.png" id="4_djioy"]
-[ext_resource type="Shader" uid="uid://rvlvejer46bm" path="res://shaders/materials/sprite_outline.gdshader" id="5_6dn8i"]
-[ext_resource type="Texture2D" uid="uid://dccrl4lpl0t2h" path="res://icon.svg" id="6_hnhuv"]
+[ext_resource type="Shader" uid="uid://cgt8onjsoqr12" path="res://shaders/materials/sprite_outline.gdshader" id="5_6dn8i"]
+[ext_resource type="Texture2D" uid="uid://cedvgcxm5d1ef" path="res://assets/weapons/甩棍.png" id="6_hnhuv"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_nqlfu"]
 shader = ExtResource("3_o1fls")
@@ -37,16 +37,13 @@ DefaultOutlineColor = Color(0, 0, 0, 0)
 
 [node name="Shadow" type="Sprite2D" parent="."]
 material = SubResource("ShaderMaterial_nqlfu")
-position = Vector2(0, 60)
-scale = Vector2(13, 1.2)
+position = Vector2(0, 28)
+scale = Vector2(12, 1.2)
 texture = ExtResource("4_djioy")
 
 [node name="Outline" type="Sprite2D" parent="."]
 material = SubResource("ShaderMaterial_waoek")
-scale = Vector2(5, 1)
 texture = ExtResource("6_hnhuv")
-region_enabled = true
-region_rect = Rect2(-16, -48, 160, 224)
 
 [node name="Sprite2D" type="Sprite2D" parent="Outline"]
 texture = ExtResource("6_hnhuv")

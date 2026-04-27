@@ -136,7 +136,7 @@ skeleton_data_res = SubResource("SpineSkeletonDataResource_7t51a")
 preview_skin = "Default"
 preview_animation = "-- Empty --"
 preview_frame = true
-preview_time = 0.4
+preview_time = 0.0
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 modulate = Color(0.8, 0.6, 0.5, 1)

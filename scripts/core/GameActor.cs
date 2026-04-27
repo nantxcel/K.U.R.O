@@ -55,6 +55,11 @@ namespace Kuros.Core
 		public event Func<DamageEventArgs, bool>? DamageIntercepted;
 		public AnimationPlayer? AnimPlayer => _animationPlayer;
 		
+		/// <summary>
+		/// 保存Frozen状态被打断时的剩余时长，用于在Hit后恢复
+		/// </summary>
+		public float FrozenStateRemainingTime { get; set; } = 0f;
+		
 		protected Node2D _spineCharacter = null!;
 		protected Sprite2D _sprite = null!;
 		protected AnimationPlayer _animationPlayer = null!;

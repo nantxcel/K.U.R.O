@@ -3,11 +3,13 @@ using Godot;
 using Kuros.Core;
 using Kuros.Core.Effects;
 using Kuros.Core.Events;
+using Kuros.Actors.Heroes.Attacks;
 
 namespace Kuros.Builds
 {
     /// <summary>
     /// 机械构筑 3 级效果：连续攻击命中时逐步提升额外最终伤害。
+    /// 仅在玩家第一段攻击命中时触发，后续段伤害不计入连续计数。
     /// </summary>
     [GlobalClass]
     public partial class BuildMachineLevel3Effect : ActorEffect
@@ -72,6 +74,13 @@ namespace Kuros.Builds
         private void OnDamageResolved(GameActor attacker, GameActor target, int damage)
         {
             if (Actor == null || attacker != Actor || target == null)
+            {
+                return;
+            }
+
+            // 只在第一段伤害时触发效果
+            // 后续段伤害不应用加成，以避免多段攻击时加成被放大
+            if (PlayerAttackTemplate.CurrentAttackHitStep != 1)
             {
                 return;
             }
