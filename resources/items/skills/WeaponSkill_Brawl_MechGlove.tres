@@ -1,8 +1,9 @@
-[gd_resource type="Resource" script_class="WeaponSkillDefinition" load_steps=5 format=3 uid="uid://bvtjj5m8rc0pi"]
+[gd_resource type="Resource" script_class="WeaponSkillDefinition" load_steps=7 format=3 uid="uid://bvtjj5m8rc0pi"]
 
 [ext_resource type="Script" uid="uid://bv0es4osw3x0r" path="res://scripts/items/effects/ItemEffectEntry.cs" id="1_rpm6u"]
 [ext_resource type="PackedScene" uid="uid://bioknm040r2lo" path="res://resources/effects/KnockbackOnAttackEffect.tscn" id="2_7vkc4"]
 [ext_resource type="Script" uid="uid://bp6pwgoj44cuq" path="res://scripts/items/weapons/WeaponSkillDefinition.cs" id="2_kidmo"]
+[ext_resource type="PackedScene" uid="uid://cjfcykygrpf6o" path="res://resources/effects/MechGloveEffect.tscn" id="3_7vkc4"]
 
 [sub_resource type="Resource" id="Resource_bk1ns"]
 script = ExtResource("1_rpm6u")
@@ -14,6 +15,12 @@ PropertyOverrides = Dictionary[String, Variant]({
 })
 metadata/_custom_type_script = "uid://bv0es4osw3x0r"
 
+[sub_resource type="Resource" id="Resource_ni6ga"]
+script = ExtResource("1_rpm6u")
+Trigger = 1
+EffectScene = ExtResource("3_7vkc4")
+metadata/_custom_type_script = "uid://bv0es4osw3x0r"
+
 [resource]
 script = ExtResource("2_kidmo")
 SkillId = "Weapon_Brawl_MechGlove"
@@ -21,5 +28,5 @@ DisplayName = "机械冲撞臂攻击"
 AnimationName = "Weapon_Brawl_MechGlove"
 ShowHitboxDebug = false
 Description = "第三次攻击到敌人后击退敌人5 m且dmg增加+3"
-Effects = Array[ExtResource("1_rpm6u")]([SubResource("Resource_bk1ns")])
+Effects = Array[ExtResource("1_rpm6u")]([SubResource("Resource_bk1ns"), SubResource("Resource_ni6ga")])
 ActivationAction = "weapon_skill_block"
