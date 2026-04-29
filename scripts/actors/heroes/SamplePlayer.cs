@@ -14,7 +14,7 @@ using Kuros.Utils;
 public partial class SamplePlayer : GameActor, IPlayerStatsSource
 {
 	[ExportCategory("Combat")]
-	[Export] public Area2D AttackArea { get; private set; } = null!;
+	[Export] public Area2D AttackArea { get; protected set; } = null!;
 	[Export] public Area2D? HitArea { get; private set; }
 	private CollisionShape2D? _attackCollisionShape;
 	private Area2D? _cachedAttackAreaOwner;

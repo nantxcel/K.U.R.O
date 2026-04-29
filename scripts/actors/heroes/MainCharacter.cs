@@ -29,9 +29,6 @@ namespace Kuros.Actors.Heroes
 	[Export] public float RunSpeedMultiplier { get; set; } = 2.0f; // 跑步速度倍数
 	[Export] public float AnimationMixDuration { get; set; } = 0.1f; // 动画混合时长
 
-	[ExportCategory("Combat")]
-	[Export] public new Area2D AttackArea { get; private set; } = null!;
-
 	[ExportCategory("Input")]
 	[Export] public string MoveLeftAction { get; set; } = "move_left";
 	[Export] public string MoveRightAction { get; set; } = "move_right";

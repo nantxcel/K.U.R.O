@@ -65,7 +65,7 @@ size = Vector2(762.42444, 548.4848)
 [sub_resource type="CircleShape2D" id="CircleShape2D_0y2r2"]
 radius = 660.0
 
-[node name="MainCharacter" type="CharacterBody2D" node_paths=PackedStringArray("AttackArea", "AttackArea", "StateMachine", "EffectController")]
+[node name="MainCharacter" type="CharacterBody2D" node_paths=PackedStringArray("AttackArea", "StateMachine", "EffectController")]
 z_index = 2
 y_sort_enabled = true
 scale = Vector2(0.33, 0.33)
@@ -75,7 +75,6 @@ motion_mode = 1
 script = ExtResource("1_om6pm")
 WalkAnimationSpeed = 2.0
 RunAnimationSpeed = 3.0
-AttackArea = NodePath("AttackArea")
 AttackArea = NodePath("AttackArea")
 LeftHandAttachmentPath = NodePath("SpineSprite/SpineBoneNode")
 Speed = 500.0
@@ -266,7 +265,7 @@ ActiveDuration = 0.17
 RecoveryDuration = 0.19
 CooldownDuration = 0.3
 AnimationName = "animations/Weapon_Slash_ExpandBaton"
-HitEffectScene = ExtResource("12_0y2r2")
+HitEffectScene = ExtResource("12_f18x1")
 HitEffectForceTopLevel = true
 RequiredItemId = "Weapon_Slash_expandBaton"
 
@@ -280,7 +279,7 @@ ActiveDuration = 0.31
 RecoveryDuration = 0.16
 CooldownDuration = 0.5
 AnimationName = "animations/Weapon_Slash_BarrierGate"
-HitEffectScene = ExtResource("12_0y2r2")
+HitEffectScene = ExtResource("12_f18x1")
 HitEffectForceTopLevel = true
 RequiredItemId = "Weapon_Slash_barrierGate"
 
@@ -293,7 +292,7 @@ WarmupDuration = 0.17
 ActiveDuration = 0.63
 RecoveryDuration = 0.2
 AnimationName = "animations/attack_thrust"
-HitEffectScene = ExtResource("12_0y2r2")
+HitEffectScene = ExtResource("13_7xilr")
 HitEffectForceTopLevel = true
 RequiredItemId = "Weapon_Stab_umbrella"
 
@@ -307,7 +306,7 @@ ActiveDuration = 0.2
 RecoveryDuration = 0.34
 CooldownDuration = 0.5
 AnimationName = "animations/Weapon_Stab_Drill"
-HitEffectScene = ExtResource("12_0y2r2")
+HitEffectScene = ExtResource("13_7xilr")
 HitEffectForceTopLevel = true
 RequiredItemId = "Weapon_Stab_drill"
 
